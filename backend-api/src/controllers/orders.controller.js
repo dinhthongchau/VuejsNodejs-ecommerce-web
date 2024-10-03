@@ -1,6 +1,9 @@
+const JSend = require('../jsend');
+
 function createOrder(req, res) {
-    return res.status(201).json({ order: {} });
+    return res.status(201).json(JSend.success({ order: {} }));
   }
+  
   function getOrdersByFilter(req, res) {
     const { status, customer_id, order_date, start_date, end_date } = req.query;
     const filters = [];
@@ -22,19 +25,17 @@ function createOrder(req, res) {
       filters.push(`order_date BETWEEN ${start_date} AND ${end_date}`);
     }
   
-    return res.json({ filters: query });
+    return res.json(JSend.success({ order: [], }));
   }
   
   function getOrder(req, res) {
-    return res.json({ order: {} });
+    return res.json(JSend.success({ order: {} }));
   }
   function updateOrder(req, res) {
-    return res.json({ order: {} });
+    return res.json(JSend.success({ order: {} }));
   }
   function deleteOrder(req, res) {
-    return res.json({
-      message: "Order deleted",
-    });
+    return res.json(JSend.success({ order: {} }));
   }
 
   

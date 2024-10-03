@@ -1,5 +1,7 @@
+const JSend = require('../jsend');
+
 function createCustomer(req, res) {
-    return res.status(201).json({ customer: {} });
+    return res.status(201).json(JSend.success({ customer: {} }));
   }
   
   function getCustomersByFilter(req, res) {
@@ -14,19 +16,17 @@ function createCustomer(req, res) {
       filters.push(`name='${name}'`);
     }
   
-    return res.json({ customers: [] });
+    return res.json(JSend.success({ customer: {} }));
   }
   
   function getCustomer(req, res) {
-    return res.json({ customer: {} });
+    return res.json(JSend.success({ customer: {} }));
   }
   function updateCustomer(req, res) {
-    return res.json({ customer: {} });
+    return res.json(JSend.success({ customer: {} }));
   }
   function deleteCustomer(req, res) {
-    return res.json({
-      message: "Customer deleted",
-    });
+    return res.json(JSend.success({ customer: {} }));
   }
   
   

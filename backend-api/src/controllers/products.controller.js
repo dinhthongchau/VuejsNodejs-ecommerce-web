@@ -1,6 +1,9 @@
+const JSend = require('../jsend');
+
 function createProduct(req, res) {
-    return res.status(201).json({ product: {} });
-  }
+    return res.status(201).json(JSend.success({ product: {} }));
+}
+  
   function getProductsByFilter(req, res) {
     const filters = [];
     const { id, name, brand, category, status, min_price, max_price } = req.query;
@@ -28,25 +31,21 @@ function createProduct(req, res) {
       filters.push(`price <= ${max_price}`);
     }
   
-    return res.json({ products: [] });
+    return res.json(JSend.success({ product: [], }));
   }
   
   function getProduct(req, res) {
-    return res.json({ product: {} });
+    return res.json(JSend.success({ product: {} }));
   }
   function updateProduct(req, res) {
-    return res.json({ product: {} });
+    return res.json(JSend.success({ product: {} }));
   }
   function deleteProduct(req, res) {
-    return res.json({
-      message: "Product deleted",
-    });
+   return res.json(JSend.success({ product: {} }));
   }
 
   function deleteAllProduct(req, res) {
-    return res.json({
-      message: "All Products deleted",
-    });
+    return res.json(JSend.success({ product: {} }));
   }
 
   
