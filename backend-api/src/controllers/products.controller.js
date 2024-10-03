@@ -4,7 +4,7 @@ function createProduct(req, res) {
     return res.status(201).json(JSend.success({ product: {} }));
 }
   
-  function getProductsByFilter(req, res) {
+function getProductsByFilter(req, res) {
     const filters = [];
     const { id, name, brand, category, status, min_price, max_price } = req.query;
   

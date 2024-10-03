@@ -1,13 +1,13 @@
 const express = require("express");
-const productsController = require("../controllers/products.controller.js");
+const productsController = require("../src/controllers/products.controller.js");
 const router = express.Router();
-const { methodNotAllowed } = require("../controllers/errors.controller.js");
+const { methodNotAllowed } = require("../src/controllers/errors.controller.js");
 /**
  * @swagger
  * /api/products:
  *   get:
  *     summary: Get products by filters
- *     description: Retrieve products based on optional filters such as ID, name, brand, category, status, and price range.
+ *     description: Retrieve products based on optional filters such as id, name, brand, category, status, and price range.
  *     parameters:
  *       - name: id
  *         in: query
@@ -103,14 +103,13 @@ const { methodNotAllowed } = require("../controllers/errors.controller.js");
  *                   type: string
  *                   example: Invalid filters
  */
-
 router.get("/", productsController.getProductsByFilter);
 /**
  * @swagger
  * /api/products:
  *   post:
  *     summary: Create a new product
- *     description: Adds a new product to the inventory, including details such as name, brand, price, and specifications.
+ *     description: Adds a new product to the inventory.
  *     requestBody:
  *       required: true
  *       content:
@@ -147,7 +146,7 @@ router.get("/", productsController.getProductsByFilter);
  *                 description: The status of the product (e.g., active, discontinued).
  *     responses:
  *       201:
- *         description: Product created successfully.
+ *         description: Successfully created a new product.
  *         content:
  *           application/json:
  *             schema:
@@ -193,8 +192,7 @@ router.get("/", productsController.getProductsByFilter);
  *                 message:
  *                   type: string
  *                   example: Invalid product data
- */
-
+ **/
 router.post("/", productsController.createProduct);
 /**
  * @swagger
@@ -216,8 +214,8 @@ router.post("/", productsController.createProduct);
  *                 message:
  *                   type: string
  *                   example: All products deleted
- */
 
+**/
 router.delete("/", productsController.deleteAllProduct);
 router.all("/", methodNotAllowed);
 /**
@@ -281,8 +279,7 @@ router.all("/", methodNotAllowed);
  *                 message:
  *                   type: string
  *                   example: Product not found
- */
-
+ **/
 router.get("/:id", productsController.getProduct);
 /**
  * @swagger
@@ -392,7 +389,7 @@ router.get("/:id", productsController.getProduct);
  *                 message:
  *                   type: string
  *                   example: Product not found
- */
+ **/
 router.put("/:id", productsController.updateProduct);
 /**
  * @swagger
@@ -434,7 +431,7 @@ router.put("/:id", productsController.updateProduct);
  *                 message:
  *                   type: string
  *                   example: Product not found
- */
+ **/
 router.delete("/:id", productsController.deleteProduct);
 router.all("/:id", methodNotAllowed);
 

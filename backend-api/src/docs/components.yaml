@@ -1,0 +1,133 @@
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the product.
+          example: 1
+        name:
+          type: string
+          description: The name of the phone.
+          example: "iPhone 13"
+        brand:
+          type: string
+          description: The brand of the phone.
+          example: "Apple"
+        price:
+          type: number
+          format: float
+          description: The price of the phone.
+          example: 999.99
+        quantity:
+          type: integer
+          description: The available stock.
+          example: 50
+        description:
+          type: string
+          description: A description of the phone.
+          example: "The latest iPhone model."
+        specs:
+          type: object
+          description: Detailed technical specifications of the phone.
+          example:
+            processor: "A15 Bionic"
+            ram: "4GB"
+            storage: "128GB"
+        images:
+          type: array
+          items:
+            type: string
+          description: An array of image URLs for the product.
+          example: ["http://example.com/image1.jpg", "http://example.com/image2.jpg"]
+        status:
+          type: string
+          description: Product status (e.g., active, discontinued).
+          example: "active"
+
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the customer.
+          example: 1
+        name:
+          type: string
+          description: Full name of the customer.
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: Email address of the customer.
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          description: Contact number of the customer.
+          example: "+123456789"
+        address:
+          type: string
+          description: Physical address of the customer.
+          example: "123 Main St, Springfield, USA"
+        password:
+          type: string
+          description: Hashed password for account access.
+          example: "$2b$10$eP/c6K3O3.CzK6nZgQV02OERISY.sT2B8R40DyyM3vY7OdHvVZJde"
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the order.
+          example: 1
+        customer_id:
+          type: integer
+          description: The ID of the customer placing the order.
+          example: 1
+        order_date:
+          type: string
+          format: date-time
+          description: The date and time when the order was placed.
+          example: "2024-10-01T14:30:00Z"
+        total_amount:
+          type: number
+          format: float
+          description: Total cost of the order.
+          example: 1999.98
+        status:
+          type: string
+          description: Order status (e.g., pending, shipped, delivered).
+          example: "pending"
+        payment_method:
+          type: string
+          description: Method of payment (e.g., credit card, PayPal).
+          example: "credit card"
+        order_items:
+          type: array
+          items:
+            type: object
+            properties:
+              product_id:
+                type: integer
+                description: The ID of the ordered product.
+                example: 1
+              product_name:
+                type: string
+                description: The name of the product at the time of order.
+                example: "iPhone 13"
+              quantity:
+                type: integer
+                description: The quantity of the product ordered.
+                example: 2
+              price:
+                type: number
+                format: float
+                description: The price of the product at the time of order.
+                example: 999.99
+
+        notes:
+          type: string
+          description: Any additional notes or comments about the order.
+          example: "Please gift wrap this item."
