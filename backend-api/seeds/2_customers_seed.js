@@ -16,5 +16,8 @@ function createCustomer() {
  */
 exports.seed = async function (knex) {
     await knex('customers').del();
-    await knex('customers').insert(Array(20).fill().map(createCustomer));
+    await knex.raw('ALTER TABLE customers AUTO_INCREMENT = 1');
+    
+    // Insert 10 new records 
+    await knex('customers').insert(Array(10).fill().map(createCustomer));
 };

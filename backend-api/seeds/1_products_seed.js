@@ -1,3 +1,5 @@
+
+
 const { faker } = require('@faker-js/faker');
 
 function createProduct() {
@@ -21,6 +23,10 @@ function createProduct() {
  * @returns { Promise<void> }
  */
 exports.seed = async function (knex) {
+    
     await knex('products').del();
-    await knex('products').insert(Array(20).fill().map(createProduct));
+    await knex.raw('ALTER TABLE products AUTO_INCREMENT = 1');
+
+    // Insert 10 new records 
+    await knex('products').insert(Array(10).fill().map(createProduct));
 };

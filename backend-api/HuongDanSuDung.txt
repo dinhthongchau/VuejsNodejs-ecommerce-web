@@ -4,10 +4,9 @@ npm install @faker-js/faker --save-dev
 
 Chạy npx knex migrate:latest để tạo bảng cho csdl
 Chay du lieu gia : 
-Nhap 4 lan , ko nhap knex seed run all 
+Nhập từng lệnh, không knex seed run all 
     npx knex seed:run --specific=1_products_seed.js
     npx knex seed:run --specific=2_customers_seed.js
 
-    npx knex seed:run --specific=3_orders_seed.js  ( vào csdl coi rồi chỉnh phạm vi 1 dòng đã note  trong folder needs )
-    npx knex seed:run --specific=4_order_items_seed.js  ( vào csdl coi rồi chỉnh phạm vi 2 dòng đã note   trong folder needs )
-    
+    npx knex seed:run --specific=3_orders_seed.js  
+    npx knex seed:run --specific=4_order_items_seed.js 
