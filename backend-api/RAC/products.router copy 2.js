@@ -419,3 +419,8 @@ router.delete("/:id", productsController.deleteProduct);
 router.all("/", methodNotAllowed);
 router.all("/:id", methodNotAllowed);
 module.exports = router;
+module.exports.setup = (app) => {
+    app.use("/api/v1/products", router);
+
+
+}

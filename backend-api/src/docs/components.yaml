@@ -41,6 +41,11 @@ components:
             type: string
           description: An array of image URLs for the product.
           example: ["http://example.com/image1.jpg", "http://example.com/image2.jpg"]
+        imageFiles:
+          type: string
+          format: binary
+          writeOnly: true # Used in POST/PUT/PATCH
+          description: Product image file
         status:
           type: string
           description: Product status (e.g., active, discontinued).
@@ -114,7 +119,11 @@ components:
       properties:
         id:
           type: integer
-          description: Unique identifier for the order items.
+          description: Unique identifier for the order item.
+          example: 1
+        order_id:
+          type: integer
+          description: Unique identifier for the order.
           example: 1
         product_id:
           type: integer
@@ -134,7 +143,72 @@ components:
           description: The price of the product at the time of order.
           example: 999.99
 
-    OrderItems:
-      type: array
-      items:
-        $ref: '#/components/schemas/OrderItem'
+responses:
+  '200NoData':
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: string
+              description: The response status
+              enum:
+                - success
+            data:
+              type: object
+              nullable: true
+              default: null
+              description: The response data
+parameters:
+    ProductIdParam:
+      name: id
+      description: Product ID
+      required: true
+      in: path
+      schema:
+        type: integer
+    limitParam:
+      name: limit
+      description: Number of records per page
+      in: query
+      schema:
+        type: integer
+        default: 5
+        minimum: 1
+        maximum: 100
+        required: false
+    pageParam:
+      name: page
+      description: Page number of records
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        required: false
+
+    PaginationMetadata:
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          default: 0
+          description: The total number of records
+        firstPage:
+          type: integer
+          default: 1
+          description: The first page
+        lastPage:
+          type: integer
+          default: 1
+          description: The last page
+        page:
+          type: integer
+          default: 1
+          description: The current page
+        limit:
+          type: integer
+          default: 5
+          description: The number of records per page
+

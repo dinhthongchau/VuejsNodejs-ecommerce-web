@@ -1,10 +1,43 @@
-// const productsService = require('../services/products.service');
-// const ApiError = require('../api-error');
+const productsService = require('../services/products.service');
+const ApiError = require('../api-error');
 const JSend = require('../jsend');
 
-function createProduct(req, res) {
-    return res.status(201).json(JSend.success({ product: {} }));
+// function createProduct(req, res) {
+//     return res.status(201).json(JSend.success({ product: {} }));
+// }
+async function createProduct(req, res, next) {
+  // Kiểm tra nếu thiếu tên hoặc tên không phải là chuỗi
+  if (!req.body?.name || typeof req.body.name !== 'string') {
+    return next(new ApiError(400, 'Name should be a non-empty string'));
+  }
+
+  try {
+    // Tạo sản phẩm mới từ dữ liệu của form
+    const product = await productService.createProduct({
+      ...req.body,
+      image: req.file ? `/public/uploads/${req.file.filename}` : null,  // Xử lý ảnh sản phẩm
+    });
+
+    // Trả về kết quả thành công kèm theo thông tin sản phẩm mới
+    return res
+      .status(201)
+      .set({
+        Location: `${req.baseUrl}/${product.id}`  // Đặt thông tin Location cho sản phẩm mới
+      })
+      .json(
+        JSend.success({ 
+          product,
+        })
+      );
+
+  } catch (error) { 
+    console.error(error);
+    return next(
+      new ApiError(500, 'An error occurred while creating the product')
+    );
+  }
 }
+
   
 async function getProductsByFilter(req, res) {
   const filters = [];
