@@ -415,5 +415,6 @@ router.put("/:id", productsController.updateProduct);
  *                   example: Product not found
  */
 router.delete("/:id", productsController.deleteProduct);
-
+router.all("/", methodNotAllowed);
+router.all("/:id", methodNotAllowed);
 module.exports = router;

@@ -1,7 +1,7 @@
 const express = require('express');
 const orderItemsController = require('../controllers/orderItems.controller.js');
 const router = express.Router();
-
+const { methodNotAllowed } = require("../controllers/errors.controller");
 /**
  * @swagger
  * /api/order-items:
@@ -187,5 +187,6 @@ router.put('/:id', orderItemsController.updateOrderItem);
  *             message: "Order item deleted successfully."
  */
 router.delete('/:id', orderItemsController.deleteOrderItem);
-
+router.all("/", methodNotAllowed);
+router.all("/:id", methodNotAllowed);
 module.exports = router;

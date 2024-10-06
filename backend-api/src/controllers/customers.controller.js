@@ -7,20 +7,35 @@ function createCustomer(req, res) {
     return res.status(201).json(JSend.success({ customer: {} }));
   }
   
-function getCustomersByFilter(req, res) {
+  function getCustomersByFilter(req, res) {
     const filters = [];
-    const { email, name } = req.query;
-  
+    const { id, email, name, phone, address } = req.query;
+
+    if (id) {
+        filters.push(`id=${parseInt(id)}`); // Lọc theo id
+    }
     if (email) {
-      filters.push(`email='${email}'`);
+        filters.push(`email='${email}'`); // Lọc theo email
     }
-  
     if (name) {
-      filters.push(`name='${name}'`);
+        filters.push(`name LIKE '%${name}%'`); // Lọc theo tên với tìm kiếm gần đúng
     }
-  
-    return res.json(JSend.success({ customer: {} }));
-  }
+    if (phone) {
+        filters.push(`phone='${phone}'`); // Lọc theo số điện thoại
+    }
+    if (address) {
+        filters.push(`address LIKE '%${address}%'`); // Lọc theo địa chỉ với tìm kiếm gần đúng
+    }
+
+    // Giả sử `contactsService.getCustomersByFilters` là hàm xử lý logic với các bộ lọc
+    contactsService.getCustomersByFilters(filters)
+        .then((customers) => {
+            return res.json(JSend.success({ customers }));
+        })
+        .catch((error) => {
+            return res.status(500).json(JSend.error(error.message));
+        });
+}
   
   function getCustomer(req, res) {
     return res.json(JSend.success({ customer: {} }));

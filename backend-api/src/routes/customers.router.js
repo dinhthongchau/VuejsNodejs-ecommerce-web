@@ -4,10 +4,36 @@ const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller");
 /**
  * @swagger
- * /api/customers:
+ * /api/customers/filter:
  *   get:
- *     summary: Retrieve a list of customers
- *     description: Retrieve a list of customers based on specified filters.
+ *     summary: Retrieve a list of customers based on specified filters
+ *     description: Retrieve a list of customers using filters such as id, email, name, phone, and address.
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         schema:
+ *           type: integer
+ *         description: Filter customers by ID
+ *       - in: query
+ *         name: email
+ *         schema:
+ *           type: string
+ *         description: Filter customers by email
+ *       - in: query
+ *         name: name
+ *         schema:
+ *           type: string
+ *         description: Filter customers by name (partial match)
+ *       - in: query
+ *         name: phone
+ *         schema:
+ *           type: string
+ *         description: Filter customers by phone
+ *       - in: query
+ *         name: address
+ *         schema:
+ *           type: string
+ *         description: Filter customers by address (partial match)
  *     responses:
  *       200:
  *         description: A list of customers.
@@ -34,9 +60,8 @@ const { methodNotAllowed } = require("../controllers/errors.controller");
  *                     type: string
  *                     example: "123 Main St, City, Country"
  */
+router.get('/filter', customersController.getCustomersByFilter);
 
-
-router.get('/', customersController.getCustomersByFilter);
 /**
  * @swagger
  * /api/customers:
