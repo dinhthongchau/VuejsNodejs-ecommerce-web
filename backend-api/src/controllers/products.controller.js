@@ -1,38 +1,60 @@
+// const productsService = require('../services/products.service');
+// const ApiError = require('../api-error');
 const JSend = require('../jsend');
 
 function createProduct(req, res) {
     return res.status(201).json(JSend.success({ product: {} }));
 }
   
-function getProductsByFilter(req, res) {
-    const filters = [];
-    const { id, name, brand, category, status, min_price, max_price } = req.query;
-  
-    if (id) {
+async function getProductsByFilter(req, res) {
+  const filters = [];
+  const { id, name, brand, price, quantity, description, specs, images, status } = req.query;
+
+  if (id) {
       filters.push(`id=${id}`);
-    }
-    if (name) {
-      filters.push(`name=${name}`);
-    }
-    if (brand) {
-      filters.push(`brand=${brand}`);
-    }
-    if (category) {
-      filters.push(`category=${category}`);
-    }
-    if (status) {
-      filters.push(`status=${status}`);
-    }
-    if (min_price !== undefined && max_price !== undefined) {
-      filters.push(`price >= ${min_price} AND price <= ${max_price}`);
-    } else if (min_price !== undefined) {
-      filters.push(`price >= ${min_price}`);
-    } else if (max_price !== undefined) {
-      filters.push(`price <= ${max_price}`);
-    }
-  
-    return res.json(JSend.success({ product: [], }));
   }
+  if (name) {
+      filters.push(`name LIKE '%${name}%'`); // Sử dụng LIKE cho tìm kiếm tên
+  }
+  if (brand) {
+      filters.push(`brand='${brand}'`);
+  }
+  if (price) {
+      const [min_price, max_price] = price.split(',').map(Number);
+      if (min_price !== undefined && max_price !== undefined) {
+          filters.push(`price >= ${min_price} AND price <= ${max_price}`);
+      } else if (min_price !== undefined) {
+          filters.push(`price >= ${min_price}`);
+      } else if (max_price !== undefined) {
+          filters.push(`price <= ${max_price}`);
+      }
+  }
+  if (quantity) {
+      filters.push(`quantity=${quantity}`);
+  }
+  if (description) {
+      filters.push(`description LIKE '%${description}%'`); // Sử dụng LIKE cho tìm kiếm mô tả
+  }
+  if (specs) {
+      filters.push(`specs LIKE '%${JSON.stringify(specs)}%'`); // Giả sử specs là một đối tượng JSON
+  }
+  if (images) {
+      filters.push(`images LIKE '%${images}%'`); // Tìm kiếm theo URL hình ảnh
+  }
+  if (status) {
+      filters.push(`status='${status}'`);
+  }
+
+  try {
+      const products = await Product.findAll({
+          where: filters.length ? { [Op.and]: filters } : {},
+      });
+      return res.json(JSend.success({ product: products }));
+  } catch (error) {
+      return res.status(500).json(JSend.error('Failed to fetch products', error));
+  }
+}
+
   
   function getProduct(req, res) {
     return res.json(JSend.success({ product: {} }));

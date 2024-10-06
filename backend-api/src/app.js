@@ -7,6 +7,7 @@ const JSend = require('./jsend');
 const productsRouter = require("./routes/products.router");
 const customersRouter = require("./routes/customers.router");
 const ordersRouter = require("./routes/orders.router");
+const orderItemsRouter = require("./routes/orderItems.router");
 const {
     resourceNotFound,
     handleError,
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
     return res.json(JSend.success());
 });
+
+app.use('/public', express.static('public'));
 app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(specs) );
 // app.use('/public',express.static('public'));
 
@@ -28,6 +31,7 @@ app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(specs) );
 app.use("/api/v1/products", productsRouter);
 app.use("/api/v1/customers", customersRouter);
 app.use("/api/v1/orders", ordersRouter);
+app.use("/api/v1/orderItems", orderItemsRouter);
 
 //handle 404 response
 

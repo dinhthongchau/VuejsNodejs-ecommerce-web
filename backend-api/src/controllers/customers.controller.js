@@ -1,10 +1,13 @@
+// const contactsService = require('../services/customers.service');
+
+// const ApiError = require('../api-error');
 const JSend = require('../jsend');
 
 function createCustomer(req, res) {
     return res.status(201).json(JSend.success({ customer: {} }));
   }
   
-  function getCustomersByFilter(req, res) {
+function getCustomersByFilter(req, res) {
     const filters = [];
     const { email, name } = req.query;
   
