@@ -1,8 +1,11 @@
-create a database named ct313h_project trong phpMyAdmin
+create a database named ct313h_projects  trong phpMyAdmin ( thêm s )
 Cai npm install knex mysql
 npm install @faker-js/faker --save-dev
 
 Chạy npx knex migrate:latest để tạo bảng cho csdl
+
+
+chay npm install ( auto cai dat cac goi ) 
 Chay du lieu gia : 
 Nhập từng lệnh, không knex seed run all 
     npx knex seed:run --specific=1_products_seed.js

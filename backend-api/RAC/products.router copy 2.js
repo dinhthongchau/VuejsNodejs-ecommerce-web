@@ -1,5 +1,5 @@
 const express = require("express");
-const productsController = require("../controllers/products.controller.js");
+const productsController = require("../controllers/product.controller.js");
 const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller.js");
 const avatarUpload=require("../middlewares/avatar-upload.middleware")

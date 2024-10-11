@@ -6,7 +6,7 @@ const ApiError = require('../api-error');
 // implement to use  router put 
 const express = require('express');
 const router = express.Router();
-const productsController = require('../controllers/products.controller'); // Update the path as necessary
+const productsController = require('../controllers/product.controller'); // Update the path as necessary
 
 
 const storage = multer.diskStorage({

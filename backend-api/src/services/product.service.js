@@ -1,7 +1,7 @@
 const knex = require("../database/knex");
 
 function productRepository() {
-  return knex("ct313h_project");
+  return knex("ct313h_projects");
 }
 
 function readProduct(payload) {
