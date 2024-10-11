@@ -3,10 +3,9 @@ const express = require("express");
 const productsController = require("../controllers/product.controller.js");
 const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller.js");
-
+const avatarUpload = require('../middlewares/avatar-upload.middleware.js');
 module.exports.setup = (app) => {
   app.use("/api/v1/products", router);
-
   /**
    * @swagger
    * /api/v1/products:
@@ -66,7 +65,7 @@ module.exports.setup = (app) => {
    *     requestBody:
    *       required: true
    *       content:
-   *         application/json:
+   *         multipart/form-data:
    *           schema:
    *             $ref: '#/components/schemas/Product'
    *     tags:
@@ -200,4 +199,6 @@ router.put('/:id', productsController.updateProduct); // Cập nhật sản ph�
  */
 router.delete('/:id', productsController.deleteProduct); // Xóa sản phẩm theo ID
 router.all('/:id', methodNotAllowed); // Xử lý phương thức không được phép
+
+module.exports = app;
 };

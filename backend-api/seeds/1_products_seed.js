@@ -1,20 +1,20 @@
-
-
 const { faker } = require('@faker-js/faker');
 
 function createProduct() {
+    const models = ['iPhone 11', 'iPhone 12', 'iPhone 13', 'iPhone 14', 'iPhone 15'];
+    const colors = ['Đen', 'Trắng', 'Đỏ', 'Xanh', 'Xanh dương', 'Vàng', 'Hồng'];
+    const storageOptions = ['64GB', '128GB', '256GB', '512GB'];
+
     return {
-        name: faker.commerce.productName(),
-        brand: faker.company.name(),
-        price: parseFloat(faker.commerce.price()),
-        quantity: faker.number.int({ min: 1, max: 20 }),
-        description: faker.commerce.productDescription(),
-        specs: JSON.stringify({
-            color: faker.color.human(),
-            storage: `${faker.number.int({ min: 64, max: 512 })}GB`
-        }),
-        images: JSON.stringify([faker.image.url(), faker.image.url()]),
-        status: faker.datatype.boolean() ? 'available' : 'unavailable',
+        product_name: `${faker.helpers.arrayElement(models)} ${faker.helpers.arrayElement(storageOptions)}`,
+        product_price: faker.number.int({ min: 15000000, max: 35000000 }), // Giá từ 15 triệu đến 35 triệu VND
+        product_color: faker.helpers.arrayElement(colors),
+        product_description: faker.commerce.productDescription(),
+        product_image: JSON.stringify([
+            `https://dummyimage.com/640x480/000/fff&text=Product+Image+1`,
+            `https://dummyimage.com/640x480/000/fff&text=Product+Image+2`,
+            `https://dummyimage.com/640x480/000/fff&text=Product+Image+3`
+        ]),
     };
 }
 
@@ -23,10 +23,6 @@ function createProduct() {
  * @returns { Promise<void> }
  */
 exports.seed = async function (knex) {
-    
-    await knex('products').del();
-    await knex.raw('ALTER TABLE products AUTO_INCREMENT = 1');
-
-    // Insert 10 new records 
-    await knex('products').insert(Array(10).fill().map(createProduct));
+    await knex('Product').del();
+    await knex('Product').insert(Array(20).fill().map(createProduct));
 };

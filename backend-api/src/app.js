@@ -12,17 +12,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.get("/", (req, res) => {
     return res.json(JSend.success());
 });
-
-app.use('/public', express.static('public'));
 app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(specs) );
-// app.use('/public',express.static('public'));
-
-// // Sử dụng các router
-// app.use("/api/v1/product", productRouter);
-
+app.use('/public', express.static('public'));
+productRouter.setup(app);
 
 //handle 404 response
 
