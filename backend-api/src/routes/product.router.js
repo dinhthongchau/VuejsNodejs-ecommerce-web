@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const express = require("express");
-const productsController = require("../controllers/product.controller.js");
+const productController = require("../controllers/product.controller.js");
 const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller.js");
 const avatarUpload = require('../middlewares/avatar-upload.middleware.js');
@@ -54,7 +54,7 @@ module.exports.setup = (app) => {
    *                     metadata:
    *                       $ref: '#/components/schemas/PaginationMetadata'
    */
-  router.get('/', productsController.getProductsByFilter); // Lọc sản phẩm
+  router.get('/', productController.getProductsByFilter); // Lọc sản phẩm
 
   /**
    * @swagger
@@ -88,7 +88,7 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.post('/', productsController.createProduct); // Tạo sản phẩm mới
+  router.post('/', productController.createProduct); // Tạo sản phẩm mới
 
   /**
    * @swagger
@@ -103,7 +103,7 @@ module.exports.setup = (app) => {
    *         description: All products deleted
    *         $ref: '#/components/responses/200NoData'
    */
-  router.delete('/', productsController.deleteAllProduct); // Xóa tất cả sản phẩm
+  router.delete('/', productController.deleteAllProduct); // Xóa tất cả sản phẩm
   router.all('/', methodNotAllowed); // Xử lý phương thức không được phép
 
   /**
@@ -134,7 +134,7 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.get('/:id', productsController.getProduct); // Lấy sản phẩm theo ID
+  router.get('/:id', productController.getProduct); // Lấy sản phẩm theo ID
 
   /**
  * @swagger
@@ -175,7 +175,7 @@ module.exports.setup = (app) => {
  *                     product:
  *                       $ref: '#/components/schemas/Product'
  */
-router.put('/:id', productsController.updateProduct); // Cập nhật sản phẩm theo ID
+router.put('/:id', productController.updateProduct); // Cập nhật sản phẩm theo ID
 
 /**
  * @swagger
@@ -197,7 +197,7 @@ router.put('/:id', productsController.updateProduct); // Cập nhật sản ph�
  *         description: Product deleted
  *         $ref: '#/components/responses/200NoData'
  */
-router.delete('/:id', productsController.deleteProduct); // Xóa sản phẩm theo ID
+router.delete('/:id', productController.deleteProduct); // Xóa sản phẩm theo ID
 router.all('/:id', methodNotAllowed); // Xử lý phương thức không được phép
 
 module.exports = app;

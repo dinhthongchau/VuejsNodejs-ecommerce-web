@@ -12,7 +12,7 @@ async function createProduct(req, res, next) {
   }
 
   const product_price = parseFloat(req.body.product_price);
-  if (!product_price || isNaN(product_price)) {
+  if (isNaN(product_price)) {
       return next(new ApiError(400, 'Product price should be a valid number'));
   }
 
@@ -31,28 +31,73 @@ async function createProduct(req, res, next) {
 
   try {
       const product = await productsService.createProduct({
-          ...req.body,
+          product_name: req.body.product_name,
+          product_price: product_price,
+          product_color: req.body.product_color,
+          product_description: req.body.product_description,
           product_image: req.file ? `/public/uploads/${req.file.filename}` : req.body.product_image,
       });
 
       return res
           .status(201)
           .set({
-              Location: `${req.baseUrl}/${product.product_id}` // Sử dụng product.product_id để thiết lập Location
+              Location: `${req.baseUrl}/${product.product_id}` // Thiết lập Location với product_id
           })
-          .json(
-              JSend.success({
-                  product,
-              })
-          );
+          .json(JSend.success({ product }));
 
   } catch (error) {
-      console.log(error);
-      return next(
-          new ApiError(500, 'An error occurred while creating the product')
-      );
+      console.error(error);
+      return next(new ApiError(500, 'An error occurred while creating the product'));
   }
 }
+// async function createProduct(req, res, next) {
+//   // Kiểm tra dữ liệu đầu vào
+//   if (!req.body?.product_name || typeof req.body.product_name !== 'string') {
+//       return next(new ApiError(400, 'Product name should be a non-empty string'));
+//   }
+
+//   const product_price = parseFloat(req.body.product_price);
+//   if (!product_price || isNaN(product_price)) {
+//       return next(new ApiError(400, 'Product price should be a valid number'));
+//   }
+
+//   if (!req.body?.product_color || typeof req.body.product_color !== 'string' || req.body.product_color.trim() === '') {
+//       return next(new ApiError(400, 'Product color should be a non-empty string'));
+//   }
+
+//   if (!req.body?.product_description || typeof req.body.product_description !== 'string' || req.body.product_description.trim() === '') {
+//       return next(new ApiError(400, 'Product description should be a non-empty string'));
+//   }
+
+//   // Kiểm tra hình ảnh
+//   if (!req.file && !req.body.product_image) {
+//       return next(new ApiError(400, 'Product image is required'));
+//   }
+
+//   try {
+//       const product = await productsService.createProduct({
+//           ...req.body,
+//           product_image: req.file ? `/public/uploads/${req.file.filename}` : req.body.product_image,
+//       });
+
+//       return res
+//           .status(201)
+//           .set({
+//               Location: `${req.baseUrl}/${product.product_id}` // Sử dụng product.product_id để thiết lập Location
+//           })
+//           .json(
+//               JSend.success({
+//                   product,
+//               })
+//           );
+
+//   } catch (error) {
+//       console.log(error);
+//       return next(
+//           new ApiError(500, 'An error occurred while creating the product')
+//       );
+//   }
+// }
 
 
 function getProductsByFilter(req, res) {
