@@ -108,7 +108,7 @@ module.exports.setup = (app) => {
 
   /**
    * @swagger
-   * /api/v1/products/{id}:
+   * /api/v1/products/{product_id}:
    *   get:
    *     summary: Get product by ID
    *     description: Get product by ID
@@ -134,17 +134,17 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.get('/:id', productController.getProduct); // Lấy sản phẩm theo ID
+  router.get('/:product_id', productController.getProduct); // Lấy sản phẩm theo ID
 
   /**
  * @swagger
- * /api/v1/products/{id}:
+ * /api/v1/products/{product_id}:
  *   put:
  *     summary: Update product by ID
  *     description: Update product by ID
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: product_id
  *         required: true
  *         schema:
  *           type: string
@@ -175,17 +175,17 @@ module.exports.setup = (app) => {
  *                     product:
  *                       $ref: '#/components/schemas/Product'
  */
-router.put('/:id', productController.updateProduct); // Cập nhật sản phẩm theo ID
+router.put('/:product_id', avatarUpload, productController.updateProduct); // Cập nhật sản phẩm theo ID
 
 /**
  * @swagger
- * /api/v1/products/{id}:
+ * /api/v1/products/{product_id}:
  *   delete:
  *     summary: Delete product by ID
  *     description: Delete a product by its ID.
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: product_id
  *         required: true
  *         schema:
  *           type: string
@@ -197,8 +197,8 @@ router.put('/:id', productController.updateProduct); // Cập nhật sản phẩ
  *         description: Product deleted
  *         $ref: '#/components/responses/200NoData'
  */
-router.delete('/:id', productController.deleteProduct); // Xóa sản phẩm theo ID
-router.all('/:id', methodNotAllowed); // Xử lý phương thức không được phép
+router.delete('/:product_id', productController.deleteProduct); // Xóa sản phẩm theo ID
+router.all('/:product_id', methodNotAllowed); // Xử lý phương thức không được phép
 
 module.exports = app;
 };

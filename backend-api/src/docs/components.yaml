@@ -48,8 +48,8 @@ components:
               description: The response data
   parameters:
     productIdParam:
-      name: id
-      description: Contact ID
+      name: product_id
+      description: Product ID
       required: true
       in: path
       schema:

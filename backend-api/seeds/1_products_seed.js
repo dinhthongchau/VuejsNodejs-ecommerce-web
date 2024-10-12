@@ -24,5 +24,6 @@ function createProduct() {
  */
 exports.seed = async function (knex) {
     await knex('Product').del();
+    await knex.raw('ALTER TABLE Product AUTO_INCREMENT = 1');
     await knex('Product').insert(Array(20).fill().map(createProduct));
 };
