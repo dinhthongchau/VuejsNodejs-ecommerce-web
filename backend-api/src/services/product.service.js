@@ -16,8 +16,8 @@ function readProduct(payload) {
 }
 async function createProduct(payload) {
   const product = readProduct(payload); // Gọi hàm readProduct để lấy dữ liệu sản phẩm
-  const [id] = await productRepository().insert(product); // Chèn sản phẩm vào cơ sở dữ liệu và lấy ID
-  return { product_id: id, ...product }; // Trả về ID cùng với thông tin sản phẩm
+  const [product_id] = await productRepository().insert(product); // Chèn sản phẩm vào cơ sở dữ liệu và lấy ID
+  return { product_id, ...product }; // Trả về ID cùng với thông tin sản phẩm
 }
 
 // // Define functions for accessing the database

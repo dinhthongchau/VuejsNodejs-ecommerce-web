@@ -88,7 +88,7 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.post('/', productController.createProduct); // Tạo sản phẩm mới
+  router.post('/', avatarUpload, productController.createProduct); // Tạo sản phẩm mới
 
   /**
    * @swagger

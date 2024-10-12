@@ -29,29 +29,6 @@ components:
           format: binary
           writeOnly: true #USE TO POST,PUT,PATCH
           description: URL or path to product images file(can store multiple images as a JSON array)
-    PaginationMetadata:
-      type: object
-      properties:
-        totalRecords:
-          type: integer
-          default: 0
-          description: The total number of records
-        firstPage:
-          type: integer
-          default: 1
-          description: The first page
-        lastPage:
-          type: integer
-          default: 1
-          description: The last page
-        page:
-          type: integer
-          default: 1
-          description: The current page
-        limit:
-          type: integer
-          default: 5
-          description: The number of records per page
   responses:
   '200NoData':
     content:
@@ -96,5 +73,28 @@ components:
         default: 1
         minimum: 1
         required: false
+    PaginationMetadata:
+      type: object
+      properties:
+        totalRecords:
+          type: integer
+          default: 0
+          description: The total number of records
+        firstPage:
+          type: integer
+          default: 1
+          description: The first page
+        lastPage:
+          type: integer
+          default: 1
+          description: The last page
+        page:
+          type: integer
+          default: 1
+          description: The current page
+        limit:
+          type: integer
+          default: 5
+          description: The number of records per page
 
     
