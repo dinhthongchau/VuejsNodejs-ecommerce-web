@@ -35,10 +35,10 @@ async function getManyOrders(query) {
     let results = await orderRepository()
       .where((builder) => {
         if (order_id) {
-          builder.where('order_id', 'like', `%${order_id}%`);
+          builder.where('order_id', order_id);
         }
         if (customer_id) {
-          builder.where('order_id', 'like', `%${customer_id}%`);
+          builder.where('customer_id', customer_id);
         }
         if (order_date) {
           builder.where('order_date', 'like', `%${order_date}%`);

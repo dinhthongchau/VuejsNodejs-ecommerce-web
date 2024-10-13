@@ -32,10 +32,10 @@ async function getManyCarts(query) {
     let results = await cartRepository()
       .where((builder) => {
         if (cart_id) {
-          builder.where('cart_id', 'like', `%${cart_id}%`);
+          builder.where('cart_id', cart_id);
         }
         if (customer_id) {
-          builder.where('customer_id', 'like', `%${customer_id}%`);
+          builder.where('customer_id', customer_id);
         }
         if (product_id) {
           builder.where('product_id', 'like', `%${product_id}%`);
