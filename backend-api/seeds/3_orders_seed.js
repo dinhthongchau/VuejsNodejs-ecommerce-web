@@ -1,17 +1,18 @@
 const { faker } = require('@faker-js/faker');
 
 function createOrder(customerId) {
-    const paymentMethods = ['Credit Card', 'Cash on Delivery', 'PayPal', 'Bank Transfer'];
-    const statuses = ['Pending', 'Shipped', 'Delivered', 'Cancelled', 'Returned'];
+    const paymentMethods = ['Bank Transfer', 'Cash on Delivery']; // Chỉ cho phép chuyển khoản hoặc thanh toán khi nhận hàng
+    const statuses = ['Confirming', 'Confirmed']; // Chỉ có trạng thái Confirming và Confirmed
 
     return {
         customer_id: customerId,
-        order_total: faker.commerce.price({ min: 500000, max: 1000000, dec: 2 }), // Giả sử tổng giá trị đơn hàng từ 500,000 VND đến 1,000,000 VND
+        order_total: faker.commerce.price({ min: 500000, max: 1000000, dec: 2 }), // Giá trị đơn hàng VNĐ
         order_payment_method: faker.helpers.arrayElement(paymentMethods),
         order_status: faker.helpers.arrayElement(statuses),
-        order_note: faker.lorem.sentence(),
+        order_note: faker.lorem.sentence(), // Ghi chú bằng tiếng Anh
     };
 }
+
 
 /**
  * @param { import("knex").Knex } knex

@@ -72,10 +72,10 @@ components:
           description: Total amount of the order
         order_payment_method:
           type: string
-          description: Payment method used for the order (e.g., Credit Card, PayPal, etc.)
+          description: Payment method used for the order (Bank Transfer or Cash on delivery)
         order_status:
           type: string
-          description: Current status of the order (e.g., pending, completed, shipped)
+          description: Current status of the order (Confirming or Confirmed)
         order_note:
           type: string
           description: Additional notes related to the order

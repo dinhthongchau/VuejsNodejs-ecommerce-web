@@ -1,3 +1,6 @@
+create database ct313h_projects;
+use ct313h_projects;
+
 CREATE TABLE Product (
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_name VARCHAR(255),
@@ -20,8 +23,9 @@ CREATE TABLE Cart (
     customer_id INT,
     product_id INT,
     quantity INT,
-    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
-    FOREIGN KEY (product_id) REFERENCES Product(product_id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES Product(product_id) ON DELETE CASCADE ON UPDATE CASCADE
+    # FOREIGN KEY (order_id) REFERENCES Product(order_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE Orders (
@@ -32,6 +36,7 @@ CREATE TABLE Orders (
     order_payment_method VARCHAR(50),
     order_status VARCHAR(50),
     order_note VARCHAR(255),
-    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+drop database ct313h_project;
