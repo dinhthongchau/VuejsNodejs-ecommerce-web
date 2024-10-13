@@ -1,5 +1,7 @@
 const knex = require('../database/knex');
 const Paginator = require('./paginator');
+const { unlink } = require('node:fs');
+
 function productRepository() {
     return knex('Product');
 }
@@ -15,9 +17,9 @@ function readProduct(payload) {
     };
 }
 async function createProduct(payload) {
-  const product = readProduct(payload); // Gọi hàm readProduct để lấy dữ liệu sản phẩm
-  const [product_id] = await productRepository().insert(product); // Chèn sản phẩm vào cơ sở dữ liệu và lấy ID
-  return { product_id, ...product }; // Trả về ID cùng với thông tin sản phẩm
+  const product = readProduct(payload); 
+  const [product_id] = await productRepository().insert(product);
+  return { product_id, ...product }; 
 }
 
 async function getManyProducts(query) {
@@ -71,42 +73,25 @@ async function getProductById(product_id) {
 
   return productRepository().where('product_id', product_id).select('*').first();
 }
-// // Define functions for accessing the database
-// async function createProduct(payload) {
-//     const productData = readProduct(payload);
-//     const [newProduct] = await productRepository().insert(productData).returning('*');
-//     return newProduct;
-// }
 
-// async function getAllProducts() {
-//     return await productRepository().select('*');
-// }
-
-// async function getProductById(productId) {
-//     return await productRepository().where('product_id', productId).first();
-// }
 async function updateProduct(product_id, payload) {
-  // Lấy sản phẩm hiện tại theo ID
   const updatedProduct = await productRepository()
     .where("product_id", product_id)
     .select("*")
     .first();
 
   if (!updatedProduct) {
-    return null; // Nếu không tìm thấy sản phẩm
+    return null; 
   }
 
-  const update = readProduct(payload); // Đọc và chuẩn hóa dữ liệu
+  const update = readProduct(payload); 
 
-  // Xóa thuộc tính image nếu không có trong payload
   if (!update.product_image) {
     delete update.product_image;
   }
 
-  // Cập nhật sản phẩm
   await productRepository().where("product_id", product_id).update(update);
 
-  // Kiểm tra và xóa hình ảnh cũ nếu có
   if (
     update.product_image &&
     updatedProduct.product_image &&
@@ -120,43 +105,39 @@ async function updateProduct(product_id, payload) {
     });
   }
 
-  return { ...updatedProduct, ...update }; // Trả về sản phẩm đã cập nhật
+  return { ...updatedProduct, ...update }; 
 }
 async function deleteProduct(product_id) {
   const deletedProduct = await productRepository()
     .where('product_id', product_id)
-    .select('product_image') // Thay đổi 'avatar' thành 'product_image' hoặc tên cột tương ứng với sản phẩm
+    .select('product_image') 
     .first();
     
   if (!deletedProduct) {
-    return null; // Nếu không tìm thấy sản phẩm
+    return null; 
   }
 
-  // Xóa sản phẩm từ cơ sở dữ liệu
   await productRepository().where('product_id', product_id).del();
 
-  // Nếu có hình ảnh và bắt đầu bằng '/public/uploads', xóa tệp hình ảnh
   if (
     deletedProduct.product_image && // Thay đổi 'avatar' thành 'product_image' hoặc tên cột tương ứng với sản phẩm
     deletedProduct.product_image.startsWith('/public/uploads')
   ) {
     unlink(`.${deletedProduct.product_image}`, (err) => {
       if (err) {
-        console.error(`Error deleting product_image: ${err}`); // Ghi log lỗi nếu có
+        console.error(`Error deleting product_image: ${err}`); 
       }
     });
   }
 
-  return deletedProduct; // Trả về thông tin sản phẩm đã xóa
+  return deletedProduct; 
 }
+
 async function deleteAllProduct() {
-  // Lấy danh sách tất cả hình ảnh của sản phẩm
   const products = await productRepository().select('product_image');
 
-  // Xóa tất cả sản phẩm
   await productRepository().del();
 
-  // Duyệt qua danh sách hình ảnh để xóa nếu có
   products.forEach((product) => {
     if (product.product_image && product.product_image.startsWith('/public/uploads')) {
       unlink(`.${product.product_image}`, (err) => {

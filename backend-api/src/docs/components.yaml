@@ -29,50 +29,80 @@ components:
           format: binary
           writeOnly: true #USE TO POST,PUT,PATCH
           description: URL or path to product images file(can store multiple images as a JSON array)
-  responses:
-  '200NoData':
-    content:
-      application/json:
-        schema:
-          type: object
-          properties:
-            status:
-              type: string
-              description: The response status
-              enum:
-                - success
-            data:
-              type: object
-              nullable: true
-              default: null
-              description: The response data
-  parameters:
-    productIdParam:
-      name: product_id
-      description: Product ID
-      required: true
-      in: path
-      schema:
-        type: integer
-    limitParam:
-      name: limit
-      description: Number of records per page
-      in: query
-      schema:
-        type: integer
-        default: 5
-        minimum: 1
-        maximum: 100
-        required: false
-    pageParam:
-      name: page
-      description: Page number of records
-      in: query
-      schema:
-        type: integer
-        default: 1
-        minimum: 1
-        required: false
+  
+    Customer:
+      type: object
+      properties:
+        customer_id:
+          type: integer
+          readOnly: true  # Returned by HTTP GET
+          description: Unique identifier for the customer
+        customer_name:
+          type: string
+          description: Name of the customer
+        customer_email:
+          type: string
+          format: email
+          description: Email address of the customer
+        customer_phone:
+          type: string
+          description: Phone number of the customer
+        customer_address:
+          type: string
+          description: Address of the customer
+
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: integer
+          readOnly: true  # Returned by HTTP GET
+          description: Unique identifier for the order
+        customer_id:
+          type: integer
+         # readOnly: true  # Returned by HTTP GET
+          description: ID of the customer who placed the order
+        order_date:
+          type: string
+          format: date-time
+          description: Date and time the order was created
+        order_total:
+          type: number
+          format: decimal
+          description: Total amount of the order
+        order_payment_method:
+          type: string
+          description: Payment method used for the order (e.g., Credit Card, PayPal, etc.)
+        order_status:
+          type: string
+          description: Current status of the order (e.g., pending, completed, shipped)
+        order_note:
+          type: string
+          description: Additional notes related to the order
+      # required:
+      #   - customer_id
+      #   - order_total
+      #   - order_status
+
+    Cart:
+      type: object
+      properties:
+        cart_id:
+          type: integer
+          readOnly: true  # Returned by HTTP GET
+          description: Unique identifier for the cart
+        customer_id:
+          type: integer
+         # readOnly: true  # Returned by HTTP GET
+          description: ID of the customer who placed the order
+        product_id:
+          type: integer
+         # readOnly: true  # Returned by HTTP GET
+          description: ID of the product exist in this cart
+        quantity:
+          type: integer
+          description: quantity of product
+
     PaginationMetadata:
       type: object
       properties:
@@ -96,5 +126,78 @@ components:
           type: integer
           default: 5
           description: The number of records per page
+
+
+  responses:
+    '200NoData':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                description: The response status
+                enum:
+                  - success
+              data:
+                type: object
+                nullable: true
+                default: null
+                description: The response data
+  
+  parameters:
+    productIdParam:
+      name: product_id
+      description: Product ID
+      required: true
+      in: path
+      schema:
+        type: integer
+
+    customerIdParam:
+      name: customer_id
+      description: customer ID
+      required: true
+      in: path
+      schema:
+        type: integer
+
+    orderIdParam:
+      name: order_id
+      description: order ID
+      required: true
+      in: path
+      schema:
+        type: integer
+
+    cartIdParam:
+      name: cart_id
+      description: cart ID
+      required: true
+      in: path
+      schema:
+        type: integer
+
+    limitParam:
+      name: limit
+      description: Number of records per page
+      in: query
+      schema:
+        type: integer
+        default: 5
+        minimum: 1
+        maximum: 100
+        required: false
+    pageParam:
+      name: page
+      description: Page number of records
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        required: false
+    
 
     

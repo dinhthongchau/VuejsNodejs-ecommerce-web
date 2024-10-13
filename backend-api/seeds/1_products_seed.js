@@ -11,9 +11,7 @@ function createProduct() {
         product_color: faker.helpers.arrayElement(colors),
         product_description: faker.commerce.productDescription(),
         product_image: JSON.stringify([
-            `https://dummyimage.com/640x480/000/fff&text=Product+Image+1`,
-            `https://dummyimage.com/640x480/000/fff&text=Product+Image+2`,
-            `https://dummyimage.com/640x480/000/fff&text=Product+Image+3`
+            '../backend-api/public/images/blank.png'
         ]),
     };
 }

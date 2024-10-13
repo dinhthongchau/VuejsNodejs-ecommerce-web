@@ -1,40 +1,40 @@
 /* eslint-disable no-undef */
 const express = require("express");
-const productController = require("../controllers/product.controller.js");
+const customerController = require("../controllers/customer.controller.js");
 const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller.js");
 const avatarUpload = require('../middlewares/avatar-upload.middleware.js');
 module.exports.setup = (app) => {
-  app.use("/api/v1/products", router);
+  app.use("/api/v1/customers", router);
   /**
    * @swagger
-   * /api/v1/products/filter:
+   * /api/v1/customers/filter:
    *   get:
-   *     summary: Get products by filter
-   *     description: Retrieve a list of products based on filtering criteria
+   *     summary: Get customers by filter
+   *     description: Retrieve a list of customers based on filtering criteria
    *     parameters:
    *       - in: query
-   *         name: product_name
+   *         name: customer_name
    *         schema:
    *           type: string
-   *         description: Filter by product name
+   *         description: Filter by customer name
    *       - in: query
-   *         name: product_price
+   *         name: customer_email
    *         schema:
    *           type: string
-   *         description: Filter by product price
+   *         description: Filter by customer email
    *       - in: query
-   *         name: product_color
+   *         name: customer_address
    *         schema:
    *           type: string
-   *         description: Filter by product color
+   *         description: Filter by customer address
    *       - $ref: '#/components/parameters/limitParam'
    *       - $ref: '#/components/parameters/pageParam'
    *     tags:
-   *       - products
+   *       - customers
    *     responses:
    *       200:
-   *         description: A list of products
+   *         description: A list of customers
    *         content:
    *           application/json:
    *             schema:
@@ -47,32 +47,32 @@ module.exports.setup = (app) => {
    *                 data:
    *                   type: object
    *                   properties:
-   *                     products:
+   *                     customers:
    *                       type: array
    *                       items:
-   *                         $ref: '#/components/schemas/Product'
+   *                         $ref: '#/components/schemas/Customer'
    *                     metadata:
    *                       $ref: '#/components/schemas/PaginationMetadata'
    */
-  router.get('/filter', productController.getProductsByFilter); // Lọc sản phẩm
+  router.get('/filter', customerController.getCustomersByFilter); // Lọc sản phẩm
 
   /**
    * @swagger
-   * /api/v1/products:
+   * /api/v1/customers:
    *   post:
-   *     summary: Create a new product
-   *     description: Create a new product
+   *     summary: Create a new customer
+   *     description: Create a new customer
    *     requestBody:
    *       required: true
    *       content:
    *         multipart/form-data:
    *           schema:
-   *             $ref: '#/components/schemas/Product'
+   *             $ref: '#/components/schemas/Customer'
    *     tags:
-   *       - products
+   *       - customers
    *     responses:
    *       201:
-   *         description: A new product created
+   *         description: A new customer created
    *         content:
    *           application/json:
    *             schema:
@@ -85,40 +85,40 @@ module.exports.setup = (app) => {
    *                 data:
    *                   type: object
    *                   properties:
-   *                     product:
-   *                       $ref: '#/components/schemas/Product'
+   *                     customer:
+   *                       $ref: '#/components/schemas/Customer'
    */
-  router.post('/', avatarUpload, productController.createProduct); // Tạo sản phẩm mới
+  router.post('/', avatarUpload, customerController.createCustomer); // Tạo sản phẩm mới
 
   /**
    * @swagger
-   * /api/v1/products:
+   * /api/v1/customers:
    *   delete:
-   *     summary: Delete all products
-   *     description: Delete all products
+   *     summary: Delete all customers
+   *     description: Delete all customers
    *     tags:
-   *       - products
+   *       - customers
    *     responses:
    *       200:
-   *         description: All products deleted
+   *         description: All customers deleted
    *         $ref: '#/components/responses/200NoData'
    */
-  router.delete('/', productController.deleteAllProduct); // Xóa tất cả sản phẩm
+  router.delete('/', customerController.deleteAllCustomer); // Xóa tất cả sản phẩm
   router.all('/', methodNotAllowed); // Xử lý phương thức không được phép
 
   /**
    * @swagger
-   * /api/v1/products/{product_id}:
+   * /api/v1/customers/{customer_id}:
    *   get:
-   *     summary: Get product by ID
-   *     description: Get product by ID
+   *     summary: Get customer by ID
+   *     description: Get customer by ID
    *     parameters:
-   *       - $ref: '#/components/parameters/productIdParam'
+   *       - $ref: '#/components/parameters/customerIdParam'
    *     tags:
-   *       - products
+   *       - customers
    *     responses:
    *       200:
-   *         description: A product
+   *         description: A customer
    *         content:
    *           application/json:
    *             schema:
@@ -131,35 +131,35 @@ module.exports.setup = (app) => {
    *                 data:
    *                   type: object
    *                   properties:
-   *                     product:
-   *                       $ref: '#/components/schemas/Product'
+   *                     customer:
+   *                       $ref: '#/components/schemas/Customer'
    */
-  router.get('/:product_id', productController.getProduct); // Lấy sản phẩm theo ID
+  router.get('/:customer_id', customerController.getCustomer); // Lấy sản phẩm theo ID
 
   /**
  * @swagger
- * /api/v1/products/{product_id}:
+ * /api/v1/customers/{customer_id}:
  *   put:
- *     summary: Update product by ID
- *     description: Update product by ID
+ *     summary: Update customer by ID
+ *     description: Update customer by ID
  *     parameters:
  *       - in: path
- *         name: product_id
+ *         name: customer_id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the product to update
+ *         description: The ID of the customer to update
  *     requestBody:
  *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Product'
+ *             $ref: '#/components/schemas/Customer'
  *     tags:
- *       - products
+ *       - customers
  *     responses:
  *       200:
- *         description: An updated product
+ *         description: An updated customer
  *         content:
  *           application/json:
  *             schema:
@@ -172,28 +172,33 @@ module.exports.setup = (app) => {
  *                 data:
  *                   type: object
  *                   properties:
- *                     product:
- *                       $ref: '#/components/schemas/Product'
+ *                     customer:
+ *                       $ref: '#/components/schemas/Customer'
  */
-router.put('/:product_id', avatarUpload, productController.updateProduct); // Cập nhật sản phẩm theo ID
+router.put('/:customer_id', avatarUpload, customerController.updateCustomer); // Cập nhật sản phẩm theo ID
 
 /**
  * @swagger
- * /api/v1/products/{product_id}:
+ * /api/v1/customers/{customer_id}:
  *   delete:
- *     summary: Delete product by ID
- *     description: Delete a product by its ID.
+ *     summary: Delete customer by ID
+ *     description: Delete a customer by its ID.
  *     parameters:
- *       - $ref: '#/components/parameters/productIdParam'
+ *       - in: path
+ *         name: customer_id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the customer to delete
  *     tags:
- *       - products
+ *       - customers
  *     responses:
  *       200:
- *         description: Product deleted
+ *         description: Customer deleted
  *         $ref: '#/components/responses/200NoData'
  */
-router.delete('/:product_id', productController.deleteProduct); // Xóa sản phẩm theo ID
-router.all('/:product_id', methodNotAllowed); // Xử lý phương thức không được phép
+router.delete('/:customer_id', customerController.deleteCustomer); // Xóa sản phẩm theo ID
+router.all('/:customer_id', methodNotAllowed); // Xử lý phương thức không được phép
 
-//module.exports = router;
+//module.exports = app;
 };
