@@ -9,8 +9,24 @@
         </div>
         <ul class="menu">
           <li class="menu-item">
-            <a href="/iphone">Danh mục iPhone</a>
+            <a href="/iphone">IPHONE</a>
           </li>
+          <li class="menu-item">
+            <a href="/">MACBOOK</a>
+          </li>
+          <li class="menu-item">
+            <a href="/">IPAD</a>
+          </li>
+          <li class="menu-item">
+            <a href="/">APPLE WATCH</a>
+          </li>
+          <li class="menu-item">
+            <a href="/">TAI NGHE,LOA</a>
+          </li>
+          <li class="menu-item">
+            <a href="/">PHỤ KIỆN</a>
+          </li>
+        
         </ul>
       </div>
        <div class="search-cart">
@@ -26,7 +42,7 @@
         </div>
         <a href="/cart" class="cart ms-3">
           <i class="fas fa-shopping-cart"></i>
-          <span class="number badge bg-danger">1</span>
+          <span class="number badge bg-danger">0</span>
         </a>
       </div>
     </div>
