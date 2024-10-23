@@ -1,51 +1,58 @@
-const knex = require('../database/knex');
-const Paginator = require('./paginator');
-const { unlink } = require('node:fs');
+const knex = require("../database/knex");
+const Paginator = require("./paginator");
+const { unlink } = require("node:fs");
 
 function productRepository() {
-    return knex('Product');
+  return knex("Product");
 }
 
 function readProduct(payload) {
-    return {
-        product_id: payload.product_id,
-        product_name: payload.product_name,
-        product_price: payload.product_price,
-        product_color: payload.product_color,
-        product_description: payload.product_description,
-        product_image: payload.product_image,
-    };
+  return {
+    product_id: payload.product_id,
+    product_name: payload.product_name,
+    product_price: payload.product_price,
+    product_color: payload.product_color,
+    product_description: payload.product_description,
+    product_image: payload.product_image,
+  };
 }
 async function createProduct(payload) {
-  const product = readProduct(payload); 
+  const product = readProduct(payload);
   const [product_id] = await productRepository().insert(product);
-  return { product_id, ...product }; 
+  return { product_id, ...product };
 }
 
 async function getManyProducts(query) {
   try {
-    const { product_name, product_price, product_color, page = 1, limit = 5 } = query;
+    const {
+      product_name,
+      product_price,
+      product_color,
+      page = 1,
+      limit = 5,
+    } = query;
     const paginator = new Paginator(page, limit);
 
     let results = await productRepository()
       .where((builder) => {
         if (product_name) {
-          builder.where('product_name', 'like', `%${product_name}%`);
+          builder.where("product_name", "like", `%${product_name}%`);
         }
         if (product_price) {
-          builder.where('product_price', '=', product_price);
+          builder.where("product_price", "=", product_price);
         }
         if (product_color) {
-          builder.where('product_color', 'like', `%${product_color}%`);
+          builder.where("product_color", "like", `%${product_color}%`);
         }
       })
       .select(
-        knex.raw('count(product_id) OVER() AS recordCount'),
-        'product_id',
-        'product_name',
-        'product_price',
-        'product_color',
-        'product_description'
+        knex.raw("count(product_id) OVER() AS recordCount"),
+        "product_id",
+        "product_name",
+        "product_price",
+        "product_color",
+        "product_description",
+        "product_image"
       )
       .limit(paginator.limit)
       .offset(paginator.offset);
@@ -62,16 +69,16 @@ async function getManyProducts(query) {
       products: results,
     };
   } catch (error) {
-    console.error('Error in getManyProducts:', error); // Ghi log lỗi
-    throw new ApiError(500, 'An error occurred while retrieving products');
+    console.error("Error in getManyProducts:", error); // Ghi log lỗi
+    throw new ApiError(500, "An error occurred while retrieving products");
   }
 }
 
-
-
 async function getProductById(product_id) {
-
-  return productRepository().where('product_id', product_id).select('*').first();
+  return productRepository()
+    .where("product_id", product_id)
+    .select("*")
+    .first();
 }
 
 async function updateProduct(product_id, payload) {
@@ -81,10 +88,10 @@ async function updateProduct(product_id, payload) {
     .first();
 
   if (!updatedProduct) {
-    return null; 
+    return null;
   }
 
-  const update = readProduct(payload); 
+  const update = readProduct(payload);
 
   if (!update.product_image) {
     delete update.product_image;
@@ -105,41 +112,44 @@ async function updateProduct(product_id, payload) {
     });
   }
 
-  return { ...updatedProduct, ...update }; 
+  return { ...updatedProduct, ...update };
 }
 async function deleteProduct(product_id) {
   const deletedProduct = await productRepository()
-    .where('product_id', product_id)
-    .select('product_image') 
+    .where("product_id", product_id)
+    .select("product_image")
     .first();
-    
+
   if (!deletedProduct) {
-    return null; 
+    return null;
   }
 
-  await productRepository().where('product_id', product_id).del();
+  await productRepository().where("product_id", product_id).del();
 
   if (
     deletedProduct.product_image && // Thay đổi 'avatar' thành 'product_image' hoặc tên cột tương ứng với sản phẩm
-    deletedProduct.product_image.startsWith('/public/uploads')
+    deletedProduct.product_image.startsWith("/public/uploads")
   ) {
     unlink(`.${deletedProduct.product_image}`, (err) => {
       if (err) {
-        console.error(`Error deleting product_image: ${err}`); 
+        console.error(`Error deleting product_image: ${err}`);
       }
     });
   }
 
-  return deletedProduct; 
+  return deletedProduct;
 }
 
 async function deleteAllProduct() {
-  const products = await productRepository().select('product_image');
+  const products = await productRepository().select("product_image");
 
   await productRepository().del();
 
   products.forEach((product) => {
-    if (product.product_image && product.product_image.startsWith('/public/uploads')) {
+    if (
+      product.product_image &&
+      product.product_image.startsWith("/public/uploads")
+    ) {
       unlink(`.${product.product_image}`, (err) => {
         if (err) {
           console.error(`Error deleting image: ${err}`);
@@ -149,10 +159,10 @@ async function deleteAllProduct() {
   });
 }
 module.exports = {
-    createProduct,
-    getManyProducts,
-    getProductById,
-    updateProduct,
-    deleteProduct,
-    deleteAllProduct,
+  createProduct,
+  getManyProducts,
+  getProductById,
+  updateProduct,
+  deleteProduct,
+  deleteAllProduct,
 };

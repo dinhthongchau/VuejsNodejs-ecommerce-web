@@ -24,11 +24,18 @@ components:
           type: string
           readOnly: true
           description: URL or path to product images (can store multiple images as a JSON array)
-        product_imageFile:
-          type: string
-          format: binary
-          writeOnly: true #USE TO POST,PUT,PATCH
-          description: URL or path to product images file(can store multiple images as a JSON array)
+        # product_imageFile:
+        #   type: string
+        #   format: binary
+        #   writeOnly: true #USE TO POST,PUT,PATCH
+        #   description: URL or path to product images file(can store multiple images as a JSON array)
+        product_imageFiles:
+          type: array
+          items:
+            type: string
+            format: binary
+          writeOnly: true
+          description: Product images files (accept multiple images)
   
     Customer:
       type: object

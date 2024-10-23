@@ -8,7 +8,7 @@ module.exports.setup = (app) => {
   app.use("/api/v1/products", router);
   /**
    * @swagger
-   * /api/v1/products/filter:
+   * /api/v1/products:
    *   get:
    *     summary: Get products by filter
    *     description: Retrieve a list of products based on filtering criteria
@@ -54,7 +54,7 @@ module.exports.setup = (app) => {
    *                     metadata:
    *                       $ref: '#/components/schemas/PaginationMetadata'
    */
-  router.get('/filter', productController.getProductsByFilter); // Lọc sản phẩm
+  router.get('/', productController.getProductsByFilter); // Lọc sản phẩm
 
   /**
    * @swagger

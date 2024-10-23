@@ -5,33 +5,50 @@ const JSend = require('../jsend');
 
 
 async function createProduct(req, res, next) {
-  if (!req.body?.product_name || typeof req.body.product_name !== 'string') {
-    return next(new ApiError(400, 'Product name should be a non-empty string'));
-  }
-
   try {
-    const product = await productsService.createProduct({
+    // Validate required fields
+    if (!req.body?.product_name) {
+      return next(new ApiError(400, "Product name is required"));
+    }
+
+    // Convert price to number if provided
+    if (req.body.product_price) {
+      req.body.product_price = Number(req.body.product_price);
+      if (isNaN(req.body.product_price)) {
+        return next(new ApiError(400, "Invalid product price"));
+      }
+    }
+
+    // Process uploaded files
+    let product_image = [];
+    if (req.files && req.files.length > 0) {
+      product_image = req.files.map(
+        (file) => `/public/uploads/${file.filename}`
+      );
+    }
+
+    // Create product object
+    const productData = {
       ...req.body,
-      product_image: req.file ? `/public/uploads/${req.file.filename}` : null,
-    });
+      product_image: JSON.stringify(product_image), // Store as JSON string
+    };
+
+    const product = await productsService.createProduct(productData);
 
     return res
       .status(201)
-      .set({
-        Location: `${req.baseUrl}/${product.product_id}`
-      })
-      .json(
-        JSend.success({
-          product,
-        })
-      );
+      .set({ Location: `${req.baseUrl}/${product.product_id}` })
+      .json(JSend.success({ product }));
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return next(
-      new ApiError(500, 'An error occurred while creating the product')
+      new ApiError(500, "An error occurred while creating the product")
     );
   }
 }
+
+
+
 
 
 
@@ -79,31 +96,63 @@ async function getProduct(req, res, next) {
 }
 
   
-  async function updateProduct(req, res, next) {
-    if (Object.keys(req.body).length === 0 && !req.file) {
-      return next(new ApiError(400, 'Data to update cannot be empty'));
+async function updateProduct(req, res, next) {
+  try {
+    const { product_id } = req.params;
+
+    if (
+      Object.keys(req.body).length === 0 &&
+      (!req.files || req.files.length === 0)
+    ) {
+      return next(new ApiError(400, "No data provided for update"));
     }
-  
-    const { product_id } = req.params; 
-  
-    try {
-      const updatedProduct = await productsService.updateProduct(product_id, {
-        ...req.body, 
-        product_image: req.file ? `/public/uploads/${req.file.filename}` : null // Kiểm tra xem có file hình ảnh không
-      });
-  
-      if (!updatedProduct) {
-        return next(new ApiError(404, 'Product not found')); 
+
+    // Get current product
+    const currentProduct = await productsService.getProductById(product_id);
+    if (!currentProduct) {
+      return next(new ApiError(404, "Product not found"));
+    }
+
+    // Process uploaded files
+    let product_image;
+    if (req.files && req.files.length > 0) {
+      // New files uploaded - replace old images
+      product_image = JSON.stringify(
+        req.files.map((file) => `/public/uploads/${file.filename}`)
+      );
+    }
+
+    // Convert price to number if provided
+    if (req.body.product_price) {
+      req.body.product_price = Number(req.body.product_price);
+      if (isNaN(req.body.product_price)) {
+        return next(new ApiError(400, "Invalid product price"));
       }
-  
-      return res.json(JSend.success({
-        product: updatedProduct, 
-      }));
-    } catch (error) {
-      console.log(error);
-      return next(new ApiError(500, `Error updating product with product_id=${product_id}`)); 
     }
+
+    // Update product data
+    const updateData = {
+      ...req.body,
+    };
+
+    // Only include product_image if new files were uploaded
+    if (product_image) {
+      updateData.product_image = product_image;
+    }
+
+    const updatedProduct = await productsService.updateProduct(
+      product_id,
+      updateData
+    );
+
+    return res.json(JSend.success({ product: updatedProduct }));
+  } catch (error) {
+    console.error(error);
+    return next(
+      new ApiError(500, `Error updating product with id=${product_id}`)
+    );
   }
+}
   
 
   async function deleteProduct(req, res, next) {
