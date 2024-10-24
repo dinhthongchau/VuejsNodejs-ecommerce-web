@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HeaderComponent />
+    <!-- <HeaderComponent /> -->
     <!-- Nội dung chính của trang -->
      <div class="container mt-3">
       <router-view />
