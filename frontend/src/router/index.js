@@ -16,6 +16,16 @@ const routes = [
     path: '/products/add',
     name: 'product.add',
     component: () => import('@/views/ProductAdd.vue')
+  },
+  {
+    path: '/iphone', // Đường dẫn cho iPhone
+    name: 'iphoneview',
+    component: () => import('@/views/IphoneView.vue')
+  },
+  {
+    path: '/product/:id',
+    name: 'product.detail',
+    component: () => import('@/views/ProductDetail.vue')
   }
 ];
 

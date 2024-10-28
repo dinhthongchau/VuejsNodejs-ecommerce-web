@@ -79,8 +79,7 @@ watch(currentPage, () => retrieveProducts(currentPage.value), { immediate: true 
 
 <template>
 <div class="page row mb-5">
-    <div class="header-spacing" style="height: 80px;"></div> <!-- Điều chỉnh chiều cao theo yêu cầu -->
-
+    
   <div class="mt-3 col-md-6">
     <h4>
       Danh sách Sản phẩm

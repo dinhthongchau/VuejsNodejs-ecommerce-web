@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <!-- <HeaderComponent /> -->
+    <HeaderComponent />
     <!-- Nội dung chính của trang -->
-     <div class="container mt-3">
+    <div class="content">
       <router-view />
     </div>
-   
+
     <FooterComponent />
   </div>
 </template>
@@ -25,5 +25,10 @@ export default {
 .page {
 max-width: 400px;
 margin: auto;
+}
+
+.content {
+  margin-top: 100px;
+  /* Điều chỉnh kích thước này theo chiều cao của header */
 }
 </style>

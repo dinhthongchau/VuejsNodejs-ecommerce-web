@@ -5,6 +5,7 @@ defineProps({
 });
 
 const $emit = defineEmits(['update:selectedIndex']);
+
 </script>
 
 <template>
