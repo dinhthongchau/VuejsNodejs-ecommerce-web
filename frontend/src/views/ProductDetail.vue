@@ -20,28 +20,28 @@
                 </div> -->
                 <!-- Thumbnail Images -->
                 <div class="thumbnail-images d-flex gap-2 mt-4 flex-wrap">
-    <div v-if="typeof product.product_image === 'string'">
-        <template v-if="product.product_image.startsWith('[')">
-            <div v-for="(image, index) in JSON.parse(product.product_image)" :key="index"
-                class="thumbnail-wrapper cursor-pointer"
-                :class="{ 'border-primary': currentImage === image.replace(/\\/g, '') }"
-                @click="currentImage = image.replace(/\\/g, '')">
-                <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
-            </div>
-        </template>
-        <template v-else>
-            <img class="img-thumbnail w-25 h-25" :src="product.product_image.replace(/\\/g, '')"
-                alt="Thumbnail" />
-        </template>
-    </div>
-    <div v-else-if="Array.isArray(product.product_image)">
-        <div v-for="(image, index) in product.product_image" :key="index"
-            class="thumbnail-wrapper cursor-pointer"
-            :class="{ 'border-primary': currentImage === image }" @click="currentImage = image">
-            <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
-        </div>
-    </div>
-</div>
+                    <div v-if="typeof product.product_image === 'string'">
+                        <template v-if="product.product_image.startsWith('[')">
+                            <div v-for="(image, index) in JSON.parse(product.product_image)" :key="index"
+                                class="thumbnail-wrapper cursor-pointer"
+                                :class="{ 'border-primary': currentImage === image.replace(/\\/g, '') }"
+                                @click="currentImage = image.replace(/\\/g, '')">
+                                <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
+                            </div>
+                        </template>
+                        <template v-else>
+                            <img class="img-thumbnail w-25 h-25" :src="product.product_image.replace(/\\/g, '')"
+                                alt="Thumbnail" />
+                        </template>
+                    </div>
+                    <div v-else-if="Array.isArray(product.product_image)">
+                        <div v-for="(image, index) in product.product_image" :key="index"
+                            class="thumbnail-wrapper cursor-pointer"
+                            :class="{ 'border-primary': currentImage === image }" @click="currentImage = image">
+                            <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
@@ -74,7 +74,7 @@
 
 
 
-                <button class="btn btn-primary w-100 py-3">
+                <button class="btn btn-primary w-100 py-3" @click="buyNow">
                     <i class="fas fa-shopping-cart mr-2"></i>
                     Mua Ngay
                 </button>
@@ -118,7 +118,7 @@
 import { defineProps, ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import productsService from '@/services/products.service';
-
+import cartService from '@/services/cart.service';
 const props = defineProps({
     id: { type: Number, required: true },
 });
@@ -173,7 +173,7 @@ onMounted(async () => {
     try {
         const id = route.params.id;
         product.value = await productsService.fetchProduct(id);
-
+        console.log('Thông tin sản phẩm tải thành công:', product.value); // Log thông tin sản phẩm
         // Set ảnh đầu tiên làm ảnh chính
         if (productImages.value.length > 0) {
             currentImage.value = productImages.value[0];
@@ -182,6 +182,17 @@ onMounted(async () => {
         console.error('Error fetching product:', error);
     }
 });
+
+// Mua ngay
+const buyNow = () => {
+    if (product.value) {
+        cartService.addToCart(product.value); // Thêm sản phẩm vào giỏ hàng
+         // Chuyển hướng đến trang giỏ hàng
+       
+        alert('Sản phẩm đã được thêm vào giỏ hàng!'); // Thông báo thành công
+    }
+};
+
 </script>
 
 <style scoped>

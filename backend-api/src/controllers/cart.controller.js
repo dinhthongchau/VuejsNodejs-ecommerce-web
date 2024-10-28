@@ -14,7 +14,7 @@ async function createCart(req, res, next) {
 
   
   if (!customer_id || isNaN(customer_id)) {
-    return next(new ApiError(400, 'Customer ID should be a valid number'));
+    return next(new ApiError(400, 'Customer ID should be a valid number (Cart) '));
   }
 
   if (!product_id || isNaN(product_id)) {

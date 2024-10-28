@@ -26,7 +26,10 @@ const routes = [
     path: '/product/:id',
     name: 'product.detail',
     component: () => import('@/views/ProductDetail.vue')
-  }
+  },
+  { path: '/cart', 
+    name: 'product.cart',
+     component: () => import('@/views/Cart.vue') } // Đường dẫn cho giỏ hàng
 ];
 
 const router = createRouter({
