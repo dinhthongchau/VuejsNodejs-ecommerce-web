@@ -3,10 +3,10 @@ import { ref } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 
 const product = ref({
-    product_name: 'Day la form test',
-    product_price: 200,
-    product_color: 'Red',
-    product_description: 'Nhap gi vo di',
+    product_name: 'Iphone 11 64GB',
+    product_price: 10000000,
+    product_color: 'Trắng',
+    product_description: 'Nội dung về tính năng: Quay video 4K, chụp ảnh chân dung tuyệt đẹp và chụp phong cảnh rộng với hệ thống camera kép hoàn toàn mới. Chụp ảnh tối ưu trong điều kiện ánh sáng yếu với chế độ Ban Đêm. Xem ảnh, video và chơi game với màu sắc chân thực trên màn hình Liquid Retina 6.1 inch. Trải nghiệm hiệu năng tuyệt vời với chip A13 Bionic dành cho game, thực tế ảo tăng cường (AR) và chụp ảnh. Làm được nhiều việc hơn và sạc ít hơn với thời lượng pin bền bỉ cả ngày. Và bớt phải lo lắng nhờ khả năng chống nước ở độ sâu tối đa 2 mét trong vòng 30 phút. Tính năng nổi bật: Màn hình Liquid Retina HD LCD 6.1 inch, chống nước và chống bụi (độ sâu tối đa 2 mét trong vòng tối đa 30 phút), hệ thống camera kép 12MP với camera Ultra Wide và Wide; chế độ Ban Đêm, chế độ Chân Dung, và khả năng quay video 4K tốc độ tối đa 60 fps. Camera trước TrueDepth 12MP với chế độ Chân Dung, quay video 4K, và quay video chậm. Xác thực bảo mật với Face ID. Chip A13 Bionic với Neural Engine thế hệ thứ ba, khả năng sạc nhanh, sạc không dây. iOS 15 với các tiện ích được thiết kế lại trên Màn Hình Chính, Thư Viện Ứng Dụng hoàn toàn mới, App Clips cùng nhiều tính năng khác.',
     product_image: [] // Chứa danh sách file hình ảnh
 });
 
@@ -68,9 +68,9 @@ async function onCreateProduct() {
         </div>
 
         <div class="mb-3">
-            <label for="product_description" class="form-label">Mô tả sản phẩm:</label>
-            <Field name="product_description" v-model="product.product_description" class="form-control"
-                as="textarea" />
+            <label for="product_description" class="form-label ">Mô tả sản phẩm:</label>
+            <Field name="product_description"  v-model=" product.product_description"
+                class="form-control description-field" as="textarea" />
             <ErrorMessage name="product_description" class="error-feedback" />
         </div>
 
@@ -95,5 +95,10 @@ async function onCreateProduct() {
 .error-feedback {
     color: red;
     font-size: 0.875em;
+}
+
+.description-field{
+    width: 100%;
+    height: 300px;
 }
 </style>
