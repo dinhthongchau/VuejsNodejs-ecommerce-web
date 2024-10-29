@@ -55,10 +55,6 @@
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
                     <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required />
                 </div>
-                <div class="mb-3">
-                    <label for="customerNote" class="form-label">Ghi chú ( nếu có )</label>
-                    <input type="text" id="customerNote" v-model="customerNote" class="form-control" required />
-                </div>
                 <button @click="confirmCustomer" class="btn btn-primary">Xác nhận thông tin </button>
                 <div class="mb-3">
                     <label class="form-label">Chọn hình thức nhận hàng</label>
@@ -92,14 +88,12 @@ const customerEmail = ref('');
 const customerAddress = ref('');
 const deliveryMethod = ref('Giao tận nơi');
 const paymentMethod = ref('Tiền mặt');
-const customerNote = ref('');
+
 const cartItems = computed(() => {
-    return JSON.parse(localStorage.getItem('cart')) || [];
+    return cartService.getCart();
 });
 
-
-
-
+console.log("cart ne " + cartItems)
 
 const totalPrice = computed(() => {
     return cartItems.value.reduce((total, item) => total + item.product_price * item.quantity, 0);
@@ -110,30 +104,15 @@ const formatPrice = (price) => {
 };
 
 const updateQuantity = (item) => {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartItem = cart.find(i => i.product_id === item.product_id);
-    if (cartItem) {
-        cartItem.quantity = item.quantity > 0 ? item.quantity : 1;
-        localStorage.setItem('cart', JSON.stringify(cart));
+    if (item.quantity <= 0) {
+        item.quantity = 1;
     }
+    cartService.updateQuantity(item);
 };
 
-// const removeFromCart = (product_id) => {
-//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-//     cart = cart.filter(item => item.product_id !== product_id);
-//     localStorage.setItem('cart', JSON.stringify(cart));
-
-//     // Kích hoạt sự kiện `storage` để Vue cập nhật `cartItems`
-//     window.dispatchEvent(new Event("storage"));
-// };
-
-// window.addEventListener("storage", () => {
-//     // Không cần viết gì ở đây, Vue sẽ tự động cập nhật `cartItems` nhờ vào `computed`
-// });
-
-
-
-
+const removeFromCart = (cart_id) => {
+    cartService.removeFromCart(cart_id);
+};
 
 
 const submitOrder = async () => {
@@ -144,9 +123,7 @@ const submitOrder = async () => {
 
 
     try {
-        // console.log("Ne 2 \n" + cartItems.value.map((item, index) =>
-        //     `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
-        // ).join(',\n') + `\nGhi chu cua khach: ` + customerNote.value);
+        
         if (customerId.value) {
             const orderData = {
                 customer_id: customerId.value,
@@ -154,9 +131,7 @@ const submitOrder = async () => {
                 order_total: totalPrice.value,
                 order_payment_method: paymentMethod.value,
                 order_status: 'Confirming',
-                order_note: cartItems.value.map((item, index) =>
-                    `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
-            ).join(',\n') + `\nGhi chu cua khach: ` + customerNote.value,
+                order_note: '',
             };
             await cartService.createOrder(orderData);
             alert('Đặt hàng thành công!');
@@ -196,6 +171,9 @@ const confirmCustomer = async () => {
         // Chuyển đổi phản hồi thành JSON
         const customerResponse = await response.json();
 
+        // Ghi log toàn bộ response để kiểm tra cấu trúc
+        console.log("API response:", customerResponse);
+
 
         isCustomerConfirmed.value = true;
         alert('Xác nhận thông tin khách hàng thành công!');
@@ -234,11 +212,6 @@ function generateUniqueCustomerId() {
     return customerId;
 }
 
-import { watch } from 'vue';
-
-watch(() => localStorage.getItem('cart'), () => {
-    cartItems.value = JSON.parse(localStorage.getItem('cart')) || [];
-});
 
 </script>
 

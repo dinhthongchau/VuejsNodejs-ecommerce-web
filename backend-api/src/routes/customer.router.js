@@ -104,7 +104,7 @@ module.exports.setup = (app) => {
    *         $ref: '#/components/responses/200NoData'
    */
   router.delete('/', customerController.deleteAllCustomer); // Xóa tất cả sản phẩm
-  router.all('/', methodNotAllowed); // Xử lý phương thức không được phép
+  // router.all('/', methodNotAllowed); // Xử lý phương thức không được phép
 
   /**
    * @swagger

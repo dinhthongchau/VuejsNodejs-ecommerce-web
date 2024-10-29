@@ -186,26 +186,12 @@ onMounted(async () => {
 // Mua ngay
 const buyNow = () => {
     if (product.value) {
-        // Lấy dữ liệu giỏ hàng hiện tại từ localStorage
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
-        const existingItem = cart.find(item => item.product_id === product.value.product_id);
-
-        if (existingItem) {
-            // Nếu đã có, tăng số lượng
-            existingItem.quantity += 1;
-        } else {
-            // Nếu chưa có, thêm sản phẩm mới
-            cart.push({ ...product.value, quantity: 1 });
-        }
-
-        // Lưu lại giỏ hàng vào localStorage
-        localStorage.setItem('cart', JSON.stringify(cart));
-        alert('Đã thêm sản phẩm vào giỏ hàng!');
-
+       
+        cartService.addToCart(product.value); // Thêm sản phẩm vào giỏ hàng
         // Chuyển hướng đến trang giỏ hàng
-        router.push({ name: 'product.cart' });
+        
+        alert('Chuyển qua giỏ hàng!'); // Thông báo thành công
+        router.push({ name: 'product.cart' }); 
     }
 };
 
