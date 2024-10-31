@@ -11,7 +11,7 @@ const route = useRoute();
 const product = ref(null);
 const message = ref('');
 
-const productId = route.params.product_id; // Lấy product_id từ tham số đường dẫn
+const productId = route.params.product_id; 
 
 onMounted(() => {
   if (!productId) {
@@ -54,7 +54,7 @@ async function onDeleteProduct(product_id) {
   if (confirm('Bạn muốn xóa Liên hệ này?')) {
     try {
       await productsService.deleteProduct(product_id);
-      router.push({ name: 'productbook' });
+      router.push({ name: 'productpage' });
     } catch (error) {
       console.log(error);
     }

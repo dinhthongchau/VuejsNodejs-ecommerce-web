@@ -1,11 +1,11 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
-import ProductBook from '@/views/ProductBook.vue';
+import ProductPage from '@/views/ProductPage.vue';
 const routes = [
   {
-    path: '/', // Đường dẫn gốc hiển thị danh sách sản phẩm
-    name: 'productbook',
-    component: ProductBook
+    path: '/', 
+    name: 'productpage',
+    component: ProductPage
   },
   {
     path: '/:pathMatch(.*)*',
@@ -18,7 +18,7 @@ const routes = [
     component: () => import('@/views/ProductAdd.vue')
   },
   {
-    path: '/iphone', // Đường dẫn cho iPhone
+    path: '/iphone', 
     name: 'iphoneview',
     component: () => import('@/views/IphoneView.vue')
   },
@@ -30,7 +30,7 @@ const routes = [
   { path: '/cart', 
     name: 'product.cart', 
     component: () => import('@/views/Cart.vue') 
-  }, // Đường dẫn cho giỏ hàng
+  }, 
   { path: '/productedit/:product_id',
     name: 'product.edit',
     component: () => import('@/views/ProductEdit.vue')}

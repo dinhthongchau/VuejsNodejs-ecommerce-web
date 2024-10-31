@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '@/constants'; // Nếu có hằng số mặc định nào đó cần thiết
+import { DEFAULT_AVATAR } from '@/constants'; 
 
 /**
  * @param {string} url
@@ -21,7 +21,7 @@ async function efetch(url, options = {}) {
 }
 
 function makeProductService() {
-  const baseUrl = 'http://localhost:3300/api/v1/products'; // Địa chỉ API cho sản phẩm
+  const baseUrl = 'http://localhost:3300/api/v1/products'; 
 
   // /**
   //  * Fetch products by filter (e.g., pagination, filtering by fields)
@@ -92,4 +92,4 @@ function makeProductService() {
   };
 }
 
-export default makeProductService(); // Xuất dịch vụ sản phẩm
+export default makeProductService(); 

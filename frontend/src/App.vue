@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <HeaderComponent />
-    <!-- Nội dung chính của trang -->
+    
     <div class="content">
       <router-view />
     </div>
@@ -29,6 +29,6 @@ margin: auto;
 
 .content {
   margin-top: 100px;
-  /* Điều chỉnh kích thước này theo chiều cao của header */
+  
 }
 </style>

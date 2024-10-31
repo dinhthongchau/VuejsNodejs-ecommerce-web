@@ -5,7 +5,7 @@ import ProductCard from '@/components/ProductCard.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import ProductList from '@/components/ProductList.vue';
 import MainPagination from '@/components/MainPagination.vue';
-import productsService from '@/services/products.service'; // Đảm bảo thay đổi service phù hợp
+import productsService from '@/services/products.service'; 
 
 const router = useRouter();
 const route = useRoute();
@@ -86,7 +86,7 @@ function goToAddProduct() {
 }
 
 function changeCurrentPage(page) {
-  router.push({ name: 'productbook', query: { page } }); // Đảm bảo route đúng
+  router.push({ name: 'productpage', query: { page } }); // Đảm bảo route đúng
 }
 
 watch(searchText, () => (selectedIndex.value = -1));

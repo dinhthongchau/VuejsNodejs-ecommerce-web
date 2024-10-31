@@ -82,7 +82,7 @@ import ProductCard from '@/components/ProductCard.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import ProductList from '@/components/ProductList.vue';
 import MainPagination from '@/components/MainPagination.vue';
-import productsService from '@/services/products.service'; // Đảm bảo thay đổi service phù hợp
+import productsService from '@/services/products.service'; 
 
 const router = useRouter();
 const route = useRoute();
@@ -117,13 +117,13 @@ const selectedProduct = computed(() => {
 
 async function retrieveProducts(page) {
     try {
-        const chunk = await productsService.fetchProducts(page); // Đảm bảo sử dụng service đúng
+        const chunk = await productsService.fetchProducts(page);
         totalPages.value = chunk.metadata.lastPage ?? 1;
         products.value = chunk.products.sort(
             (current, next) => current.product_name.localeCompare(next.product_name)
         );
-        // Giới hạn số sản phẩm hiển thị ở đây
-        const limit = 9; // Số sản phẩm mong muốn
+        // Giới hạn số sản phẩm hiển thị 
+        const limit = 9; 
         products.value = products.value.slice(0, limit); // Lấy 9 sản phẩm đầu tiên
 
         selectedIndex.value = -1;
@@ -148,11 +148,11 @@ async function onDeleteProducts() {
 }
 
 function goToAddProduct() {
-    router.push({ name: 'product.add' }); // Đảm bảo route đúng
+    router.push({ name: 'product.add' }); 
 }
 
 function changeCurrentPage(page) {
-    router.push({ name: 'iphoneview', query: { page } }); // Đảm bảo route đúng
+    router.push({ name: 'iphoneview', query: { page } }); 
 }
 const sliderImages = ref([
     '@/image-shop/logo.png',

@@ -118,18 +118,7 @@ const updateQuantity = (item) => {
     }
 };
 
-// const removeFromCart = (product_id) => {
-//     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-//     cart = cart.filter(item => item.product_id !== product_id);
-//     localStorage.setItem('cart', JSON.stringify(cart));
 
-//     // Kích hoạt sự kiện `storage` để Vue cập nhật `cartItems`
-//     window.dispatchEvent(new Event("storage"));
-// };
-
-// window.addEventListener("storage", () => {
-//     // Không cần viết gì ở đây, Vue sẽ tự động cập nhật `cartItems` nhờ vào `computed`
-// });
 
 
 
@@ -188,12 +177,12 @@ const confirmCustomer = async () => {
             body: JSON.stringify(customerData)
         });
 
-        // Kiểm tra nếu phản hồi thành công
+       
         if (!response.ok) {
             throw new Error('Không thể tạo khách hàng. Vui lòng thử lại.');
         }
 
-        // Chuyển đổi phản hồi thành JSON
+        
         const customerResponse = await response.json();
 
 
