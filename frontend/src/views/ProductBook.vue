@@ -19,6 +19,21 @@ const products = ref([]);
 const selectedIndex = ref(-1);
 const searchText = ref('');
 
+// onMounted(() => {
+//   if (!products.value) {
+//     console.error('Product ID is undefined');
+//     return;
+//   }
+//   // Fetch the product details using productId
+//   productsService.fetchProduct(products)
+//     .then((product) => {
+//       console.log('Product details:', product);
+//     })
+//     .catch((error) => {
+//       console.error('Error fetching product:', error);
+//     });
+// });
+
 const searchableProducts = computed(() =>
   products.value.map((product) => {
     const { product_name, product_description } = product;
@@ -35,6 +50,7 @@ const filteredProducts = computed(() => {
 
 const selectedProduct = computed(() => {
   if (selectedIndex.value < 0) return null;
+  console.log("seleted product: ",filteredProducts.value[selectedIndex.value]);
   return filteredProducts.value[selectedIndex.value];
 });
 
@@ -75,6 +91,15 @@ function changeCurrentPage(page) {
 
 watch(searchText, () => (selectedIndex.value = -1));
 watch(currentPage, () => retrieveProducts(currentPage.value), { immediate: true });
+watch(searchText, () => {
+  console.log("Search text changed:", searchText.value); // In giá trị searchText
+  selectedIndex.value = -1;
+});
+
+watch(filteredProducts, () => {
+  console.log("Filtered Products:", filteredProducts.value); // Kiểm tra sản phẩm đã lọc
+});
+
 </script>
 
 <template>
@@ -130,6 +155,15 @@ watch(currentPage, () => retrieveProducts(currentPage.value), { immediate: true 
         <i class="fas fa-info-circle"></i>
       </h4>
       <ProductCard :product="selectedProduct" />
+      <router-link
+        v-if="selectedProduct"
+          :to="{
+            name: 'product.edit',
+            params: { product_id: selectedProduct.product_id }
+          }"
+        >
+          <span class="mt-2 badge text-bg-warning"> <i class="fas fa-edit"></i> Hiệu chỉnh Sản phẩm</span>
+        </router-link>
     </div>
   </div>
 </div>
