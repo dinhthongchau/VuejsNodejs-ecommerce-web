@@ -19,26 +19,19 @@
                     </div>
                 </div> -->
                 <!-- Thumbnail Images -->
-                <div class="thumbnail-images d-flex gap-2 mt-4 flex-wrap">
-                    <div v-if="typeof product.product_image === 'string'">
-                        <template v-if="product.product_image.startsWith('[')">
-                            <div v-for="(image, index) in JSON.parse(product.product_image)" :key="index"
-                                class="thumbnail-wrapper cursor-pointer"
-                                :class="{ 'border-primary': currentImage === image.replace(/\\/g, '') }"
-                                @click="currentImage = image.replace(/\\/g, '')">
-                                <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
-                            </div>
-                        </template>
-                        <template v-else>
-                            <img class="img-thumbnail w-25 h-25" :src="product.product_image.replace(/\\/g, '')"
-                                alt="Thumbnail" />
-                        </template>
-                    </div>
-                    <div v-else-if="Array.isArray(product.product_image)">
-                        <div v-for="(image, index) in product.product_image" :key="index"
-                            class="thumbnail-wrapper cursor-pointer"
-                            :class="{ 'border-primary': currentImage === image }" @click="currentImage = image">
-                            <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
+                <div class="thumbnail-container">
+                    <div class="thumbnail-row">
+                        <div v-if="typeof product.product_image === 'string'">
+                            <template v-if="product.product_image.startsWith('[')">
+                                <img v-for="(image, index) in JSON.parse(product.product_image)" :key="index"
+                                    class="thumbnail" :class="{ 'active': currentImage === image.replace(/\\/g, '') }"
+                                    :src="image.replace(/\\/g, '')" @click="currentImage = image.replace(/\\/g, '')"
+                                    :alt="`Thumbnail ${index + 1}`" />
+                            </template>
+                            <template v-else>
+                                <img class="thumbnail" :src="product.product_image.replace(/\\/g, '')"
+                                    :alt="product.product_name" />
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -186,7 +179,7 @@ onMounted(async () => {
         // Lọc tên sản phẩm
         const filteredName = product.value.product_name.replace(/\s\d+GB$/, '').trim();
         console.log('Tên sản phẩm đã lọc:', filteredName); // Log tên sản phẩm đã lọc
-      
+
         // Set ảnh đầu tiên làm ảnh chính
         if (productImages.value.length > 0) {
             currentImage.value = productImages.value[0];
@@ -225,26 +218,75 @@ const buyNow = () => {
 </script>
 
 <style scoped>
+.thumbnail-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.thumbnail-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: nowrap;
+}
+
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid black;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin : 4px;
+}
+
+.thumbnail:hover {
+    border-color: #3b82f6;
+}
+
+.thumbnail.active {
+    border-color: #3b82f6;
+}
+
+.thumbnail-container {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.thumbnail-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.thumbnail-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.thumbnail-container::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
 .promotion-container {
     background-color: #f8f9fa;
     /* Màu nền nhẹ cho phần giảm giá */
     border: 1px solid #ced4da;
     /* Đường viền xám nhạt */
-    padding: 10px; 
+    padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
 }
 
 .promotion-title {
-    background-color: #ced4da;
+    background-color: red;
     /* Màu nền cho tiêu đề */
-    color: white;
+    color: yellow;
     /* Màu chữ trắng */
     padding: 10px;
     /* Khoảng cách bên trong tiêu đề */
     border-radius: 0.25rem;
     /* Bo tròn góc tiêu đề */
 }
+
 .thumbnail-wrapper {
     border: 2px solid transparent;
     border-radius: 0.5rem;
