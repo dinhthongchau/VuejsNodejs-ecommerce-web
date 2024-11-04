@@ -82,6 +82,8 @@ function makeProductService() {
     });
   }
 
+  
+
   return {
     fetchProducts,
     fetchProduct,

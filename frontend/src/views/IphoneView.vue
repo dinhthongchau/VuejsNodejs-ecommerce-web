@@ -2,14 +2,15 @@
     <div class="page">
         <!-- Logo -->
         <div class="text-center my-3">
-            <img src="@/image-shop/logo.png" alt="Logo" class="logo" />
+            <img src="@/image-shop/iphone.png" alt="Logo" class="logo" />
         </div>
 
         <!-- Slider -->
         <div class="slider">
             <div class="slider-images">
-                <img v-for="(image, index) in sliderImages" :key="index" :src="image" alt="Slider Image" />
+                <img :src="sliderImages[currentIndex]" alt="Slider Image" />
             </div>
+
             <div class="slider-controls">
                 <button @click="prevImage">❮</button>
                 <button @click="nextImage">❯</button>
@@ -20,22 +21,24 @@
             </div>
         </div>
 
-        <!-- Bộ lọc sản phẩm -->
-        <div class="filter">
-            <div class="filter-options">
-                <button @click="filterAll">Tất cả</button>
-                <button @click="filterIPhone('16')">iPhone 16</button>
-                <button @click="filterIPhone('15')">iPhone 15</button>
-                <button @click="filterIPhone('14')">iPhone 14</button>
-                <button @click="filterIPhone('13')">iPhone 13</button>
-                <button @click="filterIPhone('12')">iPhone 12</button>
-                <button @click="filterIPhone('11')">iPhone 11</button>
+
+        <div class="filter-cate">
+            <div class="ft-cate">
+                <button :class="{ active: selectedFilter === 'all' }" @click="filterAll">Tất cả</button>
+                <button :class="{ active: selectedFilter === '16' }" @click="filterIPhone('16')">Iphone 16</button>
+                <button :class="{ active: selectedFilter === '15' }" @click="filterIPhone('15')">Iphone 15</button>
+                <button :class="{ active: selectedFilter === '14' }" @click="filterIPhone('14')">Iphone 14</button>
+                <button :class="{ active: selectedFilter === '13' }" @click="filterIPhone('13')">Iphone 13</button>
+                <button :class="{ active: selectedFilter === '12' }" @click="filterIPhone('12')">Iphone 12</button>
+                <button :class="{ active: selectedFilter === '11' }" @click="filterIPhone('11')">Iphone 11</button>
             </div>
+
             <div class="sort-options">
-                <button @click="sortLowToHigh">Xếp theo: Giá thấp đến cao</button>
+                <button @click="sortLowToHigh">Giá thấp đến cao</button>
                 <button @click="sortHighToLow">Giá cao đến thấp</button>
             </div>
         </div>
+
 
         <!-- Danh sách sản phẩm -->
         <div class="product-list">
@@ -62,7 +65,8 @@
                 </div>
                 <!-- Name and price -->
                 <h5>{{ product.product_name }}</h5>
-                <p>{{ product.product_price }} đ</p>
+                <h6>{{ "Màu: " + product.product_color }}</h6>
+                <p>{{ formatCurrency(product.product_price) }}</p>
 
 
             </div>
@@ -71,6 +75,7 @@
                     @update:current-page="changeCurrentPage" />
 
             </div>
+
         </div>
 
     </div>
@@ -82,7 +87,7 @@ import ProductCard from '@/components/ProductCard.vue';
 import InputSearch from '@/components/InputSearch.vue';
 import ProductList from '@/components/ProductList.vue';
 import MainPagination from '@/components/MainPagination.vue';
-import productsService from '@/services/products.service'; 
+import productsService from '@/services/products.service';
 
 const router = useRouter();
 const route = useRoute();
@@ -102,36 +107,77 @@ const searchableProducts = computed(() =>
         return [product_name, product_description].join('');
     })
 );
-
-const filteredProducts = computed(() => {
-    if (!searchText.value) return products.value;
-    return products.value.filter((product, index) =>
-        searchableProducts.value[index].includes(searchText.value)
-    );
-});
+const filteredProducts = ref([]); // Dùng ref thay vì computed
+function updateFilteredProducts() {
+    if (!searchText.value) {
+        filteredProducts.value = products.value;
+    } else {
+        filteredProducts.value = products.value.filter((product, index) =>
+            searchableProducts.value[index].includes(searchText.value)
+        );
+    }
+}
 
 const selectedProduct = computed(() => {
     if (selectedIndex.value < 0) return null;
     return filteredProducts.value[selectedIndex.value];
 });
 
-async function retrieveProducts(page) {
-    try {
-        const chunk = await productsService.fetchProducts(page);
-        totalPages.value = chunk.metadata.lastPage ?? 1;
-        products.value = chunk.products.sort(
-            (current, next) => current.product_name.localeCompare(next.product_name)
-        );
-        // Giới hạn số sản phẩm hiển thị 
-        const limit = 9; 
-        products.value = products.value.slice(0, limit); // Lấy 9 sản phẩm đầu tiên
+// async function retrieveProducts() {
+//     try {
+//         let page = 1;
+//         let allProducts = [];
+//         let hasNextPage = true;
 
+//         while (hasNextPage) {
+//             const chunk = await productsService.fetchProducts(page);
+//             allProducts = [...allProducts, ...chunk.products];
+//             hasNextPage = page < (chunk.metadata.lastPage ?? 1);
+//             page++;
+//         }
+
+//         totalPages.value = 1; // Không cần phân trang trong bộ lọc này
+//         products.value = allProducts.sort((current, next) =>
+//             current.product_name.localeCompare(next.product_name)
+//         );
+//         selectedIndex.value = -1;
+//         updateFilteredProducts(); // Cập nhật filteredProducts
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+async function retrieveProducts (){
+    try {
+        const search = route.query.search || '';
+        let page = 1;
+        let allProducts = [];
+        let hasNextPage = true;
+
+        while (hasNextPage) {
+            const chunk = await productsService.fetchProducts(page);
+            allProducts = [...allProducts, ...chunk.products];
+            hasNextPage = page < (chunk.metadata.lastPage ?? 1);
+            page++;
+        }
+
+        // Lọc sản phẩm theo truy vấn tìm kiếm
+        if (search) {
+            allProducts = allProducts.filter(product =>
+                product.product_name.toLowerCase().includes(search.toLowerCase())
+            );
+        }
+
+        totalPages.value = 1; // Không cần phân trang trong bộ lọc này
+        products.value = allProducts.sort((current, next) =>
+            current.product_name.localeCompare(next.product_name)
+        );
         selectedIndex.value = -1;
+        updateFilteredProducts(); // Cập nhật filteredProducts
     } catch (error) {
         console.log(error);
     }
-    console.log(filteredProducts.value);
 }
+
 
 async function onDeleteProducts() {
     if (confirm('Bạn muốn xóa tất cả Sản phẩm?')) {
@@ -148,17 +194,19 @@ async function onDeleteProducts() {
 }
 
 function goToAddProduct() {
-    router.push({ name: 'product.add' }); 
+    router.push({ name: 'product.add' });
 }
 
 function changeCurrentPage(page) {
-    router.push({ name: 'iphoneview', query: { page } }); 
+    router.push({ name: 'iphoneview', query: { page } });
 }
 const sliderImages = ref([
-    '@/image-shop/logo.png',
-    '@/image-shop/logo.png',
-    '@/image-shop/logo.png'
+    '/src/image-shop/slider1.png', // đường dẫn tương đối đến thư mục
+    '/src/image-shop/slider2.png',
+    '/src/image-shop/slider3.png'
 ]);
+
+
 const currentIndex = ref(0);
 
 const prevImage = () => {
@@ -169,37 +217,68 @@ const nextImage = () => {
     currentIndex.value = (currentIndex.value + 1) % sliderImages.value.length;
 };
 
+const selectedFilter = ref('all'); // Mặc định là 'Tất cả'
 
+// Cập nhật hàm filter để thiết lập nút đang được chọn
 const filterAll = () => {
-    // Logic để lọc tất cả sản phẩm
+    filteredProducts.value = products.value;
+    selectedFilter.value = 'all';
 };
 
 const filterIPhone = (version) => {
-    // Logic để lọc sản phẩm theo phiên bản iPhone
+    filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
+    selectedFilter.value = version; // Lưu phiên bản được chọn
 };
+
+// const filterAll = () => {
+//     filteredProducts.value = products.value;
+// };
+
+// // Sử dụng hàm lọc theo phiên bản Iphone
+// const filterIPhone = (version) => {
+//     filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
+// };
 
 const sortLowToHigh = () => {
     // Logic để sắp xếp sản phẩm từ thấp đến cao
+    filteredProducts.value.sort((a, b) => a.product_price - b.product_price);
 };
 
 const sortHighToLow = () => {
     // Logic để sắp xếp sản phẩm từ cao đến thấp
+    filteredProducts.value.sort((a, b) => b.product_price - a.product_price);
 };
 
 function goToProductDetail(productId) {
     router.push({ name: 'product.detail', params: { id: productId } }); // Đảm bảo route detail có định nghĩa phù hợp
 }
-
+function formatCurrency(value) {
+    return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
+}
+onMounted(() => {
+    retrieveProducts();
+});
+// Theo dõi thay đổi trong query
+watch(() => route.query.search, (newValue) => {
+    retrieveProducts(); // Gọi lại hàm khi có thay đổi
+});
 watch(searchText, () => (selectedIndex.value = -1));
-watch(currentPage, () => retrieveProducts(currentPage.value), { immediate: true });
+watch(currentPage, () => retrieveProducts(), { immediate: true });
+watch([products, searchText], updateFilteredProducts, { immediate: true });
 </script>
 
 
 <style scoped>
 .page {
     text-align: center;
+    max-width: 900px;
+    /* Chiều rộng tùy chỉnh */
+    margin: 0 auto;
+    
 }
-
+body{
+    background-color: #3e3e3f;
+    /* Màu nền cho toàn bộ trang */}
 .logo {
     max-width: 200px;
     /* Điều chỉnh kích thước logo */
@@ -253,17 +332,121 @@ watch(currentPage, () => retrieveProducts(currentPage.value), { immediate: true 
 
 .product-list {
     display: flex;
+
     flex-wrap: wrap;
     justify-content: center;
+
+
 }
 
-.product-card {
+.product-card img {
+    max-width: 150px;
+    height: 150px;
+
+}
+
+/* .product-card {
+    border-radius: 10px;
     margin: 10px;
     transition: all 0.3s;
+} */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin: 10px;
+    transition: all 0.3s;
+    border: 2px solid #C0C0C0;
+    /* Viền màu cam đậm */
+    border-radius: 10px;
 }
 
 .product-card:hover {
-    background-color: black;
+
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.filter-cate {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.ft-cate {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Để căn giữa các nút */
+    width: 100%;
+}
+
+.ft-cate button {
+    margin: 5px;
+    /* Khoảng cách giữa các nút */
+    padding: 10px 15px;
+    /* Định dạng nút */
+    border: 2px solid #396ce8;
+    /* Đường viền màu xanh */
+    border-radius: 5px;
+    /* Bo góc */
+    background-color: transparent;
+    /* Không có màu nền */
+    color: #396ce8;
+    /* Màu chữ */
+    cursor: pointer;
+    /* Con trỏ khi di chuột */
+    transition: background-color 300ms ease-in-out, color 300ms ease-in-out;
+    /* Hiệu ứng chuyển màu */
+}
+
+.ft-cate button:hover {
+    background-color: #396ce8;
+    /* Màu nền khi hover */
+    color: white;
+    /* Màu chữ khi hover */
+}
+
+.sort-options {
+    margin-top: 15px;
+    /* Khoảng cách phía trên */
+}
+
+.sort-options button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #bbb;
+    
+    color: #fff;
+   
+    cursor: pointer;
+  
+    transition: background-color 300ms ease-in-out;
+    /* Hiệu ứng chuyển màu thay thế cho var(--transition) */
+}
+
+.sort-options button:hover {
+    background-color: black;
+    /* Màu khi hover */
+}
+
+.slider-images img {
+    width: 1200;
+    /* Chiều rộng 100% của phần tử cha */
+    height: 300;
+    /* Tự động điều chỉnh chiều cao để giữ tỉ lệ */
+    max-height: 400px;
+    /* Giới hạn chiều cao tối đa */
+    border-radius: 8px;
+}
+.ft-cate button.active {
+    background-color: #396ce8;
+    /* Màu nền khi nút đang được chọn */
+    color: white;
+    /* Màu chữ */
 }
 </style>

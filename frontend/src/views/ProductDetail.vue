@@ -57,20 +57,30 @@
 
                 <div class="product-location">
                     <p class="text-secondary">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        Giá và khuyến mãi tại: Hồ Chí Minh
+
+                        (Đã bao gồm VAT)
                     </p>
 
                 </div>
 
                 <div class="product-color">
-                    <h3 class="font-weight-bold mb-2">Màu sắc:</h3>
-                    <p class="d-flex align-items-center gap-2">
-                        <span class="rounded-circle"
-                            :style="{ backgroundColor: product.product_color, width: '0px', height: '50px' }"></span>
-                        {{ product.product_color }}
-                    </p>
+                    <h3 class="font-weight-bold mb-2">Màu sắc: {{ product.product_color }}</h3>
+
                 </div>
+                <!-- Thêm khung cho phần giảm giá -->
+                <div class="promotion-container ">
+                    <h4 class="font-weight-bold text-center promotion-title">Quà tặng và ưu đãi khác:</h4>
+                    <ul class="list-unstyled">
+                        <li>Tặng phiếu mua hàng 100,000đ mua Tai nghe AirPods (Trừ AirPods 4) (Hạn sử dụng 7 ngày)</li>
+                        <li>Apple Watch giảm thêm đến 500,000đ khi mua kèm iPhone</li>
+                        <li>Tặng mã giảm giá 200,000đ mua dịch vụ chọn số đẹp</li>
+                        <li>Tặng phiếu mua hàng 50,000đ khi mua sim FPT kèm máy</li>
+                        <li>Thu cũ đổi mới Chợ Tốt - Giảm 2.000.000đ khi thu cũ iPhone qua Chợ Tốt.</li>
+                    </ul>
+                </div>
+
+
+
 
 
 
@@ -118,7 +128,7 @@
 import { defineProps, ref, computed, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import productsService from '@/services/products.service';
-import cartService from '@/services/cart.service';
+
 const props = defineProps({
     id: { type: Number, required: true },
 });
@@ -168,12 +178,15 @@ const prevImage = () => {
 const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN').format(price);
 };
-
 onMounted(async () => {
     try {
         const id = route.params.id;
         product.value = await productsService.fetchProduct(id);
         console.log('Thông tin sản phẩm tải thành công:', product.value); // Log thông tin sản phẩm
+        // Lọc tên sản phẩm
+        const filteredName = product.value.product_name.replace(/\s\d+GB$/, '').trim();
+        console.log('Tên sản phẩm đã lọc:', filteredName); // Log tên sản phẩm đã lọc
+      
         // Set ảnh đầu tiên làm ảnh chính
         if (productImages.value.length > 0) {
             currentImage.value = productImages.value[0];
@@ -212,6 +225,26 @@ const buyNow = () => {
 </script>
 
 <style scoped>
+.promotion-container {
+    background-color: #f8f9fa;
+    /* Màu nền nhẹ cho phần giảm giá */
+    border: 1px solid #ced4da;
+    /* Đường viền xám nhạt */
+    padding: 10px; 
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.promotion-title {
+    background-color: #ced4da;
+    /* Màu nền cho tiêu đề */
+    color: white;
+    /* Màu chữ trắng */
+    padding: 10px;
+    /* Khoảng cách bên trong tiêu đề */
+    border-radius: 0.25rem;
+    /* Bo tròn góc tiêu đề */
+}
 .thumbnail-wrapper {
     border: 2px solid transparent;
     border-radius: 0.5rem;

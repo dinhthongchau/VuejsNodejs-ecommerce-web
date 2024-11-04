@@ -1,89 +1,83 @@
 <template>
   <header class="header">
-    <div class="head">
-      <div class="left-section">
-        <div class="logo">
-          <a href="/">
-            <img src="../image-shop/logo.png" alt="Logo"/>
-          </a>
-        </div>
-        <ul class="menu">
-          <li class="menu-item">
-            <a href="/iphone">IPHONE</a>
-          </li>
-          <li class="menu-item">
-            <a href="/">MACBOOK</a>
-          </li>
-          <li class="menu-item">
-            <a href="/">IPAD</a>
-          </li>
-          <li class="menu-item">
-            <a href="/">APPLE WATCH</a>
-          </li>
-          <li class="menu-item">
-            <a href="/">TAI NGHE,LOA</a>
-          </li>
-          <li class="menu-item">
-            <a href="/">PHỤ KIỆN</a>
-          </li>
-        
-        </ul>
-      </div>
-       <div class="search-cart">
-        <div class="search input-group">
-          <span class="input-group-text bg-white border-0">
-            <i class="fas fa-search"></i>
-          </span>
-          <input 
-            type="text" 
-            class="form-control border-0" 
-            placeholder="Tìm kiếm sản phẩm" 
-          />
-        </div>
-        <a href="/cart" class="cart ms-3">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="number badge bg-danger">0</span>
-        </a>
-      </div>
+    <div class="logo">
+      <img src="@/image-shop/logo.png" alt="Logo" />
     </div>
+    <div class="menu-container">
+      <ul class="menu">
+        <li class="menu-item">
+          <a href="/iphone">IPHONE</a>
+        </li>
+        <li class="menu-item">
+          <a href="/">MACBOOK</a>
+        </li>
+        <li class="menu-item">
+          <a href="/">IPAD</a>
+        </li>
+        <li class="menu-item">
+          <a href="/">APPLE WATCH</a>
+        </li>
+        <li class="menu-item">
+          <a href="/">TAI NGHE, LOA</a>
+        </li>
+        <li class="menu-item">
+          <a href="/">PHỤ KIỆN</a>
+        </li>
+      </ul>
+    </div>
+    <div class="search-bar">
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." @keyup.enter="searchProduct" />
+      <button @click="searchProduct">Tìm kiếm</button>
+    </div>
+    <a href="/cart" class="cart ms-3">
+      <i class="fas fa-shopping-cart"></i>
+      <span class="number badge bg-danger">Giỏ hàng</span>
+    </a>
   </header>
 </template>
 
-<script>
-export default {
-  name: 'HeaderComponent',
-}
+<script setup>
+import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const searchQuery = ref('');
+
+const searchProduct = () => {
+  if (searchQuery.value.trim()) {
+    router.push({ name: 'iphoneview', query: { search: searchQuery.value } });
+  }
+};
+
+// Theo dõi thay đổi trong searchQuery
+watch(searchQuery, (newValue) => {
+  if (newValue.trim()) {
+    searchProduct();
+  }
+});
 </script>
 
 <style scoped>
 .header {
-  background-color: black;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1000;
-}
-
-.head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.left-section {
-  display: flex;
-  align-items: center;
-  gap: 20px; /* Khoảng cách giữa logo và menu */
+  background-color: #333;
+  color: white;
 }
 
 .logo img {
   max-height: 60px;
   height: auto;
   border-radius: 10px;
+  margin-right: 20px;
+  /* Khoảng cách giữa logo và menu */
+}
+
+.menu-container {
+  flex-grow: 1;
+  /* Để menu chiếm toàn bộ không gian còn lại */
 }
 
 .menu {
@@ -97,8 +91,10 @@ export default {
   color: white;
   padding: 10px 15px;
   text-decoration: none;
-  font-size: 1.1rem; /* Tăng kích thước chữ */
-  font-weight: 500; /* Làm đậm chữ */
+  font-size: 1.1rem;
+  /* Tăng kích thước chữ */
+  font-weight: 500;
+  /* Làm đậm chữ */
 }
 
 .menu-item a:hover {
@@ -106,46 +102,28 @@ export default {
   border-radius: 5px;
 }
 
-.search-cart {
+.search-bar {
   display: flex;
   align-items: center;
-  margin-left: auto; /* Đẩy về bên phải */
-  gap: 20px; /* Khoảng cách giữa search và cart */
 }
 
-.search {
-  display: flex;
-  align-items: center;
-  background-color: white;
-  border-radius: 20px;
-  padding: 5px 15px;
-}
-
-.search input {
-  border: none;
-  padding: 8px;
-  width: 200px;
-  font-size: 1rem;
-  outline: none;
-}
-
-.cart {
-  color: white;
-  text-decoration: none;
-  position: relative;
-  font-size: 1.2rem;
+.search-bar input {
   padding: 5px;
+  border: none;
+  border-radius: 5px;
 }
 
-.number {
-  background-color: red;
+.search-bar button {
+  margin-left: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #396ce8;
   color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  font-size: 0.8rem;
-  font-weight: bold;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #555;
 }
 </style>
