@@ -50,22 +50,22 @@
                 <div v-if="typeof product.product_image === 'string'">
                     <template v-if="product.product_image.startsWith('[')">
                         <div class="p-1 w-75 h-75">
-                            <img v-lazy="JSON.parse(product.product_image)[0].replace(/\\/, '')" alt="No Image"
-                                class="img-fluid img-thumbnail"
+                            <img class="img-fluid img-thumbnail"
+                                :src="JSON.parse(product.product_image)[0].replace(/\\/, '')" alt="No Image"
                                 @load="console.log('Image loaded:', JSON.parse(product.product_image)[0])" />
+
                         </div>
                     </template>
                     <template v-else>
-                        <img v-lazy="product.product_image" alt="No Image" class="img-fluid img-thumbnail" />
+                        <img class="img-fluid img-thumbnail" :src="product.product_image" alt="No Image" />
                     </template>
                 </div>
                 <div v-else-if="Array.isArray(product.product_image)">
                     <div class="p-1 w-75 h-75">
-                        <img v-lazy="product.product_image[0]" alt="No Image" class="img-fluid img-thumbnail" />
+                        <img class="img-fluid img-thumbnail" :src="product.product_image[0]" alt="No Image" />
                     </div>
                 </div>
-
-
+                
                 <!-- Name and price -->
                 <h5>{{ product.product_name }}</h5>
                 <h6>{{ "Màu: " + product.product_color }}</h6>

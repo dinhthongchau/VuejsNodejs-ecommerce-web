@@ -77,10 +77,15 @@
 
 
 
-                <button class="btn btn-primary w-100 py-3" @click="buyNow">
-                    <i class="fas fa-shopping-cart mr-2"></i>
-                    Mua Ngay
-                </button>
+    
+                <div class="d-flex">
+                    <button class="btn btn-primary w-50 py-3 me-2 " @click="buyNow">
+                        Mua Ngay
+                    </button>
+                    <button class="btn btn-secondary w-50 py-3  " @click="addToCart">
+                        <i class="fas fa-shopping-cart mr-2"></i>Thêm vào giỏ hàng
+                    </button>
+                </div>
 
                 <div class="product-info mt-4">
                     <p>
@@ -208,16 +213,55 @@ const buyNow = () => {
 
         // Lưu lại giỏ hàng vào localStorage
         localStorage.setItem('cart', JSON.stringify(cart));
-        alert('Đã thêm sản phẩm vào giỏ hàng!');
+        alert('Đã thêm sản phẩm vào giỏ hàng, chuyển sang mua ngay!');
 
         // Chuyển hướng đến trang giỏ hàng
         router.push({ name: 'product.cart' });
     }
 };
 
+// them vao gio
+const addToCart = () => {
+    if (product.value) {
+        // Lấy dữ liệu giỏ hàng hiện tại từ localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+        const existingItem = cart.find(item => item.product_id === product.value.product_id);
+
+        if (existingItem) {
+            // Nếu đã có, tăng số lượng
+            existingItem.quantity += 1;
+        } else {
+            // Nếu chưa có, thêm sản phẩm mới
+            cart.push({ ...product.value, quantity: 1 });
+        }
+
+        // Lưu lại giỏ hàng vào localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert('Đã thêm sản phẩm vào giỏ hàng!');
+    }
+};
+
 </script>
 
 <style scoped>
+/* Nút Primary với nền cam và chữ trắng */
+.btn-primary {
+    background-color: #ff9800;
+
+    color: white;
+    border-color: #ff9800;
+}
+
+/* Nút Secondary với nền xanh và viền trắng */
+.btn-secondary {
+    background-color: white;
+    /* Màu xanh */
+    color: #007bff;
+    border-color: #007bff;
+}
+
 .thumbnail-container {
     width: 100%;
     overflow-x: auto;
