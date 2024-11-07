@@ -228,8 +228,20 @@ const filterAll = () => {
     selectedFilter.value = 'all';
 };
 
+// const filterIPhone = (version) => {
+//     filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
+//     selectedFilter.value = version; // Lưu phiên bản được chọn
+// };
+
 const filterIPhone = (version) => {
-    filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
+    if (products.value.length === 0) {
+        console.log("No products available to filter");
+        return;
+    }
+
+    filteredProducts.value = products.value.filter(product => 
+        product.product_name.toLowerCase().includes(`iphone ${version}`)
+    );
     selectedFilter.value = version; // Lưu phiên bản được chọn
 };
 
