@@ -1,6 +1,9 @@
 <template>
   <header class="header">
-    <div class="logo">
+    <!-- <div class="logo">
+      <img src="@/image-shop/logo.png" alt="Logo" />
+    </div> -->
+    <div class="logo" @click="goToHomePage" style="cursor: pointer;">
       <img src="@/image-shop/logo.png" alt="Logo" />
     </div>
     <div class="menu-container">
@@ -47,6 +50,11 @@ const searchProduct = () => {
   if (searchQuery.value.trim()) {
     router.push({ name: 'iphoneview', query: { search: searchQuery.value } });
   }
+};
+
+// Hàm điều hướng về trang chủ ProductPage.vue
+const goToHomePage = () => {
+  router.push({ name: 'productpage' });
 };
 
 // Theo dõi thay đổi trong searchQuery
