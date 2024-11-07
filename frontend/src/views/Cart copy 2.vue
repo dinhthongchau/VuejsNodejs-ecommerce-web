@@ -93,11 +93,10 @@ const customerAddress = ref('');
 const deliveryMethod = ref('Giao tận nơi');
 const paymentMethod = ref('Tiền mặt');
 const customerNote = ref('');
-// const cartItems = computed(() => {
-//     return JSON.parse(localStorage.getItem('cart')) || [];
-// });
+const cartItems = computed(() => {
+    return JSON.parse(localStorage.getItem('cart')) || [];
+});
 
-const cartItems = ref(JSON.parse(localStorage.getItem('cart')) || []);
 
 
 
@@ -146,7 +145,7 @@ const submitOrder = async () => {
                 order_status: 'Confirming',
                 order_note: cartItems.value.map((item, index) =>
                     `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
-                ).join(',\n') + `\nGhi chu cua khach: ` + customerNote.value,
+            ).join(',\n') + `\nGhi chu cua khach: ` + customerNote.value,
             };
             await cartService.createOrder(orderData);
             alert('Đặt hàng thành công!');
@@ -170,7 +169,7 @@ const confirmCustomer = async () => {
     customerId.value = customerData.customer_id;
     console.log("Ne id  " + customerId.value);
     try {
-        const response = await fetch('/api/v1/customer', {
+        const response = await fetch('/api/v1/customers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -178,12 +177,12 @@ const confirmCustomer = async () => {
             body: JSON.stringify(customerData)
         });
 
-
+       
         if (!response.ok) {
             throw new Error('Không thể tạo khách hàng. Vui lòng thử lại.');
         }
 
-
+        
         const customerResponse = await response.json();
 
 
@@ -223,19 +222,6 @@ function generateUniqueCustomerId() {
 
     return customerId;
 }
-
-const removeFromCart = (cartId) => {
-    // Lấy danh sách giỏ hàng từ localStorage
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    // Lọc bỏ sản phẩm với cart_id khớp với cartId
-    cart = cart.filter(item => item.cart_id !== cartId);
-
-    // Cập nhật lại localStorage và giỏ hàng
-    localStorage.setItem('cart', JSON.stringify(cart));
-    cartItems.value = cart;
-};
-
 
 import { watch } from 'vue';
 
