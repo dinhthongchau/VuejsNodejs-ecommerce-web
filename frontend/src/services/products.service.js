@@ -60,15 +60,32 @@ function makeProductService() {
     });
   }
 
-  async function updateProduct(id, product) {
-    return efetch(`${baseUrl}/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(product),
-      headers: {
-        'Content-Type': 'application/json'
+  // async function updateProduct(id, product) {
+  //   return efetch(`${baseUrl}/${id}`, {
+  //     method: 'PUT',
+  //     body: JSON.stringify(product),
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   });
+  // }
+ async function updateProduct(productId, formData) {
+    try {
+      const response = await fetch(`http://localhost:3300/api/v1/products/${productId}`, {
+        method: 'PUT',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('No data provided for update');
       }
-    });
+
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+    }
   }
+
 
   async function deleteProduct(id) {
     return efetch(`${baseUrl}/${id}`, {

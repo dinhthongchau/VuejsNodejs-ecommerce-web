@@ -1,18 +1,18 @@
 <script setup>
 import { ref, useTemplateRef } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-//import { toTypedSchema } from '@vee-validate/zod';
-//import { z } from 'zod';
+import { toTypedSchema } from '@vee-validate/zod';
+import { z } from 'zod';
 const props = defineProps({
   product: { type: Object, required: true }
 });
 
 let imageFileInput = useTemplateRef('image-file-input');
-let imageFile = ref(props.product.image);
+let imageFile = ref(props.product.product_image);
 const $emit = defineEmits(['submit:product', 'delete:product']);
 
-// let validationSchema = toTypedSchema(
-//   z.object({
+let validationSchema = toTypedSchema(
+  z.object({
 //     name: z
 //       .string()
 //       .min(2, { message: 'Tên phải ít nhất 2 ký tự.' })
@@ -29,8 +29,19 @@ const $emit = defineEmits(['submit:product', 'delete:product']);
 //       }),
 //     favorite: z.number().optional(),
 //     avatarFile: z.instanceof(File).optional()
-//   })
-// );
+    product_name: z
+      .string()
+      .min(1, { message: 'Tên sản phẩm là bắt buộc.' })
+      .max(255, { message: 'Tên sản phẩm tối đa 255 ký tự.' }),
+    product_price: z
+      .number()
+      .min(0, { message: 'Giá sản phẩm phải lớn hơn hoặc bằng 0.' })
+      .max(9999999999.99, { message: 'Giá sản phẩm vượt quá giới hạn.' }),
+    product_color: z.string().max(100, { message: 'Màu sắc sản phẩm tối đa 100 ký tự.' }),
+    product_description: z.string().optional(),
+    product_imageFiles: z.instanceof(File).optional()
+  })
+);
 
 function previewImageFile(event) {
   const file = event.target.files[0];
@@ -47,6 +58,9 @@ function submitProduct(values) {
     if (values[key] !== undefined) {
       formData.append(key, values[key]);
     }
+  }
+  for (let pair of formData.entries()) {
+    console.log(pair[0] + ': ' + pair[1]);
   }
   $emit('submit:product', formData);
 }
@@ -82,25 +96,30 @@ function deleteProduct() {
         />
       </Field>
     </div>
-    <div class="mb-3">
-      <label for="name" class="form-label">Tên</label>
-      <Field name="name" type="text" class="form-control" :value="product.product_name" />
-      <ErrorMessage name="name" class="error-feedback" />
+    <div>
+      <label for="product_name" class="form-label">Tên sản phẩm</label>
+      <Field name="product_name" type="text" class="form-control" :value="product.product_name" />
+      <ErrorMessage name="product_name" class="error-feedback" />
     </div>
     <div class="mb-3">
-      <label for="price" class="form-label">Giá</label>
-      <Field name="price" type="price" class="form-control" :value="product.product_price" />
-      <ErrorMessage name="price" class="error-feedback" />
+      <label for="product_price" class="form-label">Giá</label>
+      <Field name="product_price" type="text" class="form-control" :value="product.product_price" />
+      <ErrorMessage name="product_price" class="error-feedback" />
     </div>
     <div class="mb-3">
-      <label for="color" class="form-label">Màu sắc</label>
-      <Field name="color" type="color" class="form-control" :value="product.product_color" />
-      <ErrorMessage name="color" class="error-feedback" />
+      <label for="product_color" class="form-label">Màu sắc</label>
+      <Field name="product_color" type="text" class="form-control" :value="product.product_color" />
+      <ErrorMessage name="product_color" class="error-feedback" />
     </div>
     <div class="mb-3">
-      <label for="description" class="form-label">Mô tả chi tiết</label>
-      <Field name="description" type="description" class="form-control" :value="product.product_description" />
-      <ErrorMessage name="description" class="error-feedback" />
+      <label for="product_description" class="form-label">Mô tả</label>
+      <Field
+        name="product_description"
+        type="text"
+        class="form-control"
+        :value="product.product_description"
+      />
+      <ErrorMessage name="product_description" class="error-feedback" />
     </div>
     <!-- <div class="mb-3 form-check">
       <Field

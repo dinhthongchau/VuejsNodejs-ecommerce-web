@@ -12,6 +12,7 @@ const product = ref(null);
 const message = ref('');
 
 const productId = route.params.product_id; 
+console.log('Product ID here:', productId);
 
 onMounted(() => {
   if (!productId) {
@@ -30,6 +31,8 @@ onMounted(() => {
 
 async function getProduct(product_id) {
   try {
+    console.log("product_id có được truyền không:" ,product_id);
+    console.log("lỗi ở đây");
     product.value = await productsService.fetchProduct(product_id);
   } catch (error) {
     console.log(error);
@@ -43,13 +46,21 @@ async function getProduct(product_id) {
 }
 async function onUpdateProduct(product) {
   try {
-    await productsService.updateProduct(props.productId, product);
+    await productsService.updateProduct(productId, product);
     message.value = 'Liên hệ được cập nhật thành công.';
   } catch (error) {
     console.log(error);
     message.value = 'Lỗi cập nhật Liên hệ.';
   }
 }
+// async function onUpdateProduct(formData) {
+//   try {
+//     await productsService.updateProduct(productId, formData); // Truyền productId và formData đúng
+//   } catch (error) {
+//     console.error("Error:", error);
+//   }
+// }
+
 async function onDeleteProduct(product_id) {
   if (confirm('Bạn muốn xóa Liên hệ này?')) {
     try {
@@ -60,7 +71,8 @@ async function onDeleteProduct(product_id) {
     }
   }
 }
-getProduct(props.productId);
+getProduct(productId);
+//getProduct(route.params.product_id);
 </script>
 <template>
   <div v-if="product" class="page">
