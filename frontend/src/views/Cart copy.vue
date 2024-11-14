@@ -170,7 +170,7 @@ const confirmCustomer = async () => {
     customerId.value = customerData.customer_id;
     console.log("Ne id  " + customerId.value);
     try {
-        const response = await fetch('/api/v1/customers', {
+        const response = await fetch('/api/v1/customer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -225,25 +225,15 @@ function generateUniqueCustomerId() {
 }
 
 const removeFromCart = (cartId) => {
+    // Lấy danh sách giỏ hàng từ localStorage
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    console.log('CartId cần xóa:', cartId);
-    console.log('Giỏ hàng trước khi xóa:', cart);
+    // Lọc bỏ sản phẩm với cart_id khớp với cartId
+    cart = cart.filter(item => item.cart_id !== cartId);
 
-    // Tìm index của sản phẩm cần xóa
-    const index = cart.findIndex(item => item.cart_id === cartId);
-    console.log('Index tìm được:', index);
-
-    if (index !== -1) {
-        // Chỉ xóa một sản phẩm tại index tìm được
-        cart.splice(index, 1);
-        console.log('Giỏ hàng sau khi xóa:', cart);
-
-        localStorage.setItem('cart', JSON.stringify(cart));
-        cartItems.value = cart;
-    } else {
-        console.log('Không tìm thấy sản phẩm với cart_id:', cartId);
-    }
+    // Cập nhật lại localStorage và giỏ hàng
+    localStorage.setItem('cart', JSON.stringify(cart));
+    cartItems.value = cart;
 };
 
 
