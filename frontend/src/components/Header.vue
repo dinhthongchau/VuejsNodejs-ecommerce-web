@@ -17,7 +17,7 @@
         <li class="menu-item">
           <a href="/">IPAD</a>
         </li>
-        <li class="menu-item">
+        <!-- <li class="menu-item">
           <a href="/">APPLE WATCH</a>
         </li>
         <li class="menu-item">
@@ -25,6 +25,15 @@
         </li>
         <li class="menu-item">
           <a href="/">PHỤ KIỆN</a>
+        </li> -->
+        <li class="menu-item">
+          <a href="/product_admin">crud product</a>
+        </li>
+        <li class="menu-item">
+          <a href="/customer_admin">crud customer</a>
+        </li>
+        <li class="menu-item">
+          <a href="/order_admin">crud order(chua lam)</a>
         </li>
       </ul>
     </div>
