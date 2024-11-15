@@ -55,10 +55,12 @@
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
                     <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required />
                 </div>
+                <LocationPicker :selectedLocation="TinhPhuongXa" />
+
+
                 <div class="mb-3">
                     <label for="customerNote" class="form-label">Ghi chú ( nếu có )</label>
-                    <input type="text" id="customerNote" v-model="customerNote" class="form-control" required
-                         />
+                    <input type="text" id="customerNote" v-model="customerNote" class="form-control" required />
                 </div>
                 <button @click="confirmCustomer" class="btn btn-primary">Xác nhận thông tin </button>
                 <div class="mb-3">
@@ -94,10 +96,11 @@ const customerAddress = ref('');
 const deliveryMethod = ref('Giao tận nơi');
 const paymentMethod = ref('Tiền mặt');
 const customerNote = ref('Không');
+const TinhPhuongXa = ref('');
 import { useRouter, useRoute } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
-
+console.log("value ne " + TinhPhuongXa.value);
 // const cartItems = computed(() => {
 //     return JSON.parse(localStorage.getItem('cart')) || [];
 // });
@@ -264,6 +267,7 @@ watch(() => localStorage.getItem('cart'), () => {
     cartItems.value = JSON.parse(localStorage.getItem('cart')) || [];
 });
 
+import LocationPicker from './LocationPicker.vue';
 </script>
 
 <style scoped>

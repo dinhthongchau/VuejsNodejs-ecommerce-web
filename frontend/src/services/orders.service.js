@@ -1,5 +1,3 @@
-
-
 /**
  * @param {string} url
  * @param {RequestInit} options
@@ -20,59 +18,48 @@ async function efetch(url, options = {}) {
   return json.data;
 }
 
-function makeCustomerService() {
-  const baseUrl = 'http://localhost:3300/api/v1/customers/filter'; 
-  const baseUrl_2 = 'http://localhost:3300/api/v1/customers'; 
- 
+function makeOrderService() {
+  const baseUrl = 'http://localhost:3300/api/v1/orders/filter';
+  const baseUrl_2 = 'http://localhost:3300/api/v1/orders';
+
   // /**
-  //  * Fetch customers by filter (e.g., pagination, filtering by fields)
+  //  * Fetch orders by filter (e.g., pagination, filtering by fields)
   //  * @param {number} page - Số trang để phân trang
   //  * @param {number} limit - Giới hạn số sản phẩm mỗi trang
   //  */
-  async function fetchCustomers(page, limit = 10) {
+  async function fetchOrders(page, limit = 10) {
     let url = `${baseUrl}?page=${page}&limit=${limit}`;
     const data = await efetch(url);
 
     // Nếu có cần xử lý dữ liệu sản phẩm
-    data.customers = data.customers.map((customer) => {
+    data.orders = data.orders.map((order) => {
       return {
-      ...customer,
-      
+        ...order
       };
-  });
+    });
     return data;
   }
 
-  async function fetchCustomer(id) {
-    const { customer } = await efetch(`${baseUrl_2}/${id}`);
+  async function fetchOrder(id) {
+    const { order } = await efetch(`${baseUrl_2}/${id}`);
     return {
-      ...customer,
-      
+      ...order
     };
   }
 
-  async function createCustomer(customer) {
+  async function createOrder(order) {
     return efetch(baseUrl, {
       method: 'POST',
-      body: JSON.stringify(customer),
+      body: JSON.stringify(order),
       headers: {
         'Content-Type': 'application/json'
       }
     });
   }
 
-  // async function updatecustomer(id, customer) {
-  //   return efetch(`${baseUrl}/${id}`, {
-  //     method: 'PUT',
-  //     body: JSON.stringify(customer),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
- async function updateCustomer(customerId, formData) {
+  async function updateOrder(orderId, formData) {
     try {
-      const response = await fetch(`http://localhost:3300/api/v1/customers/${customerId}`, {
+      const response = await fetch(`http://localhost:3300/api/v1/orders/${orderId}`, {
         method: 'PUT',
         body: formData
       });
@@ -87,28 +74,26 @@ function makeCustomerService() {
     }
   }
 
-
-  async function deleteCustomer(id) {
+  async function deleteOrder(id) {
     return efetch(`${baseUrl_2}/${id}`, {
       method: 'DELETE'
     });
   }
 
-  async function deleteAllCustomers() {
+  async function deleteAllOrders() {
     return efetch(baseUrl, {
       method: 'DELETE'
     });
   }
 
-
   return {
-    fetchCustomers,
-    fetchCustomer,
-    createCustomer,
-    updateCustomer,
-    deleteCustomer,
-    deleteAllCustomers
+    fetchOrders,
+    fetchOrder,
+    createOrder,
+    updateOrder,
+    deleteOrder,
+    deleteAllOrders
   };
 }
 
-export default makeCustomerService(); 
+export default makeOrderService();

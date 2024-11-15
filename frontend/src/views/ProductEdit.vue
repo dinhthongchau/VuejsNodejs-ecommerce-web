@@ -76,7 +76,7 @@ getProduct(productId);
 </script>
 <template>
   <div v-if="product" class="page">
-    <h4>Hiệu chỉnh Liên hệ</h4>
+    <h4>Hiệu chỉnh Product</h4>
     <ProductForm
       :product="product"
       @submit:product="onUpdateProduct"

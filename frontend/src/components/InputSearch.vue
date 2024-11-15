@@ -6,7 +6,7 @@ const model = defineModel({
 </script>
 <template>
   <div class="input-group">
-    <input type="text" class="form-control px-3" placeholder="Nhập đúng form vd: iPhone 13 256GB" v-model="model" />
+    <input type="text" class="form-control px-3" placeholder="Nhập đúng form " v-model="model" />
     <button class="btn btn-outline-secondary" type="button" @click="$emit('submit')">
       <i class="fas fa-search"></i>
     </button>

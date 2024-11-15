@@ -2,6 +2,7 @@ import { createWebHistory, createRouter } from 'vue-router';
 
 import ProductPage from '@/views/ProductPage.vue';
 import CustomerPage from '@/views/CustomerPage.vue';
+import OrderPage from '@/views/OrderPage.vue';
 const routes = [
   {
     path: '/',
@@ -49,6 +50,18 @@ const routes = [
     path: '/customeredit/:customer_id',
     name: 'customer.edit',
     component: () => import('@/views/CustomerEdit.vue')
+  },
+
+  { path: '/order_admin', name: 'orderpage', component: OrderPage },
+  {
+    path: '/orders/add',
+    name: 'order.add',
+    component: () => import('@/views/OrderAdd.vue')
+  },
+  {
+    path: '/orderedit/:order_id',
+    name: 'order.edit',
+    component: () => import('@/views/OrderEdit.vue')
   }
 ];
 
