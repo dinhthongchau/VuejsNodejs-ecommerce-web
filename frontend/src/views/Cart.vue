@@ -1,4 +1,5 @@
-<template>
+<!-- Cart.vue -->
+ <template>
     <div class="cart-container container mx-auto">
         <h1 class="h3 mb-4 text-center">Giỏ Hàng của bạn</h1>
         <div v-if="cartItems.length === 0" class="text-center">
@@ -53,12 +54,17 @@
                 </div>
                 <div class="mb-3">
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
-                    <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required />
+                    <div>
+                        <LocationPicker @location-changed="handleLocationChange" />
+                    </div>
+                 <br>
+                    <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required
+                        placeholder="Nhập chi tiết số đường" />
                 </div>
+
                 <div class="mb-3">
                     <label for="customerNote" class="form-label">Ghi chú ( nếu có )</label>
-                    <input type="text" id="customerNote" v-model="customerNote" class="form-control" required
-                         />
+                    <input type="text" id="customerNote" v-model="customerNote" class="form-control" required />
                 </div>
                 <button @click="confirmCustomer" class="btn btn-primary">Xác nhận thông tin </button>
                 <div class="mb-3">
@@ -90,7 +96,7 @@ const customerId = ref(''); // Lưu ID khách hàng khi tạo thành công
 const customerName = ref('');
 const customerPhone = ref('');
 const customerEmail = ref('');
-const customerAddress = ref('');
+const customerAddress =  ref('');
 const deliveryMethod = ref('Giao tận nơi');
 const paymentMethod = ref('Tiền mặt');
 const customerNote = ref('Không');
@@ -168,14 +174,18 @@ const submitOrder = async () => {
     }
 };
 
+const resultAll = ref('');  // Declare resultAll here in the parent component
 
+const handleLocationChange = (value) => {
+    resultAll.value = value; // Update resultAll with the new location value
+};
 const confirmCustomer = async () => {
     const customerData = {
         customer_id: generateUniqueCustomerId(),
         customer_name: customerName.value,
         customer_email: customerEmail.value,
         customer_phone: customerPhone.value,
-        customer_address: customerAddress.value,
+        customer_address: resultAll.value +', '+ customerAddress.value,
     };
 
     customerId.value = customerData.customer_id;
@@ -264,6 +274,26 @@ watch(() => localStorage.getItem('cart'), () => {
     cartItems.value = JSON.parse(localStorage.getItem('cart')) || [];
 });
 
+</script>
+
+<script>
+import LocationPicker from './LocationPicker.vue';
+
+export default {
+    components: {
+        LocationPicker
+    },
+    data() {
+        return {
+            resultAll: ''
+        }
+    },
+    methods: {
+        handleLocationChange(value) {
+            this.resultAll = value;
+        }
+    }
+}
 </script>
 
 <style scoped>

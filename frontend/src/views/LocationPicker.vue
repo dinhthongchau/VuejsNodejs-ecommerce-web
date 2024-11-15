@@ -1,3 +1,4 @@
+<!-- LocationPicker.vue  -->
 <template>
     <div class='grid md:grid-cols-3 space-y-4 md:space-y-0 md:space-x-4'>
         <div class='relative' v-click-away='hideProvinceList'>
@@ -34,9 +35,7 @@
                 </ul>
             </div>
         </div>
-        <div class="mt-4">
-            <p>Địa chỉ đã chọn: {{ selectedLocation }}</p>
-        </div>
+       
 
     </div>
 </template>
@@ -46,11 +45,22 @@
 import ky from 'ky'
 import { directive as vClickAway } from 'vue3-click-away'
 import { debounce } from 'ts-debounce'
-
+import {ref} from 'vue';
 const BASE_API_URL = 'https://provinces.open-api.vn/api'
 
+
 export default {
-   
+    props: {
+        modelValue: {
+            type: String,
+            default: ''
+        }
+    },
+    watch: {
+        result_all(newVal) {
+            this.$emit('update:modelValue', newVal);
+        }
+    },
     directives: {
         'click-away': vClickAway
     },
@@ -67,7 +77,8 @@ export default {
             wardSearch: '',
             wardListShown: false,
             filteredWards: [],
-            selectedWard: null
+            selectedWard: null,
+            result_all: ''
         }
     },
     methods: {
@@ -216,10 +227,14 @@ export default {
             if (this.selectedWard) {
                 result += `, ${this.selectedWard.name}`;
             }
+            this.result_all = result;
+            this.$emit('location-changed', this.result_all); // Phát ra sự kiện khi thay đổi
             return result;
         }
+        
     }
-
+  
+    
 }
 
 
