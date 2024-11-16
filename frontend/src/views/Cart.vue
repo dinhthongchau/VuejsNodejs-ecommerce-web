@@ -38,7 +38,8 @@
             </table>
             <h3>Tạm tính: {{ formatPrice(totalPrice) }} đ</h3>
 
-            <h4 class="mt-4">Thông tin khách hàng</h4>
+            <h4 class="mt-4">Bấm <i style="color: red;">xác nhận thông tin</i> trước khi đặt hàng</h4>
+
             <form @submit.prevent="submitOrder">
                 <div class="mb-3">
                     <label for="customerName" class="form-label">Họ và Tên</label>
@@ -49,16 +50,14 @@
                     <input type="tel" id="customerPhone" v-model="customerPhone" class="form-control" required />
                 </div>
                 <div class="mb-3">
-                    <label for="customerEmail" class="form-label">Email</label>
+                    <label for="customerEmail" class="form-label">Email (nhập chính xác nhận thông tin đơn hàng)</label>
                     <input type="email" id="customerEmail" v-model="customerEmail" class="form-control" required />
                 </div>
                 <div class="mb-3">
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
                     <div>
                         <LocationPicker @location-changed="handleLocationChange" />
-                        
                     </div>
-                    
                     <br>
                     <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required
                         placeholder="Nhập chi tiết số đường" />
@@ -91,10 +90,13 @@
 </template>
 
 <script setup>
+//email send 
+import axios from 'axios';
+
 import { ref, computed } from 'vue';
 import cartService from '@/services/cart.service';
-const isCustomerConfirmed = ref(false); // Trạng thái xác nhận khách hàng
-const customerId = ref(''); // Lưu ID khách hàng khi tạo thành công
+const isCustomerConfirmed = ref(false); 
+const customerId = ref(''); 
 const customerName = ref('');
 const customerPhone = ref('');
 const customerEmail = ref('');
@@ -106,9 +108,6 @@ import { useRouter, useRoute } from 'vue-router';
 const route = useRoute();
 const router = useRouter();
 
-// const cartItems = computed(() => {
-//     return JSON.parse(localStorage.getItem('cart')) || [];
-// });
 
 const cartItems = ref(JSON.parse(localStorage.getItem('cart')) || []);
 
@@ -141,15 +140,13 @@ const updateQuantity = (item) => {
 
 const submitOrder = async () => {
     if (!isCustomerConfirmed.value) {
-        alert('Vui lòng xác nhận thông tin khách hàng trước khi đặt hàng.');
+        alert('Bấm OK để Xác nhận thông tin ( nhập đúng email để nhận đơn hàng)');
         return;
     }
 
 
     try {
-        // console.log("Ne 2 \n" + cartItems.value.map((item, index) =>
-        //     `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
-        // ).join(',\n') + `\nGhi chu cua khach: ` + customerNote.value);
+    
         if (customerId.value) {
             const orderData = {
                 customer_id: customerId.value,
@@ -161,14 +158,20 @@ const submitOrder = async () => {
                     `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
                 ).join(',\n') + `\n,Ghi chu cua khach: ` + customerNote.value,
             };
+        
+            await cartService.createOrder(orderData);
+            await sendEmail();
+
+            
+                
+
+            alert('Đặt hàng thành công, thông tin đơn hàng đã gửi về email');
             // Xoá giỏ hàng trong localStorage và cập nhật lại giỏ hàng
             localStorage.removeItem('cart');
             cartItems.value = [];
 
             // Quay về trang chủ
             router.push('/');
-            await cartService.createOrder(orderData);
-            alert('Đặt hàng thành công!');
         }
     } catch (error) {
         console.error('Có lỗi xảy ra khi đặt hàng:', error);
@@ -176,22 +179,28 @@ const submitOrder = async () => {
     }
 };
 
-const resultAll = ref('');  // Declare resultAll here in the parent component
+const TinhHuyenXaGet = ref('');  // Declare TinhHuyenXaGet here in the parent component
 
 const handleLocationChange = (value) => {
-    resultAll.value = value; // Update resultAll with the new location value
+    TinhHuyenXaGet.value = value; // Update TinhHuyenXaGet with the new location value
 };
+const diaChiGiaoHang =ref(''); 
 const confirmCustomer = async () => {
     const customerData = {
         customer_id: generateUniqueCustomerId(),
         customer_name: customerName.value,
         customer_email: customerEmail.value,
         customer_phone: customerPhone.value,
-        customer_address: resultAll.value +', '+ customerAddress.value,
+        customer_address: TinhHuyenXaGet.value +', '+ customerAddress.value,
+        
     };
-
+    //dia chi giao hang
+    diaChiGiaoHang.value = TinhHuyenXaGet.value + ', ' + customerAddress.value ; 
     customerId.value = customerData.customer_id;
-    console.log("Ne id  " + customerId.value);
+    console.log("Ne id   TinhHuyenXaGet" + TinhHuyenXaGet.value);
+
+    console.log("Ne dc value  " + diaChiGiaoHang.value);
+    console.log("Ne dc  " + diaChiGiaoHang);
     try {
         const response = await fetch('/api/v1/customers', {
             method: 'POST',
@@ -212,6 +221,7 @@ const confirmCustomer = async () => {
 
         isCustomerConfirmed.value = true;
         alert('Xác nhận thông tin khách hàng thành công!');
+        console.log("Ne id   TinhHuyenXaGetsss" + TinhHuyenXaGet.value);
     } catch (error) {
         console.error('Lỗi xác nhận khách hàng:', error);
         alert('Xác nhận thất bại. Vui lòng kiểm tra lại thông tin.');
@@ -220,14 +230,38 @@ const confirmCustomer = async () => {
 
 
 
+///send email
+const sendEmail = async () => {
+    try {
+        const emailData = {
+            to: customerEmail.value, // Gửi đến email khách hàng
+            subject: "Thông tin đơn hàng của bạn",
+            text: `Cảm ơn bạn đã đặt hàng tại cửa hàng chúng tôi!\n\n` +
+                `Thông tin đơn hàng:\n` +
+                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name}, Số lượng: ${item.quantity}`).join('\n')}\n\n` +
+                `Tổng tiền: ${formatPrice(totalPrice.value)} đ\n` +
+                `Phương thức thanh toán: ${paymentMethod.value}\n` +
+                `Địa chỉ giao hàng: ${diaChiGiaoHang.value}\n` +
+                `Ghi chú: ${customerNote.value}\n`
+        };
+
+        const response = await axios.post("http://localhost:3300/send-email", emailData);
+        console.log('Email gửi thành công:', response.data.message);
+    } catch (error) {
+        console.error('Gửi email thất bại:', error);
+    }
+};
+
+//confirm cus
+
 const existingIds = new Set(); // Set để lưu trữ các ID đã được tạo
 
 function generateUniqueCustomerId() {
     // Lấy ngày tháng hiện tại
     const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0'); // Ngày (DD)
+    const day = String(now.getDate()).padStart(2, '0'); // Ngày 
     const month = String(now.getMonth() + 1).padStart(2, '0'); // Tháng (MM) +1 vì tháng bắt đầu từ 0
-    const year = String(now.getFullYear()).slice(-2); // Năm (YY)
+    const year = String(now.getFullYear()).slice(-2); // Năm 
 
     const dateStr = `${day}${month}${year}`; // Định dạng DDMMYY
 
@@ -287,12 +321,12 @@ export default {
     },
     data() {
         return {
-            resultAll: ''
+            TinhHuyenXaGet: ''
         }
     },
     methods: {
         handleLocationChange(value) {
-            this.resultAll = value;
+            this.TinhHuyenXaGet = value;
         }
     }
 }

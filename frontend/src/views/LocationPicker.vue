@@ -34,8 +34,12 @@
                         v-html='highlightName(item)'></li>
                 </ul>
             </div>
+            <div class="mt-4">
+                <p>Địa chỉ đã chọn: {{ selectedLocation }}</p>
+                <!-- <p> {{ resultAll }}</p> -->
+            </div>
         </div>
-       
+
 
     </div>
 </template>
