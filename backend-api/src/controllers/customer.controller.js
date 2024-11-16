@@ -5,9 +5,9 @@ const JSend = require('../jsend');
 
 
 async function createCustomer(req, res, next) {
-    if (!req.session.customer) {
-      return next(new ApiError(401, "Vui lòng đăng nhập!"));
-    }
+    // if (!req.session.customer) {
+    //   return next(new ApiError(401, "Vui lòng đăng nhập!"));
+    // }
 
   if (!req.body?.customer_name || typeof req.body.customer_name !== 'string') {
     return next(new ApiError(400, 'Customer name should be a non-empty string'));

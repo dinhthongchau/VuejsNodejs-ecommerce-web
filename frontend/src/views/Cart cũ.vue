@@ -56,10 +56,8 @@
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
                     <div>
                         <LocationPicker @location-changed="handleLocationChange" />
-                        
                     </div>
-                    
-                    <br>
+                 <br>
                     <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required
                         placeholder="Nhập chi tiết số đường" />
                 </div>

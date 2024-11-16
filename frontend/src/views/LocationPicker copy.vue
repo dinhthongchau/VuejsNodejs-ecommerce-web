@@ -57,7 +57,7 @@ export default {
         }
     },
     watch: {
-        resultAll(newVal) {
+        result_all(newVal) {
             this.$emit('update:modelValue', newVal);
         }
     },
@@ -78,7 +78,7 @@ export default {
             wardListShown: false,
             filteredWards: [],
             selectedWard: null,
-            resultAll: ''
+            result_all: ''
         }
     },
     methods: {
@@ -227,8 +227,8 @@ export default {
             if (this.selectedWard) {
                 result += `, ${this.selectedWard.name}`;
             }
-            this.resultAll = result;
-            this.$emit('location-changed', this.resultAll); // Phát ra sự kiện khi thay đổi
+            this.result_all = result;
+            this.$emit('location-changed', this.result_all); // Phát ra sự kiện khi thay đổi
             return result;
         }
         

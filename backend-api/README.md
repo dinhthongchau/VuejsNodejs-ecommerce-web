@@ -1,11 +1,5 @@
-create a database named ct313h_projects  trong phpMyAdmin 
-tạo .env , dán 
-    PORT=3300
-    DB_HOST=localhost
-    DB_PORT=3306
-    DB_USER=root
-    DB_PASS=
-    DB_NAME=ct313h_projects
+create a database named ct313h_projects
+đổi env.example thành .env
 chay npm install ( auto cai dat cac goi ) 
 Chay du lieu gia :  npx knex seed:run all
 
@@ -13,5 +7,3 @@ Chay du lieu gia :  npx knex seed:run all
 
 update ở orders nhớ xoá chữ Z ở sau ngày giờ khi nhập dữ liệu
 Chay serverr: npm run start
-
-   
