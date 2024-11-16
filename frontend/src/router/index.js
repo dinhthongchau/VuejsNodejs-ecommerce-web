@@ -62,6 +62,22 @@ const routes = [
     path: '/orderedit/:order_id',
     name: 'order.edit',
     component: () => import('@/views/OrderEdit.vue')
+  },
+  {
+    path: '/login/',
+    name: 'Login',
+    component: () => import('@/views/AdminLogin.vue'),
+    beforeEnter: (to, from, next) => {
+      if (localStorage.getItem('isLoggedIn') === 'true') {
+        next('/');
+      } else next();
+    },
+    meta: { requiresAuth: false } // Cho phép truy cập mà không cần đăng nhập
+  },
+  {
+    path: '/logout/',
+    name: 'Logout',
+    meta: { requiresAuth: true }
   }
 ];
 

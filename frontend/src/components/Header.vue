@@ -3,8 +3,15 @@
     <!-- <div class="logo">
       <img src="@/image-shop/logo.png" alt="Logo" />
     </div> -->
-    <div class="logo" @click="goToHomePage" style="cursor: pointer;">
-      <img src="@/image-shop/logo.png" alt="Logo" />
+    <div
+      class="logo"
+      @click="goToHomePage"
+      style="cursor: pointer"
+    >
+      <img
+        src="@/image-shop/logo.png"
+        alt="Logo"
+      />
     </div>
     <div class="menu-container">
       <ul class="menu">
@@ -38,22 +45,60 @@
       </ul>
     </div>
     <div class="search-bar">
-      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." @keyup.enter="searchProduct" />
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Tìm kiếm sản phẩm..."
+        @keyup.enter="searchProduct"
+      />
       <button @click="searchProduct">Tìm kiếm</button>
     </div>
-    <a href="/cart" class="cart ms-3">
+    <a
+      href="/cart"
+      class="cart ms-3"
+    >
       <i class="fas fa-shopping-cart"></i>
       <span class="number badge bg-danger">Giỏ hàng</span>
     </a>
+    <button
+      v-if="!isLoggedIn"
+      @click="login"
+    >
+      Login
+    </button>
+    <button
+      v-if="isLoggedIn"
+      @click="logout"
+      class="logout-btn"
+    >
+      Logout
+    </button>
   </header>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
+import makeAdminService from '@/services/admins.service';
 
 const router = useRouter();
 const searchQuery = ref('');
+const isLoggedIn = ref(localStorage.getItem('isLoggedIn') === 'true');
+
+const login = () => {
+  console.error('hello');
+  router.push({ name: 'Login' });
+};
+
+const logout = async () => {
+  await makeAdminService.logout();
+  localStorage.clear();
+  isLoggedIn.value = false;
+  //router.push({ name: 'Login'});
+};
+watchEffect(() => {
+  isLoggedIn.value = localStorage.getItem('isLoggedIn') === 'true';
+});
 
 const searchProduct = () => {
   if (searchQuery.value.trim()) {

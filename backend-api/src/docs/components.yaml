@@ -1,5 +1,18 @@
 components:
   schemas:
+    Admin:
+      type: object
+      properties:
+        admin_id:
+          type: integer
+          readOnly: true  # Returned by HTTP GET
+          description: Unique identifier for the admin
+        admin_username:
+          type: string
+          description: Username for the admin
+        admin_password:
+          type: string
+          format: password
     Product:
       type: object
       properties:
