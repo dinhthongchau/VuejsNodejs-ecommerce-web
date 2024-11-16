@@ -13,7 +13,7 @@ const order = ref({
 });
 
 const message = ref('');
-
+const apiUrl = import.meta.env.VITE_API_URL;
 async function onCreateOrder() {
     try {
         const formData = new FormData();
@@ -24,7 +24,7 @@ async function onCreateOrder() {
         formData.append('order_status', order.value.order_status);
         formData.append('order_note', order.value.order_note);
 
-        const response = await fetch('http://localhost:3300/api/v1/orders', {
+        const response = await fetch(`${apiUrl}/v1/orders`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -111,7 +111,7 @@ async function onCreateOrder() {
     font-size: 0.875em;
 }
 
-.description-field{
+.description-field {
     height: 200px;
 }
 </style>

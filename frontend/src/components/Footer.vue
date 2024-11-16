@@ -6,7 +6,7 @@
         <div class="col-md-4">
           <div class="logo-foot mb-4">
             <a href="/">
-              <img src="../image-shop/logo.png" alt="Logo" class="img-fluid" />
+              <img src="../assets/image-shop/logo.png" alt="Logo" class="img-fluid" />
             </a>
           </div>
           <div class="footer-social">

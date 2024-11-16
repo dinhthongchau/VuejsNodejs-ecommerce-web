@@ -1,8 +1,7 @@
+// Vite.config.js
 import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
@@ -13,14 +12,7 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:3300/',
-        changeOrigin: true
-      },
-      '/public': {
-        target: 'http://localhost:3300/',
-        changeOrigin: true
-      }
+     
     }
   }
 });

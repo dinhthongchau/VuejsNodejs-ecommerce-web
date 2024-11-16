@@ -17,10 +17,10 @@ async function efetch(url, options = {}) {
   }
   return json.data;
 }
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function makeOrderService() {
-  const baseUrl = 'http://localhost:3300/api/v1/orders/filter';
-  const baseUrl_2 = 'http://localhost:3300/api/v1/orders';
+  const baseUrl = `${apiUrl}/v1/orders/filter`;
+  const baseUrl_2 = `${apiUrl}/v1/orders`;
 
   // /**
   //  * Fetch orders by filter (e.g., pagination, filtering by fields)
@@ -59,7 +59,7 @@ function makeOrderService() {
 
   async function updateOrder(orderId, formData) {
     try {
-      const response = await fetch(`http://localhost:3300/api/v1/orders/${orderId}`, {
+      const response = await fetch(`${apiUrl}/v1/orders/${orderId}`, {
         method: 'PUT',
         body: formData
       });

@@ -9,15 +9,26 @@ const $emit = defineEmits(['update:selectedIndex']);
 </script>
 
 <template>
-  <ul class="list-group">
-    <li
-      class="list-group-item px-3"
-      v-for="(customer, index) in customers" 
-      :class="{ active: index === selectedIndex }"
-      :key="customer.id"
-      @click="$emit('update:selectedIndex', index)"
-    >ID: {{ customer.customer_id }} Tên KH:
-      {{ customer.customer_name }} <!-- Hiển thị tên sản phẩm -->
-    </li>
-  </ul>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID khách hàng</th>
+        <th>Tên khách hàng</th>
+        <th>Email</th>
+        <th>Số điện thoại</th>
+        <th>Địa chỉ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(customer, index) in customers" :key="customer.customer_id"
+        :class="{ 'table-active': index === selectedIndex }" @click="$emit('update:selectedIndex', index)">
+        <td>{{ customer.customer_id }}</td>
+        <td>{{ customer.customer_name }}</td>
+        <td>{{ customer.customer_email }}</td>
+        <td>{{ customer.customer_phone }}</td>
+        <td>{{ customer.customer_address }}</td>
+      </tr>
+    </tbody>
+  </table>
 </template>
+

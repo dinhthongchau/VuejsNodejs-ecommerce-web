@@ -11,6 +11,7 @@
                 <thead>
                     <tr>
                         <th>Sản phẩm</th>
+                        <th>Màu sắc</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
                         <th>Tổng</th>
@@ -22,6 +23,11 @@
                         <td>
                             <div class="d-flex align-items-center">
                                 <span>{{ item.product_name }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <span>{{ item.product_color }}</span>
                             </div>
                         </td>
                         <td>{{ formatPrice(item.product_price) }} đ</td>
@@ -155,8 +161,9 @@ const submitOrder = async () => {
                 order_payment_method: paymentMethod.value,
                 order_status: 'Confirming',
                 order_note: cartItems.value.map((item, index) =>
-                    `SP${index + 1}: ${item.product_name} SL: ${item.quantity}`
-                ).join(',\n') + `\n,Ghi chu cua khach: ` + customerNote.value,
+                    `SP${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}) SL: ${item.quantity}`
+                ).join(',\n') + `\n,Ghi chú của khách: ` + customerNote.value,
+
             };
         
             await cartService.createOrder(orderData);
@@ -229,7 +236,7 @@ const confirmCustomer = async () => {
 };
 
 
-
+const Url = import.meta.env.VITE_URL;
 ///send email
 const sendEmail = async () => {
     try {
@@ -237,15 +244,15 @@ const sendEmail = async () => {
             to: customerEmail.value, // Gửi đến email khách hàng
             subject: "Thông tin đơn hàng của bạn",
             text: `Cảm ơn bạn đã đặt hàng tại cửa hàng chúng tôi!\n\n` +
-                `Thông tin đơn hàng:\n` +
-                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name}, Số lượng: ${item.quantity}`).join('\n')}\n\n` +
+                `Thông tin đơn hàng: \n` +
+                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}), Số lượng: ${item.quantity}`).join('\n')} \n\n` +
                 `Tổng tiền: ${formatPrice(totalPrice.value)} đ\n` +
                 `Phương thức thanh toán: ${paymentMethod.value}\n` +
                 `Địa chỉ giao hàng: ${diaChiGiaoHang.value}\n` +
                 `Ghi chú: ${customerNote.value}\n`
         };
 
-        const response = await axios.post("http://localhost:3300/send-email", emailData);
+        const response = await axios.post(`${Url}/send-email`, emailData);
         console.log('Email gửi thành công:', response.data.message);
     } catch (error) {
         console.error('Gửi email thất bại:', error);

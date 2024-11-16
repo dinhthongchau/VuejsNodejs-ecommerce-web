@@ -9,7 +9,7 @@
       style="cursor: pointer"
     >
       <img
-        src="@/image-shop/logo.png"
+        src="@/assets/image-shop/logo.png"
         alt="Logo"
       />
     </div>
@@ -40,7 +40,7 @@
           <a href="/customer_admin">crud customer</a>
         </li>
         <li v-if="isLoggedIn" class="menu-item">
-          <a href="/order_admin">crud order(chua lam)</a>
+          <a href="/order_admin">crud order</a>
         </li>
       </ul>
     </div>

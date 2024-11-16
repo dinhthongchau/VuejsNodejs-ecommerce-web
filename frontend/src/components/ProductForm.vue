@@ -7,7 +7,7 @@ const props = defineProps({
   product: { type: Object, required: true }
   
 });
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const product = ref({
   product_name: props.product.product_name,
   product_price: props.product.product_price,
@@ -94,7 +94,7 @@ async function onCreateProduct() {
       formData.append('product_imageFiles', product.value.product_image[i]);
     }
 
-    const response = await fetch(`http://localhost:3300/api/v1/products/${props.product.product_id}`, {
+    const response = await fetch(`${apiUrl}/v1/products/${props.product.product_id}`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',

@@ -19,10 +19,10 @@ async function efetch(url, options = {}) {
   }
   return json.data;
 }
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function makeCustomerService() {
-  const baseUrl = 'http://localhost:3300/api/v1/customers/filter'; 
-  const baseUrl_2 = 'http://localhost:3300/api/v1/customers'; 
+  const baseUrl = `${apiUrl}/v1/customers/filter`; 
+  const baseUrl_2 = `${apiUrl}/v1/customers`;
  
   // /**
   //  * Fetch customers by filter (e.g., pagination, filtering by fields)
@@ -72,7 +72,7 @@ function makeCustomerService() {
   // }
  async function updateCustomer(customerId, formData) {
     try {
-      const response = await fetch(`http://localhost:3300/api/v1/customers/${customerId}`, {
+      const response = await fetch(`${apiUrl}/v1/customers/${customerId}`, {
         method: 'PUT',
         body: formData
       });

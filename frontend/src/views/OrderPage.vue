@@ -102,7 +102,7 @@ watch(filteredOrders, () => {
             <OrderList v-if="filteredOrders.length > 0" :orders="filteredOrders"
                 v-model:selected-index="selectedIndex" />
             <p v-else>
-                Không có sản phẩm nào.
+                Không có đơn hàng  nào.
             </p>
             <div class="mt-3 d-flex flex-wrap justify-content-round align-items-center">
                 <MainPagination :total-pages="totalPages" :current-page="currentPage"

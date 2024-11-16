@@ -1,21 +1,27 @@
 <script setup>
-// defineProps({
-//     order: { type: Object, required: true }, // Thay contact thành customer
-// });
+const apiUrl = import.meta.env.VITE_API_URL;
 import { ref, onMounted } from 'vue';
 const props = defineProps({
     order: { type: Object, required: true },
 });
 console.log('API Respon3se:', props.order.customer_id);
 const customer = ref(null);
-const baseUrl_2 = 'http://localhost:3300/api/v1/customers';
+const baseUrl_2 = `${apiUrl}/v1/customers`;
+const customer_name_from_id = ref('');
+const customer_phone_from_id = ref('');
+const customer_mail_from_id = ref('');
+
 // Fetch customer details by customer_id
 async function fetchCustomer(id) {
     try {
         const response = await fetch(`${baseUrl_2}/${id}`);
         const data = await response.json();
-        console.log('API Response:', data.data. customer.customer_id);
-
+        if (data && data.data && data.data.customer) {
+            customer_name_from_id.value = data.data.customer.customer_name;
+            customer_phone_from_id.value = data.data.customer.customer_phone;
+            customer_mail_from_id.value = data.data.customer.customer_email;
+            console.log("check ten " + customer_name_from_id.value)
+        }
         return data.customer;
 
 
@@ -37,6 +43,12 @@ function formatOrderNote(note) {
     // Nối các phần tử lại với thẻ <br>
     return items.join('<br>');
 }
+
+function formatCurrency(amount) {
+    // Sử dụng toLocaleString để phân cách số theo kiểu 10.000.000
+    return amount.toLocaleString('vi-VN');
+}
+
 </script>
 
 <template>
@@ -49,18 +61,18 @@ function formatOrderNote(note) {
             <strong>ID khách hàng:</strong>
             {{ order.customer_id }}
         </div>
-        <!-- Display customer information if fetched -->
-        <div v-if="customer" class="p-1">
+
+        <div class="p-1">
             <strong>Tên khách hàng:</strong>
-            {{ customer.customer_name }}
+            {{ customer_name_from_id }}
         </div>
-        <div v-if="customer" class="p-1">
+        <div class="p-1">
             <strong>Số điện thoại:</strong>
-            {{ customer.customer_phone }}
+            {{ customer_phone_from_id }}
         </div>
-        <div v-if="customer" class="p-1">
+        <div class="p-1">
             <strong>Email:</strong>
-            {{ customer.customer_email }}
+            {{ customer_mail_from_id }}
         </div>
         <div class="p-1">
             <strong>Ngày đặt hàng:</strong>
@@ -68,8 +80,9 @@ function formatOrderNote(note) {
         </div>
         <div class="p-1">
             <strong>Tổng đơn hàng:</strong>
-            {{ order.order_total }} đ <!-- Thêm ký hiệu tiền tệ -->
+            {{ formatCurrency(order.order_total) }} đ
         </div>
+
         <div class="p-1">
             <strong>Phương thức thanh toán:</strong>
             {{ order.order_payment_method }}

@@ -10,6 +10,7 @@ const customer = ref({
 });
 
 const message = ref('');
+const apiUrl = import.meta.env.VITE_API_URL;
 
 async function onCreateCustomer() {
     try {
@@ -21,7 +22,7 @@ async function onCreateCustomer() {
 
     
 
-        const response = await fetch('http://localhost:3300/api/v1/customers', {
+        const response = await fetch(`${apiUrl}/v1/customers`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

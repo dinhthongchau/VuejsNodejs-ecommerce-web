@@ -23,20 +23,40 @@ function formatOrderNote(note) {
   return items.join('<br>');
 }
 
-const $emit = defineEmits(['update:selectedIndex']);
 
+function formatCurrency(amount) {
+    // Sử dụng toLocaleString để phân cách số theo kiểu 10.000.000
+    return amount.toLocaleString('vi-VN');
+}
 </script>
 
+
 <template>
-  <ul class="list-group">
-    <li class="list-group-item px-3" v-for="(order, index) in orders" :class="{ active: index === selectedIndex }"
-      :key="order.id" @click="$emit('update:selectedIndex', index)">
-      <div><strong>ID:</strong> {{ order.order_id }}</div>
-      <div><strong>TIME:</strong> {{ formatDate(order.order_date) }}</div>
-      <div>
-        <strong>ITEMS:</strong>
-        <div v-html="formatOrderNote(order.order_note)" class="ml-2"></div>
-      </div>
-    </li>
-  </ul>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th class="col-2">ID đơn hàng</th>
+        <th class="col-2">ID khách hàng</th>
+        <th class="col-2">Ngày đặt hàng</th>
+        <th class="col-2">Tổng đơn hàng</th>
+        <th class="col-2">Phương thức thanh toán</th>
+        <th class="col-2">Trạng thái đơn hàng</th>
+        <!-- <th class="col-4">Ghi chú đơn hàng</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(order, index) in orders" :key="order.order_id" :class="{ 'table-active': index === selectedIndex }"
+        @click="$emit('update:selectedIndex', index)">
+        <td>{{ order.order_id }}</td>
+        <td>{{ order.customer_id }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>{{ formatCurrency(order.order_total) }} đ</td>
+        <td>{{ order.order_payment_method }}</td>
+        <td>{{ order.order_status }}</td>
+        <!-- <td>
+          <div v-html="formatOrderNote(order.order_note)"></div>
+        </td> -->
+      </tr>
+    </tbody>
+  </table>
 </template>

@@ -17,27 +17,27 @@ async function efetch(url, options = {}) {
   }
   return json.data;
 }
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function makeAdminService() {
-  const baseUrl = 'http://localhost:3300/api/v1/admins';
+  const baseUrl = `${apiUrl}/v1/admins`;
 
   // /**
   //  * Fetch customers by filter (e.g., pagination, filtering by fields)
   //  * @param {number} page - Số trang để phân trang
   //  * @param {number} limit - Giới hạn số sản phẩm mỗi trang
   //  */
-//   async function fetchAdmins(page, limit = 10) {
-//     let url = `${baseUrl}?page=${page}&limit=${limit}`;
-//     const data = await efetch(url);
+  //   async function fetchAdmins(page, limit = 10) {
+  //     let url = `${baseUrl}?page=${page}&limit=${limit}`;
+  //     const data = await efetch(url);
 
-//     // Nếu có cần xử lý dữ liệu sản phẩm
-//     data.customers = data.customers.map((customer) => {
-//       return {
-//         ...customer
-//       };
-//     });
-//     return data;
-//   }
+  //     // Nếu có cần xử lý dữ liệu sản phẩm
+  //     data.customers = data.customers.map((customer) => {
+  //       return {
+  //         ...customer
+  //       };
+  //     });
+  //     return data;
+  //   }
 
   async function fetchAdmin(id) {
     const { admin } = await efetch(`${baseUrl}/${id}`);
@@ -79,9 +79,11 @@ function makeAdminService() {
   //     }
   //   });
   // }
+
   async function updateCustomer(customerId, formData) {
     try {
-      const response = await fetch(`http://localhost:3300/api/v1/customers/${customerId}`, {
+
+      const response = await fetch(`${apiUrl}/v1/customers/${customerId}`, {
         method: 'PUT',
         body: formData
       });

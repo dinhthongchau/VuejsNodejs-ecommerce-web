@@ -120,9 +120,9 @@ function changeCurrentPage(page) {
   router.push({ name: 'iphoneview', query: { page } });
 }
 const sliderImages = ref([
-  '/src/image-shop/slider1.png', // đường dẫn tương đối đến thư mục
-  '/src/image-shop/slider2.png',
-  '/src/image-shop/slider3.png'
+  '/src/assets/image-shop/slider1.png', // đường dẫn tương đối đến thư mục
+  '/src/assets/image-shop/slider2.png',
+  '/src/assets/image-shop/slider3.png'
 ]);
 
 const currentIndex = ref(0);
@@ -206,20 +206,13 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
   <div class="page">
     <!-- Logo -->
     <div class="text-center my-3">
-      <img
-        src="@/image-shop/iphone.png"
-        alt="Logo"
-        class="logo"
-      />
+      <img src="@/assets/image-shop/iphone.png" alt="Logo" class="logo" />
     </div>
 
     <!-- Slider -->
     <div class="slider">
       <div class="slider-images">
-        <img
-          :src="sliderImages[currentIndex]"
-          alt="Slider Image"
-        />
+        <img :src="sliderImages[currentIndex]" alt="Slider Image" />
       </div>
 
       <div class="slider-controls">
@@ -227,57 +220,32 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
         <button @click="nextImage">❯</button>
       </div>
       <div class="slider-indicators">
-        <span
-          v-for="(image, index) in sliderImages"
-          :key="index"
-          class="dot"
-          :class="{ active: currentIndex === index }"
-        ></span>
+        <span v-for="(image, index) in sliderImages" :key="index" class="dot"
+          :class="{ active: currentIndex === index }"></span>
       </div>
     </div>
 
     <div class="filter-cate">
       <div class="ft-cate">
-        <button
-          :class="{ active: selectedFilter === 'all' }"
-          @click="filterAll"
-        >
+        <button :class="{ active: selectedFilter === 'all' }" @click="filterAll">
           Tất cả
         </button>
-        <button
-          :class="{ active: selectedFilter === '16' }"
-          @click="filterIPhone('16')"
-        >
+        <button :class="{ active: selectedFilter === '16' }" @click="filterIPhone('16')">
           Iphone 16
         </button>
-        <button
-          :class="{ active: selectedFilter === '15' }"
-          @click="filterIPhone('15')"
-        >
+        <button :class="{ active: selectedFilter === '15' }" @click="filterIPhone('15')">
           Iphone 15
         </button>
-        <button
-          :class="{ active: selectedFilter === '14' }"
-          @click="filterIPhone('14')"
-        >
+        <button :class="{ active: selectedFilter === '14' }" @click="filterIPhone('14')">
           Iphone 14
         </button>
-        <button
-          :class="{ active: selectedFilter === '13' }"
-          @click="filterIPhone('13')"
-        >
+        <button :class="{ active: selectedFilter === '13' }" @click="filterIPhone('13')">
           Iphone 13
         </button>
-        <button
-          :class="{ active: selectedFilter === '12' }"
-          @click="filterIPhone('12')"
-        >
+        <button :class="{ active: selectedFilter === '12' }" @click="filterIPhone('12')">
           Iphone 12
         </button>
-        <button
-          :class="{ active: selectedFilter === '11' }"
-          @click="filterIPhone('11')"
-        >
+        <button :class="{ active: selectedFilter === '11' }" @click="filterIPhone('11')">
           Iphone 11
         </button>
       </div>
@@ -290,42 +258,26 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
 
     <!-- Danh sách sản phẩm -->
     <div class="product-list">
-      <div
-        v-for="product in filteredProducts"
-        :key="product.product_id"
-        class="product-card"
-        style="flex: 0 0 calc(33.333% - 20px); margin: 10px"
-        @click="goToProductDetail(product.product_id)"
-      >
+      <div v-for="product in filteredProducts" :key="product.product_id" class="product-card"
+        style="flex: 0 0 calc(33.333% - 20px); margin: 10px" @click="goToProductDetail(product.product_id)">
         <!-- click-->
 
         <!-- image -->
         <div v-if="typeof product.product_image === 'string'">
           <template v-if="product.product_image.startsWith('[')">
             <div class="p-1 w-75 h-75">
-              <img
-                v-lazy="JSON.parse(product.product_image)[0].replace(/\\/, '')"
-                alt="No Image"
+              <img v-lazy="JSON.parse(product.product_image)[0].replace(/\\/, '')" alt="No Image"
                 class="img-fluid img-thumbnail"
-                @load="console.log('Image loaded:', JSON.parse(product.product_image)[0])"
-              />
+                @load="console.log('Image loaded:', JSON.parse(product.product_image)[0])" />
             </div>
           </template>
           <template v-else>
-            <img
-              v-lazy="product.product_image"
-              alt="No Image"
-              class="img-fluid img-thumbnail"
-            />
+            <img v-lazy="product.product_image" alt="No Image" class="img-fluid img-thumbnail" />
           </template>
         </div>
         <div v-else-if="Array.isArray(product.product_image)">
           <div class="p-1 w-75 h-75">
-            <img
-              v-lazy="product.product_image[0]"
-              alt="No Image"
-              class="img-fluid img-thumbnail"
-            />
+            <img v-lazy="product.product_image[0]" alt="No Image" class="img-fluid img-thumbnail" />
           </div>
         </div>
 
@@ -337,12 +289,8 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
 
     </div>
     <div class="pagination-wrapper">
-        <MainPagination
-          :total-pages="totalPages"
-          :current-page="currentPage"
-          @update:current-page="changeCurrentPage"
-        />
-      </div>
+      <MainPagination :total-pages="totalPages" :current-page="currentPage" @update:current-page="changeCurrentPage" />
+    </div>
   </div>
 </template>
 

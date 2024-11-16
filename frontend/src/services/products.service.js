@@ -1,4 +1,4 @@
-import { DEFAULT_AVATAR } from '@/constants'; 
+import { DEFAULT_AVATAR } from '@/constants';
 
 /**
  * @param {string} url
@@ -19,9 +19,9 @@ async function efetch(url, options = {}) {
   }
   return json.data;
 }
-
+const apiUrl = import.meta.env.VITE_API_URL;
 function makeProductService() {
-  const baseUrl = 'http://localhost:3300/api/v1/products'; 
+  const baseUrl = `${apiUrl}/v1/products`;
 
   // /**
   //  * Fetch products by filter (e.g., pagination, filtering by fields)
@@ -35,10 +35,10 @@ function makeProductService() {
     // Nếu có cần xử lý dữ liệu sản phẩm
     data.products = data.products.map((product) => {
       return {
-      ...product,
-      product_image: product.product_image ?? DEFAULT_AVATAR // Gán product_image mặc định nếu không có
+        ...product,
+        product_image: product.product_image ?? DEFAULT_AVATAR // Gán product_image mặc định nếu không có
       };
-  });
+    });
     return data;
   }
 
@@ -69,9 +69,9 @@ function makeProductService() {
   //     }
   //   });
   // }
- async function updateProduct(productId, formData) {
+  async function updateProduct(productId, formData) {
     try {
-      const response = await fetch(`http://localhost:3300/api/v1/products/${productId}`, {
+      const response = await fetch(`${apiUrl}/v1/products/${productId}`, {
         method: 'PUT',
         body: formData
       });
@@ -86,7 +86,6 @@ function makeProductService() {
     }
   }
 
-
   async function deleteProduct(id) {
     return efetch(`${baseUrl}/${id}`, {
       method: 'DELETE'
@@ -99,8 +98,6 @@ function makeProductService() {
     });
   }
 
-  
-
   return {
     fetchProducts,
     fetchProduct,
@@ -111,4 +108,4 @@ function makeProductService() {
   };
 }
 
-export default makeProductService(); 
+export default makeProductService();

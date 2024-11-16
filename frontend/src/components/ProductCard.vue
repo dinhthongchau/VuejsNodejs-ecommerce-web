@@ -27,7 +27,7 @@ defineProps({
 
 
         <div class="p-1">
-            <strong>Toàn văn:</strong>
+            <strong>Mô tả sản phẩm:</strong>
             <p>{{ product.product_description }}</p> <!-- Hiển thị mô tả sản phẩm -->
         </div>
         <div class="p-1">

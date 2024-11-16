@@ -11,7 +11,7 @@ const product = ref({
 });
 
 const message = ref('');
-
+const apiUrl = import.meta.env.VITE_API_URL;
 async function onCreateProduct() {
     try {
         const formData = new FormData();
@@ -24,7 +24,7 @@ async function onCreateProduct() {
             formData.append('product_imageFiles', product.value.product_image[i]);
         }
 
-        const response = await fetch('http://localhost:3300/api/v1/products', {
+        const response = await fetch(`${apiUrl}/v1/products`, {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -69,7 +69,7 @@ async function onCreateProduct() {
 
         <div class="mb-3">
             <label for="product_description" class="form-label ">Mô tả sản phẩm:</label>
-            <Field name="product_description"  v-model=" product.product_description"
+            <Field name="product_description" v-model="product.product_description"
                 class="form-control description-field" as="textarea" />
             <ErrorMessage name="product_description" class="error-feedback" />
         </div>
@@ -97,7 +97,7 @@ async function onCreateProduct() {
     font-size: 0.875em;
 }
 
-.description-field{
+.description-field {
     width: 100%;
     height: 300px;
 }

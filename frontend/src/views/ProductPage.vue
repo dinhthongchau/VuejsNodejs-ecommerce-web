@@ -24,7 +24,7 @@ const searchText = ref('');
 //     console.error('Product ID is undefined');
 //     return;
 //   }
-//   // Fetch the product details using productId
+//   // Fetch t/public/uploads/he product details using productId
 //   productsService.fetchProduct(products)
 //     .then((product) => {
 //       console.log('Product details:', product);

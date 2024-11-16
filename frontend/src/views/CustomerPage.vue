@@ -19,32 +19,22 @@ const customers = ref([]);
 const selectedIndex = ref(-1);
 const searchText = ref('');
 
-// onMounted(() => {
-//   if (!customers.value) {
-//     console.error('Customer ID is undefined');
-//     return;
-//   }
-//   // Fetch the customer details using customerId
-//   customersService.fetchCustomer(customers)
-//     .then((customer) => {
-//       console.log('Customer details:', customer);
-//     })
-//     .catch((error) => {
-//       console.error('Error fetching customer:', error);
-//     });
-// });
 
 const searchableCustomers = computed(() =>
     customers.value.map((customer) => {
-        const { customer_name, customer_description } = customer;
-        return [customer_name, customer_description].join('');
+        const { customer_name, customer_email, customer_phone } = customer;
+        // Kết hợp tên, email, và số điện thoại để làm chuỗi tìm kiếm
+        return [customer_name, customer_email, customer_phone].join(' ').toLowerCase();
     })
 );
 
+
 const filteredCustomers = computed(() => {
     if (!searchText.value) return customers.value;
+    // Chuyển searchText thành chữ thường để tìm kiếm không phân biệt chữ hoa/thường
+    const lowerCaseSearchText = searchText.value.toLowerCase();
     return customers.value.filter((customer, index) =>
-        searchableCustomers.value[index].includes(searchText.value)
+        searchableCustomers.value[index].includes(lowerCaseSearchText)
     );
 });
 
@@ -116,7 +106,7 @@ watch(filteredCustomers, () => {
             <CustomerList v-if="filteredCustomers.length > 0" :customers="filteredCustomers"
                 v-model:selected-index="selectedIndex" />
             <p v-else>
-                Không có sản phẩm nào.
+                Không có khách hàng nào.
             </p>
             <div class="mt-3 d-flex flex-wrap justify-content-round align-items-center">
                 <MainPagination :total-pages="totalPages" :current-page="currentPage"

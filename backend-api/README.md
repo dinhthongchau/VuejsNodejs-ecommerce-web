@@ -1,6 +1,9 @@
 create a database named ct313h_projects
-đổi env.example thành .env
-chay npm install ( auto cai dat cac goi ) 
+
+đổi env.example trong backend thành .env
+
+chay npm install ( auto cai dat cac goi, tai e ben frontend , backend  ) 
+
 Chay du lieu gia :  npx knex seed:run all
 
 
