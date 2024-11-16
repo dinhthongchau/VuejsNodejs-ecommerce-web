@@ -12,7 +12,8 @@ const routes = [
   {
     path: '/product_admin',
     name: 'productpage',
-    component: ProductPage
+    component: ProductPage,
+    meta: { requiresAuth: true }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -22,7 +23,8 @@ const routes = [
   {
     path: '/products/add',
     name: 'product.add',
-    component: () => import('@/views/ProductAdd.vue')
+    component: () => import('@/views/ProductAdd.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/iphone',
@@ -38,21 +40,29 @@ const routes = [
   {
     path: '/productedit/:product_id',
     name: 'product.edit',
-    component: () => import('@/views/ProductEdit.vue')
+    component: () => import('@/views/ProductEdit.vue'),
+    meta: { requiresAuth: true }
   },
-  { path: '/customer_admin', name: 'customerpage', component: CustomerPage },
+  {
+    path: '/customer_admin',
+    name: 'customerpage',
+    component: CustomerPage,
+    meta: { requiresAuth: true }
+  },
   {
     path: '/customers/add',
     name: 'customer.add',
-    component: () => import('@/views/CustomerAdd.vue')
+    component: () => import('@/views/CustomerAdd.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/customeredit/:customer_id',
     name: 'customer.edit',
-    component: () => import('@/views/CustomerEdit.vue')
+    component: () => import('@/views/CustomerEdit.vue'),
+    meta: { requiresAuth: true }
   },
 
-  { path: '/order_admin', name: 'orderpage', component: OrderPage },
+  { path: '/order_admin', name: 'orderpage', component: OrderPage, meta: { requiresAuth: false } },
   {
     path: '/orders/add',
     name: 'order.add',
@@ -74,16 +84,51 @@ const routes = [
     },
     meta: { requiresAuth: false } // Cho phép truy cập mà không cần đăng nhập
   },
+  // {
+  //   path: '/logout/',
+  //   name: 'Logout',
+  //   meta: { requiresAuth: true }
+  // },
   {
     path: '/logout/',
     name: 'Logout',
-    meta: { requiresAuth: true }
+    beforeEnter: (to, from, next) => {
+      const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      if (!isLoggedIn) {
+        // Nếu chưa đăng nhập, chuyển hướng về trang chính
+        //toast.error('Bạn chưa đăng nhập thì đừng vào /logout nhé.');
+
+          next('/'); // Chuyển hướng về trang chính sau khi thông báo lỗi
+ 
+      } else {
+        // Thực hiện logic đăng xuất
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('admin_id');
+        localStorage.removeItem('admin_username');
+        alert('Bạn đã đăng xuất thành công!');
+        toast.success('Bạn đã đăng xuất thành công!');
+
+        next('/'); // Chuyển hướng về trang chính sau khi đăng xuất
+      }
+    }
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'; // Kiểm tra trạng thái đăng nhập
+
+  // Kiểm tra các route yêu cầu xác thực
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    alert('Bạn không có quyền truy cập! Vui lòng đăng nhập nếu bạn là người quản trị');
+    next('/'); // Chuyển hướng về trang login
+  } else {
+    next(); // Cho phép tiếp tục nếu không yêu cầu xác thực hoặc đã đăng nhập
+  }
 });
 
 export default router;

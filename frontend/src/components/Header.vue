@@ -33,13 +33,13 @@
         <li class="menu-item">
           <a href="/">PHỤ KIỆN</a>
         </li> -->
-        <li class="menu-item">
+        <li v-if="isLoggedIn" class="menu-item">
           <a href="/product_admin">crud product</a>
         </li>
-        <li class="menu-item">
+        <li v-if="isLoggedIn" class="menu-item">
           <a href="/customer_admin">crud customer</a>
         </li>
-        <li class="menu-item">
+        <li v-if="isLoggedIn" class="menu-item">
           <a href="/order_admin">crud order(chua lam)</a>
         </li>
       </ul>
