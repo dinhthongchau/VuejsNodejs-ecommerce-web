@@ -144,7 +144,7 @@ async function onCreateProduct() {
 
     <div class="mb-3">
       <button class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
-      <button v-if="product.product_id" type="button" class="ms-2 btn btn-danger" @click="deleteProduct">
+      <button  type="button" class="ms-2 btn btn-danger" @click="deleteProduct">
         <i class="fas fa-trash"></i> Xóa
       </button>
     </div>
