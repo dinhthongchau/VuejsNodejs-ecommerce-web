@@ -12,12 +12,7 @@
                         <i class="fas fa-chevron-right"></i>
                     </div>
                 </div>
-                <!-- <div class="thumbnail-images d-flex gap-2 mt-4">
-                    <div v-for="(image, index) in productImages" :key="index" class="thumbnail-wrapper cursor-pointer"
-                        :class="{ 'border-primary': currentImage === image }" @click="currentImage = image">
-                        <img class="img-thumbnail w-25 h-25" :src="image.replace(/\\/g, '')" alt="Thumbnail" />
-                    </div>
-                </div> -->
+                
                 <!-- Thumbnail Images -->
                 <div class="thumbnail-container">
                     <div class="thumbnail-row">
@@ -60,7 +55,7 @@
                     <h3 class="font-weight-bold mb-2">Màu sắc: {{ product.product_color }}</h3>
 
                 </div>
-                <!-- Thêm khung cho phần giảm giá -->
+              
                 <div class="promotion-container ">
                     <h4 class="font-weight-bold text-center promotion-title">Quà tặng và ưu đãi khác:</h4>
                     <ul class="list-unstyled">
@@ -200,40 +195,40 @@ const buyNow = () => {
         // Lấy dữ liệu giỏ hàng hiện tại từ localStorage
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+
         const existingItem = cart.find(item => item.product_id === product.value.product_id);
 
         if (existingItem) {
-            // Nếu đã có, tăng số lượng
+          
             existingItem.quantity += 1;
         } else {
-            // Nếu chưa có, thêm sản phẩm mới
+        
             cart.push({ ...product.value, quantity: 1 });
         }
 
-        // Lưu lại giỏ hàng vào localStorage
+       
         localStorage.setItem('cart', JSON.stringify(cart));
         alert('Đã thêm sản phẩm vào giỏ hàng, chuyển sang mua ngay!');
 
-        // Chuyển hướng đến trang giỏ hàng
+       
         router.push({ name: 'product.cart' });
     }
 };
 
-// them vao gio
+
 const addToCart = () => {
     if (product.value) {
         // Lấy dữ liệu giỏ hàng hiện tại từ localStorage
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+
         const existingItem = cart.find(item => item.product_id === product.value.product_id);
 
         if (existingItem) {
-            // Nếu đã có, tăng số lượng
+           
             existingItem.quantity += 1;
         } else {
-            // Nếu chưa có, thêm sản phẩm mới
+       
             cart.push({ ...product.value, quantity: 1 });
         }
 
@@ -246,7 +241,7 @@ const addToCart = () => {
 </script>
 
 <style scoped>
-/* Nút Primary với nền cam và chữ trắng */
+
 .btn-primary {
     background-color: #ff9800;
 
@@ -254,7 +249,7 @@ const addToCart = () => {
     border-color: #ff9800;
 }
 
-/* Nút Secondary với nền xanh và viền trắng */
+
 .btn-secondary {
     background-color: white;
     /* Màu xanh */
@@ -312,9 +307,7 @@ const addToCart = () => {
 }
 .promotion-container {
     background-color: #f8f9fa;
-    /* Màu nền nhẹ cho phần giảm giá */
     border: 1px solid #ced4da;
-    /* Đường viền xám nhạt */
     padding: 10px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -322,13 +315,10 @@ const addToCart = () => {
 
 .promotion-title {
     background-color: red;
-    /* Màu nền cho tiêu đề */
     color: yellow;
-    /* Màu chữ trắng */
     padding: 10px;
-    /* Khoảng cách bên trong tiêu đề */
     border-radius: 0.25rem;
-    /* Bo tròn góc tiêu đề */
+  
 }
 
 .thumbnail-wrapper {

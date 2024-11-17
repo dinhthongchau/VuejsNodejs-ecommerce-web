@@ -1,48 +1,45 @@
-<!-- LocationPicker.vue  -->
 <template>
-    <div class='grid md:grid-cols-3 space-y-4 md:space-y-0 md:space-x-4'>
-        <div class='relative' v-click-away='hideProvinceList'>
-            <input class='p-1 px-2 appearance-none outline-none text-gray-800 border' v-model.trim='provinceSearch'
-                placeholder='Tỉnh...' @focus='startSearchingProvince' />
-            <div class='absolute z-10 max-h-48 w-full bg-gray-100 overflow-y-auto shadow'
-                v-show='provinceListShown && filteredProvinces.length'>
-                <ul class='list-none'>
-                    <li v-for='(item, idx) in filteredProvinces' :key='idx' v-html='highlightName(item)'
-                        class='px-2 py-1 cursor-pointer bg-white hover:bg-blue-100' @click='selectProvince(item)'></li>
-                </ul>
-            </div>
-        </div>
-        <div class='relative' v-click-away='hideDistrictList'>
-            <input class='p-1 px-2 appearance-none outline-none text-gray-800 border' v-model.trim='districtSearch'
-                placeholder='Huyện...' @focus='startSearchingDistrict' @keyup='searchDistrictOnTyping()' />
-            <div class='absolute z-10 max-h-48 w-full bg-gray-100 overflow-y-auto shadow'
-                v-show='districtListShown && filteredDistricts.length'>
-                <ul class='list-none'>
-                    <li v-for='(item, idx) in filteredDistricts' :key='idx' v-html='highlightName(item)'
-                        class='px-2 py-1 cursor-pointer bg-white hover:bg-blue-100' @click='selectDistrict(item)'></li>
-                </ul>
-            </div>
-        </div>
-        <div class='relative' v-click-away='hideWardList'>
-            <input class='p-1 px-2 appearance-none outline-none text-gray-800 border' v-model.trim='wardSearch'
-                placeholder='Xã...' @focus='startSearchingWard' />
-            <div class='absolute z-10 max-h-48 w-full bg-gray-100 overflow-y-auto shadow'
-                v-show='wardListShown && filteredWards.length'>
-                <ul class='list-none'>
-                    <li v-for='(item, idx) in filteredWards' :key='idx'
-                        class='px-2 py-1 cursor-pointer bg-white hover:bg-blue-100' @click='selectWard(item)'
-                        v-html='highlightName(item)'></li>
-                </ul>
-            </div>
-            <div class="mt-4">
-                <p>Địa chỉ đã chọn: {{ selectedLocation }}</p>
-                <!-- <p> {{ resultAll }}</p> -->
-            </div>
+    <div class='grid md:grid-cols-3 gap-4'>
+        <!-- Province Dropdown -->
+        <div class='relative p-2' v-click-away='hideProvinceList'>
+            <select class='form-select p-2 px-3 border w-[300px]' v-model="selectedProvince"
+                @focus="startSearchingProvince">
+                <option disabled value="">Tỉnh...</option>
+                <option v-for="(province, idx) in filteredProvinces" :key="idx" :value="province">
+                    {{ province.name }}
+                </option>
+            </select>
         </div>
 
+        <!-- District Dropdown -->
+        <div class='relative p-2' v-click-away='hideDistrictList'>
+            <select class='form-select p-2 px-3 border w-[300px]' v-model="selectedDistrict"
+                @focus="startSearchingDistrict" @keyup="searchDistrictOnTyping">
+                <option disabled value="">Huyện...</option>
+                <option v-for="(district, idx) in filteredDistricts" :key="idx" :value="district">
+                    {{ district.name }}
+                </option>
+            </select>
+        </div>
 
+        <!-- Ward Dropdown -->
+        <div class='relative p-2' v-click-away='hideWardList'>
+            <select class='form-select p-2 px-3 border w-[300px]' v-model="selectedWard" @focus="startSearchingWard">
+                <option disabled value="">Xã...</option>
+                <option v-for="(ward, idx) in filteredWards" :key="idx" :value="ward">
+                    {{ ward.name }}
+                </option>
+            </select>
+        </div>
+
+        <div class="mt-4">
+            <p>Địa chỉ đã chọn: {{ selectedLocation }}</p>
+        </div>
     </div>
 </template>
+
+
+
 
 <script>
 
@@ -244,3 +241,4 @@ export default {
 
 
 </script>
+

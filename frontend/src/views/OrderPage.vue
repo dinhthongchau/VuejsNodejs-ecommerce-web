@@ -42,7 +42,7 @@ const selectedOrder = computed(() => {
 
 async function retrieveOrders(page) {
     try {
-        const chunk = await ordersService.fetchOrders(page); // Đảm bảo sử dụng service đúng
+        const chunk = await ordersService.fetchOrders(page);
         totalPages.value = chunk.metadata.lastPage ?? 1;
         orders.value = chunk.orders.sort(
             (current, next) => current.order_date.localeCompare(next.order_date)
@@ -68,11 +68,11 @@ async function onDeleteOrders() {
 }
 
 function goToAddOrder() {
-    router.push({ name: 'order.add' }); // Đảm bảo route đúng
+    router.push({ name: 'order.add' });
 }
 
 function changeCurrentPage(page) {
-    router.push({ name: 'orderpage', query: { page } }); // Đảm bảo route đúng
+    router.push({ name: 'orderpage', query: { page } });
 }
 
 watch(searchText, () => (selectedIndex.value = -1));
@@ -102,7 +102,7 @@ watch(filteredOrders, () => {
             <OrderList v-if="filteredOrders.length > 0" :orders="filteredOrders"
                 v-model:selected-index="selectedIndex" />
             <p v-else>
-                Không có đơn hàng  nào.
+                Không có đơn hàng nào.
             </p>
             <div class="mt-3 d-flex flex-wrap justify-content-round align-items-center">
                 <MainPagination :total-pages="totalPages" :current-page="currentPage"
@@ -130,7 +130,7 @@ watch(filteredOrders, () => {
                     name: 'order.edit',
                     params: { order_id: selectedOrder.order_id }
                 }">
-                    <span class="mt-2 badge text-bg-warning"> <i class="fas fa-edit"></i> Hiệu chỉnh ORDER DETAIL</span>
+                    <span class="mt-2 badge text-bg-warning"> <i class="fas fa-edit"></i> Chỉnh sửa ORDER DETAIL</span>
                 </router-link>
             </div>
         </div>

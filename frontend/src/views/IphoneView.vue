@@ -25,7 +25,7 @@ const searchableProducts = computed(() =>
     return [product_name, product_description].join('');
   })
 );
-const filteredProducts = ref([]); // Dùng ref thay vì computed
+const filteredProducts = ref([]); 
 function updateFilteredProducts() {
   if (!searchText.value) {
     filteredProducts.value = products.value;
@@ -43,29 +43,6 @@ const selectedProduct = computed(() => {
 
 
 
-// async function retrieveProducts() {
-//     try {
-//         let page = 1;
-//         let allProducts = [];
-//         let hasNextPage = true;
-
-//         while (hasNextPage) {
-//             const chunk = await productsService.fetchProducts(page);
-//             allProducts = [...allProducts, ...chunk.products];
-//             hasNextPage = page < (chunk.metadata.lastPage ?? 1);
-//             page++;
-//         }
-
-//         totalPages.value = 1; // Không cần phân trang trong bộ lọc này
-//         products.value = allProducts.sort((current, next) =>
-//             current.product_name.localeCompare(next.product_name)
-//         );
-//         selectedIndex.value = -1;
-//         updateFilteredProducts(); // Cập nhật filteredProducts
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 async function retrieveProducts() {
   try {
     const search = route.query.search || '';
@@ -80,19 +57,18 @@ async function retrieveProducts() {
       page++;
     }
 
-    // Lọc sản phẩm theo truy vấn tìm kiếm
     if (search) {
       allProducts = allProducts.filter((product) =>
         product.product_name.toLowerCase().includes(search.toLowerCase())
       );
     }
 
-    totalPages.value = 1; // Không cần phân trang trong bộ lọc này
+    totalPages.value = 1; 
     products.value = allProducts.sort((current, next) =>
       current.product_name.localeCompare(next.product_name)
     );
     selectedIndex.value = -1;
-    updateFilteredProducts(); // Cập nhật filteredProducts
+    updateFilteredProducts();
   } catch (error) {
     console.log(error);
   }
@@ -120,7 +96,7 @@ function changeCurrentPage(page) {
   router.push({ name: 'iphoneview', query: { page } });
 }
 const sliderImages = ref([
-  '/src/assets/image-shop/slider1.png', // đường dẫn tương đối đến thư mục
+  '/src/assets/image-shop/slider1.png',
   '/src/assets/image-shop/slider2.png',
   '/src/assets/image-shop/slider3.png'
 ]);
@@ -136,18 +112,12 @@ const nextImage = () => {
   currentIndex.value = (currentIndex.value + 1) % sliderImages.value.length;
 };
 
-const selectedFilter = ref('all'); // Mặc định là 'Tất cả'
-
-// Cập nhật hàm filter để thiết lập nút đang được chọn
+const selectedFilter = ref('all'); 
 const filterAll = () => {
   filteredProducts.value = products.value;
   selectedFilter.value = 'all';
 };
 
-// const filterIPhone = (version) => {
-//     filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
-//     selectedFilter.value = version; // Lưu phiên bản được chọn
-// };
 
 const filterIPhone = (version) => {
   if (products.value.length === 0) {
@@ -161,14 +131,7 @@ const filterIPhone = (version) => {
   selectedFilter.value = version; // Lưu phiên bản được chọn
 };
 
-// const filterAll = () => {
-//     filteredProducts.value = products.value;
-// };
 
-// // Sử dụng hàm lọc theo phiên bản Iphone
-// const filterIPhone = (version) => {
-//     filteredProducts.value = products.value.filter(product => product.product_name.includes(`Iphone ${version}`));
-// };
 
 const sortLowToHigh = () => {
   // Logic để sắp xếp sản phẩm từ thấp đến cao
@@ -181,7 +144,7 @@ const sortHighToLow = () => {
 };
 
 function goToProductDetail(productId) {
-  router.push({ name: 'product.detail', params: { id: productId } }); // Đảm bảo route detail có định nghĩa phù hợp
+  router.push({ name: 'product.detail', params: { id: productId } }); 
 }
 function formatCurrency(value) {
   return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
@@ -189,11 +152,11 @@ function formatCurrency(value) {
 onMounted(() => {
   retrieveProducts();
 });
-// Theo dõi thay đổi trong query
+
 watch(
   () => route.query.search,
   (newValue) => {
-    retrieveProducts(); // Gọi lại hàm khi có thay đổi
+    retrieveProducts(); 
   }
 );
 watch(searchText, () => (selectedIndex.value = -1));
@@ -260,14 +223,11 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
     <div class="product-list">
       <div v-for="product in filteredProducts" :key="product.product_id" class="product-card"
         style="flex: 0 0 calc(33.333% - 20px); margin: 10px" @click="goToProductDetail(product.product_id)">
-        <!-- click-->
-
-        <!-- image -->
+  
         <div v-if="typeof product.product_image === 'string'">
           <template v-if="product.product_image.startsWith('[')">
             <div class="p-1 w-75 h-75">
-              <img v-lazy="JSON.parse(product.product_image)[0].replace(/\\/, '')" alt="No Image"
-                class="img-fluid img-thumbnail"
+              <img v-lazy="JSON.parse(product.product_image)[0]" alt="No Image" class="img-fluid img-thumbnail"
                 @load="console.log('Image loaded:', JSON.parse(product.product_image)[0])" />
             </div>
           </template>
@@ -305,24 +265,26 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
 .product-list {
   display: flex;
   flex-wrap: wrap;
-  /* justify-content: center; */
-  margin-bottom: 20px; /* Thêm khoảng cách dưới danh sách sản phẩm */
+  margin-bottom: 20px;
+
 }
 
 .pagination-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 10px; /* Giảm khoảng cách so với danh sách sản phẩm */
+  margin-top: 10px;
+
 }
 
 
 body {
   background-color: #3e3e3f;
-  /* Màu nền cho toàn bộ trang */
+
 }
+
 .logo {
   max-width: 200px;
-  /* Điều chỉnh kích thước logo */
+
 }
 
 .slider {
@@ -378,11 +340,7 @@ body {
   height: 150px;
 }
 
-/* .product-card {
-    border-radius: 10px;
-    margin: 10px;
-    transition: all 0.3s;
-} */
+
 .product-card {
   display: flex;
   flex-direction: column;
@@ -392,7 +350,6 @@ body {
   margin: 10px;
   transition: all 0.3s;
   border: 2px solid #c0c0c0;
-  /* Viền màu cam đậm */
   border-radius: 10px;
 }
 
@@ -411,41 +368,29 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /* Để căn giữa các nút */
   width: 100%;
 }
 
 .ft-cate button {
   margin: 5px;
-  /* Khoảng cách giữa các nút */
   padding: 10px 15px;
-  /* Định dạng nút */
   border: 2px solid #396ce8;
-  /* Đường viền màu xanh */
   border-radius: 5px;
-  /* Bo góc */
   background-color: transparent;
-  /* Không có màu nền */
   color: #396ce8;
-  /* Màu chữ */
   cursor: pointer;
-  /* Con trỏ khi di chuột */
   transition:
     background-color 300ms ease-in-out,
     color 300ms ease-in-out;
-  /* Hiệu ứng chuyển màu */
 }
 
 .ft-cate button:hover {
   background-color: #396ce8;
-  /* Màu nền khi hover */
   color: white;
-  /* Màu chữ khi hover */
 }
 
 .sort-options {
   margin-top: 15px;
-  /* Khoảng cách phía trên */
 }
 
 .sort-options button {
@@ -454,33 +399,26 @@ body {
   border: none;
   border-radius: 5px;
   background-color: #bbb;
-
   color: #fff;
-
   cursor: pointer;
-
   transition: background-color 300ms ease-in-out;
-  /* Hiệu ứng chuyển màu thay thế cho var(--transition) */
+
 }
 
 .sort-options button:hover {
   background-color: black;
-  /* Màu khi hover */
+
 }
 
 .slider-images img {
   width: 1200;
-  /* Chiều rộng 100% của phần tử cha */
   height: 300;
-  /* Tự động điều chỉnh chiều cao để giữ tỉ lệ */
   max-height: 400px;
-  /* Giới hạn chiều cao tối đa */
   border-radius: 8px;
 }
+
 .ft-cate button.active {
   background-color: #396ce8;
-  /* Màu nền khi nút đang được chọn */
   color: white;
-  /* Màu chữ */
 }
 </style>

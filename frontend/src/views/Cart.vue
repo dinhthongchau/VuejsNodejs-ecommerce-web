@@ -62,7 +62,7 @@
                 <div class="mb-3">
                     <label for="customerAddress" class="form-label">Địa chỉ giao hàng</label>
                     <div>
-                        <LocationPicker @location-changed="handleLocationChange" />
+                        <LocationPicker class="form-control" @location-changed="handleLocationChange" />
                     </div>
                     <br>
                     <input type="text" id="customerAddress" v-model="customerAddress" class="form-control" required
@@ -172,7 +172,7 @@ const submitOrder = async () => {
             
                 
 
-            alert('Đặt hàng thành công, thông tin đơn hàng đã gửi về email');
+            alert('Đặt hàng thành công, thông tin đơn hàng đã gửi về email trong giây lát. Về trang chủ');
             // Xoá giỏ hàng trong localStorage và cập nhật lại giỏ hàng
             localStorage.removeItem('cart');
             cartItems.value = [];
@@ -186,8 +186,8 @@ const submitOrder = async () => {
     }
 };
 
+//xu ly tinh, huyen, xa
 const TinhHuyenXaGet = ref('');  // Declare TinhHuyenXaGet here in the parent component
-
 const handleLocationChange = (value) => {
     TinhHuyenXaGet.value = value; // Update TinhHuyenXaGet with the new location value
 };
@@ -204,10 +204,6 @@ const confirmCustomer = async () => {
     //dia chi giao hang
     diaChiGiaoHang.value = TinhHuyenXaGet.value + ', ' + customerAddress.value ; 
     customerId.value = customerData.customer_id;
-    console.log("Ne id   TinhHuyenXaGet" + TinhHuyenXaGet.value);
-
-    console.log("Ne dc value  " + diaChiGiaoHang.value);
-    console.log("Ne dc  " + diaChiGiaoHang);
     try {
         const response = await fetch('/api/v1/customers', {
             method: 'POST',
@@ -237,9 +233,11 @@ const confirmCustomer = async () => {
 
 
 const Url = import.meta.env.VITE_URL;
+const EmailAdmin = import.meta.env.VITE_EMAIL_ADMIN_RECEIVE_ORDER;
 ///send email
 const sendEmail = async () => {
     try {
+        // Gửi email cho khách
         const emailData = {
             to: customerEmail.value, // Gửi đến email khách hàng
             subject: "Thông tin đơn hàng của bạn",
@@ -254,6 +252,23 @@ const sendEmail = async () => {
 
         const response = await axios.post(`${Url}/send-email`, emailData);
         console.log('Email gửi thành công:', response.data.message);
+       
+        // Gửi email cho admin
+        const emailAdminData = {
+            to: EmailAdmin, // Gửi đến email admin
+            subject: "Thông báo đơn hàng mới",
+            text: `Đơn hàng mới vừa được đặt từ khách hàng ${customerEmail.value} (${customerName.value}, SĐT: ${customerPhone.value}).\n\n` +
+                `Thông tin đơn hàng: \n` +
+                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}), Số lượng: ${item.quantity}`).join('\n')} \n\n` +
+                `Tổng tiền: ${formatPrice(totalPrice.value)} đ\n` +
+                `Phương thức thanh toán: ${paymentMethod.value}\n` +
+                `Địa chỉ giao hàng: ${diaChiGiaoHang.value}\n` +
+                `Ghi chú: ${customerNote.value}\n`
+        };
+
+        // Gửi email cho admin
+        const responseAdmin = await axios.post(`${Url}/send-email`, emailAdminData);
+        console.log('Email gửi cho admin thành công:', responseAdmin.data.message);
     } catch (error) {
         console.error('Gửi email thất bại:', error);
     }
@@ -262,7 +277,7 @@ const sendEmail = async () => {
 //confirm cus
 
 const existingIds = new Set(); // Set để lưu trữ các ID đã được tạo
-
+//tạo id ngẫu nghiên khách hàng
 function generateUniqueCustomerId() {
     // Lấy ngày tháng hiện tại
     const now = new Date();
@@ -291,8 +306,7 @@ function generateUniqueCustomerId() {
 const removeFromCart = (cartId) => {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    console.log('CartId cần xóa:', cartId);
-    console.log('Giỏ hàng trước khi xóa:', cart);
+   
 
     // Tìm index của sản phẩm cần xóa
     const index = cart.findIndex(item => item.cart_id === cartId);
@@ -343,5 +357,8 @@ export default {
 .table img {
     max-width: 50px;
     height: auto;
+}
+.form-control{
+    width: 600px;
 }
 </style>

@@ -93,19 +93,7 @@ function deleteCustomer() {
       />
       <ErrorMessage name="customer_address" class="error-feedback" />
     </div>
-    <!-- <div class="mb-3 form-check">
-      <Field
-        name="favorite"
-        type="checkbox"
-        class="form-check-input"
-        :model-value="customer.favorite"
-        :value="1"
-        :unchecked-value="0"
-      />
-      <label for="favorite" class="form-check-label">
-        <strong>Liên hệ yêu thích</strong>
-      </label>
-    </div> -->
+ 
     <div class="mb-3">
       <button class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
       <button v-if="customer.customer_id" type="button" class="ms-2 btn btn-danger" @click="deleteCustomer">
@@ -114,6 +102,3 @@ function deleteCustomer() {
     </div>
   </Form>
 </template>
-<!-- <style scoped>
-@import '@/assets/form.css';
-</style> -->

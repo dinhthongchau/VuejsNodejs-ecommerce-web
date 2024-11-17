@@ -36,49 +36,49 @@ function deleteOrder() {
 
 <template>
   <Form @submit="submitOrder">
-    <!-- Order ID (Readonly, không thể thay đổi) -->
+    
     <div class="mb-3">
       <label for="order_id" class="form-label">Mã Đơn Hàng</label>
       <Field name="order_id" type="text" class="form-control" :value="order.order_id" readonly />
       <ErrorMessage name="order_id" class="error-feedback" />
     </div>
 
-    <!-- Customer ID (Readonly) -->
+
     <div class="mb-3">
       <label for="customer_id" class="form-label">Mã Khách Hàng</label>
       <Field name="customer_id" type="text" class="form-control" :value="order.customer_id" readonly />
       <ErrorMessage name="customer_id" class="error-feedback" />
     </div>
 
-    <!-- Order Date (Readonly) -->
+ 
     <div class="mb-3">
       <label for="order_date" class="form-label">Ngày Đặt Hàng</label>
       <Field name="order_date" type="text" class="form-control" :value="order.order_date" readonly />
       <ErrorMessage name="order_date" class="error-feedback" />
     </div>
 
-    <!-- Total Order (Readonly) -->
+ 
     <div class="mb-3">
       <label for="order_total" class="form-label">Tổng Đơn Hàng</label>
       <Field name="order_total" type="number" class="form-control" :value="order.order_total" readonly />
       <ErrorMessage name="order_total" class="error-feedback" />
     </div>
 
-    <!-- Phương thức thanh toán -->
+  
     <div class="mb-3">
       <label for="order_payment_method" class="form-label">Phương Thức Thanh Toán</label>
       <Field name="order_payment_method" type="text" class="form-control" v-model="order.order_payment_method" />
       <ErrorMessage name="order_payment_method" class="error-feedback" />
     </div>
 
-    <!-- Trạng thái đơn hàng -->
+
     <div class="mb-3">
       <label for="order_status" class="form-label">Trạng Thái Đơn Hàng</label>
       <Field name="order_status" type="text" class="form-control" v-model="order.order_status" />
       <ErrorMessage name="order_status" class="error-feedback" />
     </div>
 
-    <!-- Ghi chú đơn hàng -->
+  
     <div class="mb-3">
       <label for="order_note" class="form-label">Ghi Chú Đơn Hàng</label>
       <Field name="order_note" as="textarea" class="form-control" v-model="order.order_note" rows="4" />
@@ -94,6 +94,4 @@ function deleteOrder() {
     </div>
   </Form>
 </template>
-<!-- <style scoped>
-@import '@/assets/form.css';
-</style> -->
+

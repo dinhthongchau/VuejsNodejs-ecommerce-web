@@ -11,7 +11,7 @@ const route = useRoute();
 const product = ref(null);
 const message = ref('');
 
-const productId = route.params.product_id; 
+const productId = route.params.product_id;
 console.log('Product ID here:', productId);
 
 onMounted(() => {
@@ -31,7 +31,7 @@ onMounted(() => {
 
 async function getProduct(product_id) {
   try {
-    console.log("product_id có được truyền không:" ,product_id);
+    console.log("product_id có được truyền không:", product_id);
     console.log("lỗi ở đây");
     product.value = await productsService.fetchProduct(product_id);
   } catch (error) {
@@ -47,22 +47,15 @@ async function getProduct(product_id) {
 async function onUpdateProduct(product) {
   try {
     await productsService.updateProduct(productId, product);
-    message.value = 'Liên hệ được cập nhật thành công.';
+    message.value = 'Product được cập nhật thành công.';
   } catch (error) {
     console.log(error);
-    message.value = 'Lỗi cập nhật Liên hệ.';
+    message.value = 'Lỗi cập nhật Product.';
   }
 }
-// async function onUpdateProduct(formData) {
-//   try {
-//     await productsService.updateProduct(productId, formData); // Truyền productId và formData đúng
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// }
 
 async function onDeleteProduct(product_id) {
-  if (confirm('Bạn muốn xóa Liên hệ này?')) {
+  if (confirm('Bạn muốn xóa Product này?')) {
     try {
       await productsService.deleteProduct(product_id);
       router.push({ name: 'productpage' });
@@ -72,16 +65,11 @@ async function onDeleteProduct(product_id) {
   }
 }
 getProduct(productId);
-//getProduct(route.params.product_id);
 </script>
 <template>
   <div v-if="product" class="page">
-    <h4>Hiệu chỉnh Product</h4>
-    <ProductForm
-      :product="product"
-      @submit:product="onUpdateProduct"
-      @delete:product="onDeleteProduct"
-    />
+    <h4>Chỉnh sửa Product</h4>
+    <ProductForm :product="product" @submit:product="onUpdateProduct" @delete:product="onDeleteProduct" />
     <p>{{ message }}</p>
   </div>
 </template>

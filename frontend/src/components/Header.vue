@@ -3,59 +3,51 @@
     <!-- <div class="logo">
       <img src="@/image-shop/logo.png" alt="Logo" />
     </div> -->
-    <div
-      class="logo"
-      @click="goToHomePage"
-      style="cursor: pointer"
-    >
-      <img
-        src="@/assets/image-shop/logo.png"
-        alt="Logo"
-      />
+    <div class="logo" @click="goToHomePage" style="cursor: pointer">
+      <img src="@/assets/image-shop/logo.png" alt="Logo" />
     </div>
     <div class="menu-container">
       <ul class="menu">
         <li class="menu-item">
-          <a href="/iphone">IPHONE</a>
+          <router-link to="/iphone">IPHONE</router-link>
+        </li>
+        <li class="menu-item">
+          <router-link to="/macbook">MACBOOK</router-link>
+        </li>
+        <li class="menu-item">
+          <router-link to="/apple-watch">APPLE WATCH</router-link>
+        </li>
+        <li class="menu-item">
+          <router-link to="/air-pod">AIR POD</router-link>
+        </li>
+        <li class="menu-item">
+          <router-link to="/mac-mini">MAC MINI</router-link>
         </li>
         <li v-if="isLoggedIn" class="menu-item">
-          <a href="/product_admin">crud product</a>
+          <router-link to="/product_admin">CRUD product</router-link>
         </li>
         <li v-if="isLoggedIn" class="menu-item">
-          <a href="/customer_admin">crud customer</a>
+          <router-link to="/customer_admin">CRUD customer</router-link>
         </li>
         <li v-if="isLoggedIn" class="menu-item">
-          <a href="/order_admin">crud order</a>
+          <router-link to="/order_admin">CRUD order</router-link>
         </li>
+
+
       </ul>
     </div>
     <div class="search-bar">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Tìm kiếm sản phẩm..."
-        @keyup.enter="searchProduct"
-      />
+      <input type="text" v-model="searchQuery" placeholder="Tìm kiếm sản phẩm..." @keyup.enter="searchProduct" />
       <button @click="searchProduct">Tìm kiếm</button>
     </div>
-    <a
-      href="/cart"
-      class="cart ms-3"
-    >
+    <a href="/cart" class="cart ms-3">
       <i class="fas fa-shopping-cart"></i>
       <span class="number badge bg-danger">Giỏ hàng</span>
     </a>
-    <button
-      v-if="!isLoggedIn"
-      @click="login"
-    >
+    <button v-if="!isLoggedIn" @click="login" class="login-btn">
       Login
     </button>
-    <button
-      v-if="isLoggedIn"
-      @click="logout"
-      class="logout-btn"
-    >
+    <button v-if="isLoggedIn" @click="logout" class="logout-btn">
       Logout
     </button>
   </header>
@@ -103,32 +95,31 @@ watch(searchQuery, (newValue) => {
   }
 });
 </script>
-
 <style scoped>
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px 40px; /* Tăng padding để header cao hơn */
+  padding: 20px 40px;
   background-color: #333;
   color: white;
 }
 
 .logo img {
-  max-height: 80px; /* Tăng kích thước logo */
+  max-height: 80px;
   height: auto;
   border-radius: 10px;
 }
 
 .menu-container {
-  flex-grow: 1; /* Để menu chiếm không gian linh hoạt */
+  flex-grow: 1;
   display: flex;
-  justify-content: center; /* Đẩy menu ra giữa */
+  justify-content: center;
 }
 
 .menu {
   display: flex;
-  gap: 20px; /* Tăng khoảng cách giữa các mục menu */
+  gap: 20px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -136,10 +127,10 @@ watch(searchQuery, (newValue) => {
 
 .menu-item a {
   color: white;
-  padding: 15px 20px; /* Tăng kích thước vùng nhấn */
+  padding: 15px 20px;
   text-decoration: none;
-  font-size: 1.2rem; /* Tăng kích thước chữ */
-  font-weight: 600; /* Làm đậm chữ */
+  font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .menu-item a:hover {
@@ -150,11 +141,11 @@ watch(searchQuery, (newValue) => {
 .search-bar {
   display: flex;
   align-items: center;
-  gap: 10px; /* Tăng khoảng cách giữa ô input và nút */
+  gap: 10px;
 }
 
 .search-bar input {
-  width: 250px; /* Tăng chiều rộng ô tìm kiếm */
+  width: 250px;
   padding: 10px;
   border: none;
   border-radius: 5px;
@@ -162,7 +153,7 @@ watch(searchQuery, (newValue) => {
 }
 
 .search-bar button {
-  width: 120px; /* Kích thước đồng nhất với các nút khác */
+  width: 120px;
   height: 40px;
   border: none;
   border-radius: 5px;
@@ -226,9 +217,13 @@ button:hover {
   background-color: #2a52c6;
 }
 
+ .logout-btn {
+  margin-left: 15px;
+}
+.login-btn {
+   margin-left: 15px;
+ }
 .logout-btn:hover {
   background-color: #c9302c;
 }
-
-
 </style>

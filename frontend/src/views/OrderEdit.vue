@@ -20,7 +20,7 @@ onMounted(() => {
         return;
     }
     // Fetch the order details using orderId
-    ordersService.fetchOrder(orderId) // Sử dụng orderId
+    ordersService.fetchOrder(orderId) // 
         .then((order) => {
             console.log('Order details:', order);
         })
@@ -47,22 +47,15 @@ async function getOrder(order_id) {
 async function onUpdateOrder(order) {
     try {
         await ordersService.updateOrder(orderId, order);
-        message.value = 'Liên hệ được cập nhật thành công.';
+        message.value = 'Order được cập nhật thành công.';
     } catch (error) {
         console.log(error);
-        message.value = 'Lỗi cập nhật Liên hệ.';
+        message.value = 'Lỗi cập nhật Order.';
     }
 }
-// async function onUpdateOrder(formData) {
-//   try {
-//     await ordersService.updateOrder(orderId, formData); // Truyền orderId và formData đúng
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// }
 
 async function onDeleteOrder(order_id) {
-    if (confirm('Bạn muốn xóa Liên hệ này?')) {
+    if (confirm('Bạn muốn xóa Order này?')) {
         try {
             await ordersService.deleteOrder(order_id);
             router.push({ name: 'orderpage' });
@@ -72,11 +65,11 @@ async function onDeleteOrder(order_id) {
     }
 }
 getOrder(orderId);
-//getOrder(route.params.order_id);
+
 </script>
 <template>
     <div v-if="order" class="page">
-        <h4>Hiệu chỉnh Liên hệ</h4>
+        <h4>Chỉnh sửa Order</h4>
         <OrderForm :order="order" @submit:order="onUpdateOrder" @delete:order="onDeleteOrder" />
         <p>{{ message }}</p>
     </div>

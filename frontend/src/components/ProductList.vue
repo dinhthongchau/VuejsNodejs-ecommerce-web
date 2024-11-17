@@ -1,4 +1,3 @@
-<!-- ProductTable.vue -->
 <script setup>
 defineProps({
   products: { type: Array, default: () => [] },
@@ -6,6 +5,9 @@ defineProps({
 });
 
 const $emit = defineEmits(['update:selectedIndex']);
+const formattedPrice = (price) => {
+  return new Intl.NumberFormat('vi-VN').format(price);
+};
 </script>
 
 <template>
@@ -16,7 +18,6 @@ const $emit = defineEmits(['update:selectedIndex']);
         <th class="col-3">Tên sản phẩm</th>
         <th class="col-2">Giá sản phẩm</th>
         <th class="col-2">Màu sắc</th>
-        <!-- <th class="col-3">Mô tả sản phẩm</th> -->
       </tr>
     </thead>
     <tbody>
@@ -24,13 +25,14 @@ const $emit = defineEmits(['update:selectedIndex']);
         :class="{ 'table-active': index === selectedIndex }" @click="$emit('update:selectedIndex', index)">
         <td>{{ product.product_id }}</td>
         <td>{{ product.product_name }}</td>
-        <td>{{ product.product_price }} đ</td>
+        <td>{{ formattedPrice(product.product_price) }} đ</td>
         <td>{{ product.product_color }}</td>
-        <!-- <td>{{ product.product_description }}</td> -->
       </tr>
     </tbody>
   </table>
 </template>
+
+
 
 <style>
 .table {
@@ -39,17 +41,14 @@ const $emit = defineEmits(['update:selectedIndex']);
 
 .table-striped tbody tr:nth-of-type(odd) {
   background-color: #f9f9f9;
-  /* Màu nền cho hàng lẻ */
 }
 
 .table-active {
   background-color: #cce5ff;
-  /* Màu khi dòng được chọn */
 }
 
 .col-2,
 .col-3 {
   width: auto;
-  /* Cân chỉnh độ rộng các cột */
 }
 </style>

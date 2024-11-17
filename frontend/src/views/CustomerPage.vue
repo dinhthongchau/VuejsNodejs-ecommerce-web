@@ -23,7 +23,7 @@ const searchText = ref('');
 const searchableCustomers = computed(() =>
     customers.value.map((customer) => {
         const { customer_name, customer_email, customer_phone } = customer;
-        // Kết hợp tên, email, và số điện thoại để làm chuỗi tìm kiếm
+
         return [customer_name, customer_email, customer_phone].join(' ').toLowerCase();
     })
 );
@@ -31,7 +31,7 @@ const searchableCustomers = computed(() =>
 
 const filteredCustomers = computed(() => {
     if (!searchText.value) return customers.value;
-    // Chuyển searchText thành chữ thường để tìm kiếm không phân biệt chữ hoa/thường
+
     const lowerCaseSearchText = searchText.value.toLowerCase();
     return customers.value.filter((customer, index) =>
         searchableCustomers.value[index].includes(lowerCaseSearchText)
@@ -46,7 +46,7 @@ const selectedCustomer = computed(() => {
 
 async function retrieveCustomers(page) {
     try {
-        const chunk = await customersService.fetchCustomers(page); // Đảm bảo sử dụng service đúng
+        const chunk = await customersService.fetchCustomers(page);
         totalPages.value = chunk.metadata.lastPage ?? 1;
         customers.value = chunk.customers.sort(
             (current, next) => current.customer_name.localeCompare(next.customer_name)
@@ -72,22 +72,22 @@ async function onDeleteCustomers() {
 }
 
 function goToAddCustomer() {
-    router.push({ name: 'customer.add' }); // Đảm bảo route đúng
+    router.push({ name: 'customer.add' });
 }
 
 function changeCurrentPage(page) {
-    router.push({ name: 'customerpage', query: { page } }); // Đảm bảo route đúng
+    router.push({ name: 'customerpage', query: { page } });
 }
 
 watch(searchText, () => (selectedIndex.value = -1));
 watch(currentPage, () => retrieveCustomers(currentPage.value), { immediate: true });
 watch(searchText, () => {
-    console.log("Search text changed:", searchText.value); // In giá trị searchText
+    console.log("Search text changed:", searchText.value);
     selectedIndex.value = -1;
 });
 
 watch(filteredCustomers, () => {
-    console.log("Filtered Customers:", filteredCustomers.value); // Kiểm tra sản phẩm đã lọc
+    console.log("Filtered Customers:", filteredCustomers.value);
 });
 
 </script>
@@ -134,7 +134,7 @@ watch(filteredCustomers, () => {
                     name: 'customer.edit',
                     params: { customer_id: selectedCustomer.customer_id }
                 }">
-                    <span class="mt-2 badge text-bg-warning"> <i class="fas fa-edit"></i> Hiệu chỉnh KHÁCH HÀNG</span>
+                    <span class="mt-2 badge text-bg-warning"> <i class="fas fa-edit"></i> Chỉnh sửa KHÁCH HÀNG</span>
                 </router-link>
             </div>
         </div>

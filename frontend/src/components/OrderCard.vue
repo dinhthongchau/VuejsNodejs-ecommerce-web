@@ -92,7 +92,7 @@ function formatCurrency(amount) {
             {{ order.order_status }}
         </div>
         <div class="p-1">
-            <strong>Ghi chú đơn hàng:</strong>
+            <strong>Danh sách sản phẩm :</strong>
             <div v-html="formatOrderNote(order.order_note)"></div> <!-- Thay về v-html để hiển thị HTML -->
 
         </div>

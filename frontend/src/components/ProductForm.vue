@@ -3,17 +3,18 @@ import { ref, useTemplateRef } from 'vue';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
+
 const props = defineProps({
   product: { type: Object, required: true }
-  
 });
+
 const apiUrl = import.meta.env.VITE_API_URL;
 const product = ref({
   product_name: props.product.product_name,
   product_price: props.product.product_price,
   product_color: props.product.product_color,
   product_description: props.product.product_description,
-  product_image: props.product.product_image // Chứa danh sách file hình ảnh
+  product_image: props.product.product_image
 });
 
 let imageFileInput = useTemplateRef('image-file-input');
@@ -22,22 +23,6 @@ const $emit = defineEmits(['submit:product', 'delete:product']);
 
 let validationSchema = toTypedSchema(
   z.object({
-//     name: z
-//       .string()
-//       .min(2, { message: 'Tên phải ít nhất 2 ký tự.' })
-//       .max(50, { message: 'Tên có nhiều nhất 50 ký tự.' }),
-//     email: z
-//       .string()
-//       .email({ message: 'E-mail không đúng.' })
-//       .max(50, { message: 'E-mail tối đa 50 ký tự.' }),
-//     address: z.string().max(100, { message: 'Địa chỉ tối đa 100 ký tự.' }),
-//     phone: z
-//       .string()
-//       .regex(/(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})\b/g, {
-//         message: 'Số điện thoại không hợp lệ.'
-//       }),
-//     favorite: z.number().optional(),
-//     avatarFile: z.instanceof(File).optional()
     product_name: z
       .string()
       .min(1, { message: 'Tên sản phẩm là bắt buộc.' })
@@ -52,28 +37,18 @@ let validationSchema = toTypedSchema(
   })
 );
 
-// function previewImageFile(event) {
-//   const file = event.target.files[0];
-//   const reader = new FileReader();
-//   reader.onload = (evt) => {
-//     imageFile.value = evt.target.result;
-//   };
-//   reader.readAsDataURL(file);
-// }
 function previewImageFile(event) {
   const files = Array.from(event.target.files);
-  imageFile.value = []; // Xóa mảng cũ
+  imageFile.value = [];
 
   files.forEach((file) => {
     const reader = new FileReader();
     reader.onload = (evt) => {
-      imageFile.value.push(evt.target.result); // Lưu từng ảnh vào danh sách imageFile
+      imageFile.value.push(evt.target.result);
     };
     reader.readAsDataURL(file);
   });
 }
-
-
 
 function deleteProduct() {
   $emit('delete:product', props.product.product_id);
@@ -107,23 +82,17 @@ async function onCreateProduct() {
     }
 
     const result = await response.json();
-    message.value = 'Sản phẩm được tạo thành công!';
+    message.value = 'Sản phẩm được sửa thành công!';
     console.log(result);
   } catch (error) {
     console.error(error);
     message.value = 'Tạo sản phẩm thất bại.';
   }
 }
-
-
-
 </script>
-
-
 
 <template>
   <Form :validation-schema="validationSchema" @submit="onCreateProduct">
-
     <div>
       <label for="product_name" class="form-label">Tên sản phẩm</label>
       <Field name="product_name" type="text" class="form-control" v-model="product.product_name" />
@@ -141,42 +110,37 @@ async function onCreateProduct() {
     </div>
     <div class="mb-3">
       <label for="product_description" class="form-label">Mô tả</label>
-      <Field name="product_description" type="text" class="form-control" v-model="product.product_description" />
+      <Field name="product_description" as="textarea" rows="5" class="form-control"
+        v-model="product.product_description" style="min-height: 100px; resize: vertical;" />
       <ErrorMessage name="product_description" class="error-feedback" />
     </div>
-    <!-- <div class="mb-3 form-check">
-      <Field
-        name="favorite"
-        type="checkbox"
-        class="form-check-input"
-        :model-value="product.favorite"
-        :value="1"
-        :unchecked-value="0"
-      />
-      <label for="favorite" class="form-check-label">
-        <strong>Liên hệ yêu thích</strong>
-      </label>
-    </div> -->
+
     <div class="mb-3">
       <label for="product_image" class="form-label">Hình ảnh:</label>
-      <input type="file" class="form-control" multiple @change="e => product.product_image = e.target.files" />
+      <input type="file" class="form-control" multiple
+        @change="e => { previewImageFile(e); product.product_image = e.target.files }" />
     </div>
-    
-    <div v-if="Array.isArray(imageFile) && imageFile.length">
-      <div v-for="(img, index) in imageFile" :key="index" class="p-1 w-75 h-75">
-        <img class="img-fluid img-thumbnail" :src="img" alt="No Image" />
+
+    <!-- Preview ảnh -->
+    <div class="mb-3">
+      <!-- Preview cho ảnh mới upload -->
+      <div v-if="Array.isArray(imageFile) && imageFile.length" class="d-flex flex-wrap">
+        <div v-for="(img, index) in imageFile" :key="index" class="p-1" style="width: 150px; height: 150px;">
+          <img :src="img" alt="Preview" class="img-fluid img-thumbnail"
+            style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+
+      <!-- Preview cho ảnh đã có -->
+      <div v-else-if="typeof product.product_image === 'string' && product.product_image.startsWith('[')"
+        class="d-flex flex-wrap">
+        <div v-for="(image, index) in JSON.parse(product.product_image)" :key="index" class="p-1"
+          style="width: 150px; height: 150px;">
+          <img :src="image.replace(/\\/, '')" alt="No Image" class="img-fluid img-thumbnail"
+            style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
       </div>
     </div>
-
-    <div v-else-if="typeof product.product_image === 'string'">
-      <template v-if="product.product_image.startsWith('[')">
-        <div v-for="(image, index) in JSON.parse(product.product_image)" :key="index" class="p-1 w-75 h-75">
-          <img class="img-fluid img-thumbnail" :src="image.replace(/\\/, '')" alt="No Image" />
-        </div>
-      </template>
-
-    </div>
-
 
     <div class="mb-3">
       <button class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
@@ -187,6 +151,3 @@ async function onCreateProduct() {
   </Form>
   <p>{{ message }}</p>
 </template>
-<!-- <style scoped>
-@import '@/assets/form.css';
-</style> -->

@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  customers: { type: Array, default: () => [] }, // Thay contacts thành customers
+  customers: { type: Array, default: () => [] }, 
   selectedIndex: { type: Number, default: -1 },
 });
 
@@ -14,9 +14,9 @@ const $emit = defineEmits(['update:selectedIndex']);
       <tr>
         <th>ID khách hàng</th>
         <th>Tên khách hàng</th>
-        <th>Email</th>
+        <!-- <th>Email</th> -->
         <th>Số điện thoại</th>
-        <th>Địa chỉ</th>
+        <!-- <th>Địa chỉ</th> -->
       </tr>
     </thead>
     <tbody>
@@ -24,9 +24,9 @@ const $emit = defineEmits(['update:selectedIndex']);
         :class="{ 'table-active': index === selectedIndex }" @click="$emit('update:selectedIndex', index)">
         <td>{{ customer.customer_id }}</td>
         <td>{{ customer.customer_name }}</td>
-        <td>{{ customer.customer_email }}</td>
+        <!-- <td>{{ customer.customer_email }}</td> -->
         <td>{{ customer.customer_phone }}</td>
-        <td>{{ customer.customer_address }}</td>
+        <!-- <td>{{ customer.customer_address }}</td> -->
       </tr>
     </tbody>
   </table>

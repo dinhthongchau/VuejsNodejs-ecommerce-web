@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  orders: { type: Array, default: () => [] }, // Thay contacts thành orders
+  orders: { type: Array, default: () => [] }, 
   selectedIndex: { type: Number, default: -1 },
 });
 function formatDate(dateString) {
@@ -37,9 +37,9 @@ function formatCurrency(amount) {
       <tr>
         <th class="col-2">ID đơn hàng</th>
         <th class="col-2">ID khách hàng</th>
-        <th class="col-2">Ngày đặt hàng</th>
+        <!-- <th class="col-2">Ngày đặt hàng</th> -->
         <th class="col-2">Tổng đơn hàng</th>
-        <th class="col-2">Phương thức thanh toán</th>
+        <!-- <th class="col-2">Phương thức thanh toán</th> -->
         <th class="col-2">Trạng thái đơn hàng</th>
         <!-- <th class="col-4">Ghi chú đơn hàng</th> -->
       </tr>
@@ -49,9 +49,9 @@ function formatCurrency(amount) {
         @click="$emit('update:selectedIndex', index)">
         <td>{{ order.order_id }}</td>
         <td>{{ order.customer_id }}</td>
-        <td>{{ order.order_date }}</td>
+        <!-- <td>{{ order.order_date }}</td> -->
         <td>{{ formatCurrency(order.order_total) }} đ</td>
-        <td>{{ order.order_payment_method }}</td>
+        <!-- <td>{{ order.order_payment_method }}</td> -->
         <td>{{ order.order_status }}</td>
         <!-- <td>
           <div v-html="formatOrderNote(order.order_note)"></div>

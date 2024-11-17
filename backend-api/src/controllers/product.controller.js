@@ -1,8 +1,6 @@
-const productsService = require('../services/product.service');
-const ApiError = require('../api-error');
-const JSend = require('../jsend');
-
-
+const productsService = require("../services/product.service");
+const ApiError = require("../api-error");
+const JSend = require("../jsend");
 
 async function createProduct(req, res, next) {
   try {
@@ -47,55 +45,54 @@ async function createProduct(req, res, next) {
   }
 }
 
-
-
-
-
-
-
 async function getProductsByFilter(req, res, next) {
   let result = {
     metadata: {
-    products: [],
-    totalRecords: 0,
-    firstPage: 1,
-    lastPage: 1,
-    page: 1,
-    limit: 5,
-    }
+      products: [],
+      totalRecords: 0,
+      firstPage: 1,
+      lastPage: 1,
+      page: 1,
+      limit: 5,
+    },
   };
   try {
     result = await productsService.getManyProducts(req.query);
-    
   } catch (error) {
     console.log(error);
-    return next(new ApiError(500, 'An error occurred while retrieving products'));
+    return next(
+      new ApiError(500, "An error occurred while retrieving products")
+    );
   }
 
-   return res.json(
+  return res.json(
     JSend.success({
       products: result.products,
       metadata: result.metadata,
     })
   );
 }
-  
+
 async function getProduct(req, res, next) {
   const { product_id } = req.params;
 
   try {
-    const product = await productsService.getProductById(product_id); 
+    const product = await productsService.getProductById(product_id);
     if (!product) {
-      return next(new ApiError(404, "Product not found")); 
+      return next(new ApiError(404, "Product not found"));
     }
-    return res.json(JSend.success({ product })); 
+    return res.json(JSend.success({ product }));
   } catch (error) {
-    console.error(error); 
-    return next(new ApiError(500, `Error retrieving product with product_id=${product_id}`)); // Trả về lỗi 500
+    console.error(error);
+    return next(
+      new ApiError(
+        500,
+        `Error retrieving product with product_id=${product_id}`
+      )
+    ); // Trả về lỗi 500
   }
 }
 
-  
 async function updateProduct(req, res, next) {
   try {
     const { product_id } = req.params;
@@ -153,43 +150,46 @@ async function updateProduct(req, res, next) {
     );
   }
 }
-  
 
-  async function deleteProduct(req, res, next) {
-    const { product_id } = req.params; 
-  
-    try {
-      const deleted = await productsService.deleteProduct(product_id); 
-  
-      if (!deleted) {
-        return next(new ApiError(404, 'Product not found')); 
-      }
-  
-      return res.json(JSend.success()); 
-    } catch (error) {
-      console.log(error); 
-      return next(new ApiError(500, `Could not delete product with product_id=${product_id}`)); 
-    }
-  }
-  
+async function deleteProduct(req, res, next) {
+  const { product_id } = req.params;
 
- 
-  async function deleteAllProduct(req, res, next) {
-    try {
-      await productsService.deleteAllProduct();
-      return res.json(JSend.success());
-    } catch (error) {
-      console.log(error);
-      return next(new ApiError(500, 'An error occurred while removing all products'));
+  try {
+    const deleted = await productsService.deleteProduct(product_id);
+
+    if (!deleted) {
+      return next(new ApiError(404, "Product not found"));
     }
+
+    return res.json(JSend.success());
+  } catch (error) {
+    console.log(error);
+    return next(
+      new ApiError(
+        500,
+        `Could not delete product with product_id=${product_id}`
+      )
+    );
   }
-  
+}
+
+async function deleteAllProduct(req, res, next) {
+  try {
+    await productsService.deleteAllProduct();
+    return res.json(JSend.success());
+  } catch (error) {
+    console.log(error);
+    return next(
+      new ApiError(500, "An error occurred while removing all products")
+    );
+  }
+}
+
 module.exports = {
-    createProduct,
-    getProductsByFilter,
-    getProduct,
-    updateProduct,
-    deleteProduct,
-    deleteAllProduct,
-  };
-  
+  createProduct,
+  getProductsByFilter,
+  getProduct,
+  updateProduct,
+  deleteProduct,
+  deleteAllProduct,
+};

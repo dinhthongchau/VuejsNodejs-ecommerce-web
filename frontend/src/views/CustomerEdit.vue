@@ -19,8 +19,7 @@ onMounted(() => {
         console.error('Customer ID is undefined');
         return;
     }
-    // Fetch the customer details using customerId
-    customersService.fetchCustomer(customerId) // Sử dụng customerId
+    customersService.fetchCustomer(customerId)
         .then((customer) => {
             console.log('Customer details:', customer);
         })
@@ -47,22 +46,16 @@ async function getCustomer(customer_id) {
 async function onUpdateCustomer(customer) {
     try {
         await customersService.updateCustomer(customerId, customer);
-        message.value = 'Liên hệ được cập nhật thành công.';
+        message.value = 'Customer được cập nhật thành công.';
     } catch (error) {
         console.log(error);
-        message.value = 'Lỗi cập nhật Liên hệ.';
+        message.value = 'Lỗi cập nhật Customer.';
     }
 }
-// async function onUpdateCustomer(formData) {
-//   try {
-//     await customersService.updateCustomer(customerId, formData); // Truyền customerId và formData đúng
-//   } catch (error) {
-//     console.error("Error:", error);
-//   }
-// }
+
 
 async function onDeleteCustomer(customer_id) {
-    if (confirm('Bạn muốn xóa Liên hệ này?')) {
+    if (confirm('Bạn muốn xóa Customer này?')) {
         try {
             await customersService.deleteCustomer(customer_id);
             router.push({ name: 'customerpage' });
@@ -72,11 +65,11 @@ async function onDeleteCustomer(customer_id) {
     }
 }
 getCustomer(customerId);
-//getCustomer(route.params.customer_id);
+
 </script>
 <template>
     <div v-if="customer" class="page">
-        <h4>Hiệu chỉnh Liên hệ</h4>
+        <h4>Chỉnh sửa Customer</h4>
         <CustomerForm :customer="customer" @submit:customer="onUpdateCustomer" @delete:customer="onDeleteCustomer" />
         <p>{{ message }}</p>
     </div>
