@@ -28,9 +28,9 @@ let validationSchema = toTypedSchema(
       .min(1, { message: 'Tên sản phẩm là bắt buộc.' })
       .max(255, { message: 'Tên sản phẩm tối đa 255 ký tự.' }),
     product_price: z
-      .number()
-      .min(0, { message: 'Giá sản phẩm phải lớn hơn hoặc bằng 0.' })
-      .max(9999999999.99, { message: 'Giá sản phẩm vượt quá giới hạn.' }),
+      .preprocess((value) => parseFloat(value), z.number()
+        .min(0, { message: 'Giá sản phẩm phải lớn hơn hoặc bằng 0.' })
+        .max(9999999999.99, { message: 'Giá sản phẩm vượt quá giới hạn.' })),
     product_color: z.string().max(100, { message: 'Màu sắc sản phẩm tối đa 100 ký tự.' }),
     product_description: z.string().optional(),
     product_imageFiles: z.instanceof(File).optional()

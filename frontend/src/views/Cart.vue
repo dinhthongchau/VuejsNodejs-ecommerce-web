@@ -159,7 +159,7 @@ const submitOrder = async () => {
                 order_date: new Date().toISOString(),
                 order_total: totalPrice.value,
                 order_payment_method: paymentMethod.value,
-                order_status: 'Confirming',
+                order_status: 'OK',
                 order_note: cartItems.value.map((item, index) =>
                     `SP${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}) SL: ${item.quantity}`
                 ).join(',\n') + `\n,Ghi chú của khách: ` + customerNote.value,
