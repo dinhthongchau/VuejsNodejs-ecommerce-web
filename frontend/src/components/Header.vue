@@ -18,21 +18,6 @@
         <li class="menu-item">
           <a href="/iphone">IPHONE</a>
         </li>
-        <li class="menu-item">
-          <a href="/">MACBOOK</a>
-        </li>
-        <li class="menu-item">
-          <a href="/">IPAD</a>
-        </li>
-        <!-- <li class="menu-item">
-          <a href="/">APPLE WATCH</a>
-        </li>
-        <li class="menu-item">
-          <a href="/">TAI NGHE, LOA</a>
-        </li>
-        <li class="menu-item">
-          <a href="/">PHỤ KIỆN</a>
-        </li> -->
         <li v-if="isLoggedIn" class="menu-item">
           <a href="/product_admin">crud product</a>
         </li>
@@ -108,7 +93,7 @@ const searchProduct = () => {
 
 // Hàm điều hướng về trang chủ ProductPage.vue
 const goToHomePage = () => {
-  router.push({ name: 'productpage' });
+  router.push({ name: 'iphoneview1' });
 };
 
 // Theo dõi thay đổi trong searchQuery
@@ -124,26 +109,26 @@ watch(searchQuery, (newValue) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 20px 40px; /* Tăng padding để header cao hơn */
   background-color: #333;
   color: white;
 }
 
 .logo img {
-  max-height: 60px;
+  max-height: 80px; /* Tăng kích thước logo */
   height: auto;
   border-radius: 10px;
-  margin-right: 20px;
-  /* Khoảng cách giữa logo và menu */
 }
 
 .menu-container {
-  flex-grow: 1;
-  /* Để menu chiếm toàn bộ không gian còn lại */
+  flex-grow: 1; /* Để menu chiếm không gian linh hoạt */
+  display: flex;
+  justify-content: center; /* Đẩy menu ra giữa */
 }
 
 .menu {
   display: flex;
+  gap: 20px; /* Tăng khoảng cách giữa các mục menu */
   margin: 0;
   padding: 0;
   list-style: none;
@@ -151,12 +136,10 @@ watch(searchQuery, (newValue) => {
 
 .menu-item a {
   color: white;
-  padding: 10px 15px;
+  padding: 15px 20px; /* Tăng kích thước vùng nhấn */
   text-decoration: none;
-  font-size: 1.1rem;
-  /* Tăng kích thước chữ */
-  font-weight: 500;
-  /* Làm đậm chữ */
+  font-size: 1.2rem; /* Tăng kích thước chữ */
+  font-weight: 600; /* Làm đậm chữ */
 }
 
 .menu-item a:hover {
@@ -167,25 +150,85 @@ watch(searchQuery, (newValue) => {
 .search-bar {
   display: flex;
   align-items: center;
+  gap: 10px; /* Tăng khoảng cách giữa ô input và nút */
 }
 
 .search-bar input {
-  padding: 5px;
+  width: 250px; /* Tăng chiều rộng ô tìm kiếm */
+  padding: 10px;
   border: none;
   border-radius: 5px;
+  font-size: 1rem;
 }
 
 .search-bar button {
-  margin-left: 5px;
-  padding: 5px 10px;
+  width: 120px; /* Kích thước đồng nhất với các nút khác */
+  height: 40px;
   border: none;
   border-radius: 5px;
   background-color: #396ce8;
   color: white;
+  font-size: 1rem;
   cursor: pointer;
+  font-weight: 500;
 }
 
 .search-bar button:hover {
   background-color: #555;
 }
+
+.cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 40px;
+  padding: 0 10px;
+  background-color: #396ce8;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid #396ce8;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart:hover {
+  background-color: #2a52c6;
+}
+
+.cart .number {
+  font-size: 0.8rem;
+  background-color: #d9534f;
+  color: white;
+  border-radius: 50%;
+  padding: 3px 7px;
+  margin-left: 5px;
+}
+
+button {
+  width: 120px;
+  height: 40px;
+  border: none;
+  border-radius: 5px;
+  background-color: #396ce8;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+button.logout-btn {
+  background-color: #d9534f;
+}
+
+button:hover {
+  background-color: #2a52c6;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
+
+
 </style>
