@@ -25,7 +25,7 @@ const searchableProducts = computed(() =>
     return [product_name, product_description].join('');
   })
 );
-const filteredProducts = ref([]); 
+const filteredProducts = ref([]);
 function updateFilteredProducts() {
   if (!searchText.value) {
     filteredProducts.value = products.value;
@@ -63,7 +63,7 @@ async function retrieveProducts() {
       );
     }
 
-    totalPages.value = 1; 
+    totalPages.value = 1;
     products.value = allProducts.sort((current, next) =>
       current.product_name.localeCompare(next.product_name)
     );
@@ -96,9 +96,9 @@ function changeCurrentPage(page) {
   router.push({ name: 'iphoneview', query: { page } });
 }
 const sliderImages = ref([
-  '/src/assets/image-shop/slider1.png',
-  '/src/assets/image-shop/slider2.png',
-  '/src/assets/image-shop/slider3.png'
+  'https://cdnv2.tgdd.vn/mwg-static/topzone/Banner/39/05/39050ec4293c942a953b00ada7c5bb67.png',
+  'https://cdnv2.tgdd.vn/mwg-static/topzone/Banner/8d/a6/8da6a304fdc158ed931d1c8b24f85677.png',
+  'https://www.topzone.vn/iphone/iphone-13?itm_source=trang-nganh-hang&itm_medium=banner'
 ]);
 
 const currentIndex = ref(0);
@@ -112,7 +112,7 @@ const nextImage = () => {
   currentIndex.value = (currentIndex.value + 1) % sliderImages.value.length;
 };
 
-const selectedFilter = ref('all'); 
+const selectedFilter = ref('all');
 const filterAll = () => {
   filteredProducts.value = products.value;
   selectedFilter.value = 'all';
@@ -144,7 +144,7 @@ const sortHighToLow = () => {
 };
 
 function goToProductDetail(productId) {
-  router.push({ name: 'product.detail', params: { id: productId } }); 
+  router.push({ name: 'product.detail', params: { id: productId } });
 }
 function formatCurrency(value) {
   return new Intl.NumberFormat('vi-VN').format(value) + ' đ';
@@ -156,7 +156,7 @@ onMounted(() => {
 watch(
   () => route.query.search,
   (newValue) => {
-    retrieveProducts(); 
+    retrieveProducts();
   }
 );
 watch(searchText, () => (selectedIndex.value = -1));
@@ -223,7 +223,7 @@ watch([products, searchText], updateFilteredProducts, { immediate: true });
     <div class="product-list">
       <div v-for="product in filteredProducts" :key="product.product_id" class="product-card"
         style="flex: 0 0 calc(33.333% - 20px); margin: 10px" @click="goToProductDetail(product.product_id)">
-  
+
         <div v-if="typeof product.product_image === 'string'">
           <template v-if="product.product_image.startsWith('[')">
             <div class="p-1 w-75 h-75">
