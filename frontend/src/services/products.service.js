@@ -60,15 +60,6 @@ function makeProductService() {
     });
   }
 
-  // async function updateProduct(id, product) {
-  //   return efetch(`${baseUrl}/${id}`, {
-  //     method: 'PUT',
-  //     body: JSON.stringify(product),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
   async function updateProduct(productId, formData) {
     try {
       const response = await fetch(`${apiUrl}/v1/products/${productId}`, {

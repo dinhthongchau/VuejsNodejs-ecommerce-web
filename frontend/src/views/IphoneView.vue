@@ -1,9 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import ProductCard from '@/components/ProductCard.vue';
-import InputSearch from '@/components/InputSearch.vue';
-import ProductList from '@/components/ProductList.vue';
+
 import MainPagination from '@/components/MainPagination.vue';
 import productsService from '@/services/products.service';
 
@@ -36,10 +34,6 @@ function updateFilteredProducts() {
   }
 }
 
-const selectedProduct = computed(() => {
-  if (selectedIndex.value < 0) return null;
-  return filteredProducts.value[selectedIndex.value];
-});
 
 
 
@@ -74,23 +68,7 @@ async function retrieveProducts() {
   }
 }
 
-async function onDeleteProducts() {
-  if (confirm('Bạn muốn xóa tất cả Sản phẩm?')) {
-    try {
-      await productsService.deleteAllProducts();
-      totalPages.value = 1;
-      products.value = [];
-      selectedIndex.value = -1;
-      changeCurrentPage(1);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-}
 
-function goToAddProduct() {
-  router.push({ name: 'product.add' });
-}
 
 function changeCurrentPage(page) {
   router.push({ name: 'iphoneview', query: { page } });
@@ -128,18 +106,18 @@ const filterIPhone = (version) => {
   filteredProducts.value = products.value.filter((product) =>
     product.product_name.toLowerCase().includes(`iphone ${version}`)
   );
-  selectedFilter.value = version; // Lưu phiên bản được chọn
+  selectedFilter.value = version;
 };
 
 
 
 const sortLowToHigh = () => {
-  // Logic để sắp xếp sản phẩm từ thấp đến cao
+
   filteredProducts.value.sort((a, b) => a.product_price - b.product_price);
 };
 
 const sortHighToLow = () => {
-  // Logic để sắp xếp sản phẩm từ cao đến thấp
+ 
   filteredProducts.value.sort((a, b) => b.product_price - a.product_price);
 };
 

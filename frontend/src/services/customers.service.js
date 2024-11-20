@@ -61,15 +61,7 @@ function makeCustomerService() {
     });
   }
 
-  // async function updatecustomer(id, customer) {
-  //   return efetch(`${baseUrl}/${id}`, {
-  //     method: 'PUT',
-  //     body: JSON.stringify(customer),
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
+
  async function updateCustomer(customerId, formData) {
     try {
       const response = await fetch(`${apiUrl}/v1/customers/${customerId}`, {
