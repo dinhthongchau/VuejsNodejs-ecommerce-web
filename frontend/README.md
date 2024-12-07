@@ -1,31 +1,35 @@
-## Recommended IDE Setup
+### **Frontend Setup Guide**
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+#### **Steps to Set Up the Frontend**
 
-## Customize configuration
+1. **Configure Environment Variables**  
+   - Navigate to the `frontend` folder.  
+   - Copy the file `env.example` and rename it to `.env`:  
+     ```bash
+     cp env.example .env
+     ```
+   - Open `.env` and configure :  
+     ```env
+     VITE_API_URL=http://localhost:3300/api
+     VITE_URL=http://localhost:3300
+     VITE_EMAIL_ADMIN_RECEIVE_ORDER=thongb2111955@student.ctu.edu.vn
+     ```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+2. **Install Dependencies**  
+   - Run the following command to install all required dependencies:  
+     ```bash
+     npm install
+     ```
 
-## Project Setup
+3. **Run the Development Server**  
+   - Start the frontend development server using:  
+     ```bash
+     npm run dev
+     ```
 
-```sh
-npm install
-```
+---
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+### **Notes**
+- Ensure the backend server is running before starting the frontend.
+- Make sure the `VITE_API_URL` and `VITE_URL` match your backend server URL and port.
+- Open your browser at the link provided in the terminal after running `npm run dev` to view the app.
