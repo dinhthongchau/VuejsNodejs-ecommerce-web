@@ -29,6 +29,7 @@ async function createProduct(req, res, next) {
     const productData = {
       ...req.body,
       product_image: JSON.stringify(product_image), // Store as JSON string
+      //product_image: product_image, // Store as array directly
     };
 
     const product = await productsService.createProduct(productData);
@@ -113,10 +114,13 @@ async function updateProduct(req, res, next) {
     // Process uploaded files
     let product_image;
     if (req.files && req.files.length > 0) {
-      // New files uploaded - replace old images
+      //New files uploaded - replace old images
       product_image = JSON.stringify(
         req.files.map((file) => `/public/uploads/${file.filename}`)
       );
+      // product_image = req.files.map(
+      //   (file) => `/public/uploads/${file.filename}`
+      // );
     }
 
     // Convert price to number if provided

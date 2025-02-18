@@ -33,3 +33,4 @@
 - Ensure the backend server is running before starting the frontend.
 - Make sure the `VITE_API_URL` and `VITE_URL` match your backend server URL and port.
 - Open your browser at the link provided in the terminal after running `npm run dev` to view the app.
+//pm2 resurrect on startup windows

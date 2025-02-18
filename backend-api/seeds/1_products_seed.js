@@ -17,6 +17,7 @@ function createProduct() {
     product_color: faker.helpers.arrayElement(colors),
     product_description: faker.commerce.productDescription(),
     product_image: JSON.stringify(["/public/images/blank.png"]),
+    //product_image: ["/public/images/blank.png"],
   };
 }
 
