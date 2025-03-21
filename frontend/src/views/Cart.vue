@@ -224,45 +224,7 @@ const confirmCustomer = async () => {
 
 const Url = import.meta.env.VITE_URL;
 const EmailAdmin = import.meta.env.VITE_EMAIL_ADMIN_RECEIVE_ORDER;
-///send email
-const sendEmail = async () => {
-    try {
-        // Gửi email cho khách
-        const emailData = {
-            to: customerEmail.value, // Gửi đến email khách hàng
-            subject: "Thông tin đơn hàng của bạn",
-            text: `Cảm ơn bạn đã đặt hàng tại cửa hàng chúng tôi!\n\n` +
-                `Thông tin đơn hàng: \n` +
-                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}), Số lượng: ${item.quantity}`).join('\n')} \n\n` +
-                `Tổng tiền: ${formatPrice(totalPrice.value)} đ\n` +
-                `Phương thức thanh toán: ${paymentMethod.value}\n` +
-                `Địa chỉ giao hàng: ${diaChiGiaoHang.value}\n` +
-                `Ghi chú: ${customerNote.value}\n`
-        };
-
-        const response = await axios.post(`${Url}/send-email`, emailData);
-        console.log('Email gửi thành công:', response.data.message);
-
-        // Gửi email cho admin
-        const emailAdminData = {
-            to: EmailAdmin, // Gửi đến email admin
-            subject: "Thông báo đơn hàng mới",
-            text: `Đơn hàng mới vừa được đặt từ khách hàng ${customerEmail.value} (${customerName.value}, SĐT: ${customerPhone.value}).\n\n` +
-                `Thông tin đơn hàng: \n` +
-                `${cartItems.value.map((item, index) => `- Sản phẩm ${index + 1}: ${item.product_name} (Màu sắc: ${item.product_color}), Số lượng: ${item.quantity}`).join('\n')} \n\n` +
-                `Tổng tiền: ${formatPrice(totalPrice.value)} đ\n` +
-                `Phương thức thanh toán: ${paymentMethod.value}\n` +
-                `Địa chỉ giao hàng: ${diaChiGiaoHang.value}\n` +
-                `Ghi chú: ${customerNote.value}\n`
-        };
-
-        // Gửi email cho admin
-        const responseAdmin = await axios.post(`${Url}/send-email`, emailAdminData);
-        console.log('Email gửi cho admin thành công:', responseAdmin.data.message);
-    } catch (error) {
-        console.error('Gửi email thất bại:', error);
-    }
-};
+ 
 
 //confirm cus
 

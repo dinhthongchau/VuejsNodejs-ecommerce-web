@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const mailjet = require("node-mailjet");
 const express = require("express");
 const cors = require("cors");
 const JSend = require("./jsend");
@@ -42,32 +42,72 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // app.use(upload.none());
 
-//gui mail qua
-app.post("/send-email", async (req, res) => {
-  const { to, subject, text, html } = req.body; // Get email data from frontend request
+// //gui mail qua
+// app.post("/send-email", async (req, res) => {
+//   const { to, subject, text, html } = req.body; // Get email data from frontend request
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.sendgrid.net",
-    port: 587,
-    secure: false,
-    auth: {
-      user: "apikey",
-      pass: process.env.SENDGRID_API_KEY,
-    },
+//   const transporter = nodemailer.createTransport({
+//     host: "smtp.sendgrid.net",
+//     port: 587,
+//     secure: false,
+//     auth: {
+//       user: "apikey",
+//       pass: process.env.SENDGRID_API_KEY,
+//     },
+//   });
+
+//   const mailOptions = {
+//     from: process.env.EMAIL_OF_API,
+//     to,
+//     subject,
+//     text,
+//     html,
+//   };
+
+//   try {
+//     const info = await transporter.sendMail(mailOptions);
+//     console.log("Email response:", info);
+//     res.json({ message: "Email sent successfully!", info });
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to send email: " + error.message });
+//   }
+// });
+// Kết nối với Mailjet
+const mjClient = new mailjet.Client({
+  apiKey: process.env.MJ_APIKEY_PUBLIC,
+  apiSecret: process.env.MJ_APIKEY_PRIVATE,
+});
+
+// Gửi email qua Mailjet
+app.post("/send-email", async (req, res) => {
+  const { to, subject, text, html } = req.body; // Lấy dữ liệu email từ request frontend
+
+  const request = mjClient.post("send", { version: "v3.1" }).request({
+    Messages: [
+      {
+        From: {
+          Email: process.env.EMAIL_OF_API, // Email người gửi từ .env
+          Name: "ChauDinhThong API KEY mjClient", // Tên người gửi (có thể tùy chỉnh)
+        },
+        To: [
+          {
+            Email: to, // Địa chỉ email người nhận
+            Name: "You", // Tên người nhận (có thể tùy chỉnh)
+          },
+        ],
+        Subject: subject, // Tiêu đề email
+        TextPart: text, // Nội dung dạng text
+        HTMLPart: html, // Nội dung dạng HTML
+      },
+    ],
   });
 
-  const mailOptions = {
-    from: process.env.EMAIL_OF_API,
-    to,
-    subject,
-    text,
-    html,
-  };
-
   try {
-    await transporter.sendMail(mailOptions);
-    res.json({ message: "Email sent successfully!" });
+    const result = await request;
+    console.log("Email response:", result.body);
+    res.json({ message: "Email sent successfully!", response: result.body });
   } catch (error) {
+    console.error("Mailjet error:", error);
     res.status(500).json({ message: "Failed to send email: " + error.message });
   }
 });
