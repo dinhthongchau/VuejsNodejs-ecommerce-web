@@ -101,7 +101,8 @@
 <script setup>
 //email send 
 import axios from 'axios';
-
+import { watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { ref, computed } from 'vue';
 import cartService from '@/services/cart.service';
 const isCustomerConfirmed = ref(false);
@@ -113,7 +114,7 @@ const customerAddress = ref('');
 const deliveryMethod = ref('Giao tận nơi');
 const paymentMethod = ref('Tiền mặt');
 const customerNote = ref('Không');
-import { useRouter, useRoute } from 'vue-router';
+
 const route = useRoute();
 const router = useRouter();
 
@@ -224,7 +225,7 @@ const confirmCustomer = async () => {
 
 const Url = import.meta.env.VITE_URL;
 const EmailAdmin = import.meta.env.VITE_EMAIL_ADMIN_RECEIVE_ORDER;
- 
+
 
 //confirm cus
 
@@ -277,7 +278,7 @@ const removeFromCart = (cartId) => {
 };
 
 
-import { watch } from 'vue';
+
 
 watch(() => localStorage.getItem('cart'), () => {
     cartItems.value = JSON.parse(localStorage.getItem('cart')) || [];
