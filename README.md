@@ -1,7 +1,3 @@
-# phone-shop-vuejs-nextjs
-### **README.md**
-
-```markdown
 # **E-Commerce Project: Selling iPhone**
 
 This project includes a **frontend** built with Vue.js and a **backend** built with Node.js, Express, and MySQL. Follow the instructions below to set up the application.
@@ -26,7 +22,7 @@ Video youtube demo: https://youtu.be/BY-JZOygIGg
 - Rename the `env.example` file to `.env`:
   ```bash
   mv env.example .env
-  ```
+  
 - Open `.env` and configure the following:
   - Database connection.
   - SendGrid API details (obtain your API key from [SendGrid](https://sendgrid.com/)).
