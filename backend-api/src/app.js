@@ -5,7 +5,8 @@ const cors = require("cors");
 const JSend = require("./jsend");
 const crypto = require("crypto");
 const session = require("express-session");
-const nodemailer = require("nodemailer");
+const MemoryStore = require("memorystore")(session);
+const knex = require("./database/knex"); // Dùng knex thay mysql
 const customerRouter = require("./routes/customer.router");
 const productRouter = require("./routes/product.router");
 const orderRouter = require("./routes/order.router");
@@ -14,90 +15,73 @@ const adminRouter = require("./routes/admin.router");
 const {
   resourceNotFound,
   handleError,
-  //methodNotAllowed,
 } = require("./controllers/errors.controller");
 const { specs, swaggerUi } = require("./docs/swagger");
 
 const app = express();
 const secretKey = crypto.randomBytes(32).toString("hex");
-// console.log(secretKey);
+
+// Gắn knex vào app
+app.set("db", knex);
+
+// Kiểm tra kết nối database và log kết quả
+knex
+  .raw("SELECT 1")
+  .then(() => {
+    console.log("Knex connected to DB");
+  })
+  .catch((err) => {
+    console.error("Knex connection error:", err);
+  });
+
+// Sử dụng MemoryStore cho session (với cảnh báo trong log)
 app.use(
   session({
     secret: secretKey,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 2 }, // Đặt true nếu bạn sử dụng HTTPS
+    store: new MemoryStore({
+      checkPeriod: 86400000, // 24h
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 2 }, // 2 giờ
   })
 );
-app.use(cors());
+console.log(
+  "Using MemoryStore for session management (warning: not ideal for production)"
+);
+
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.get("/", (req, res) => {
-  return res.json(JSend.success());
+
+// Middleware để log request
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.originalUrl}`);
+  next();
 });
 
-// app.use('/public/images', express.static('public'));
+app.get("/", (req, res) => {
+  return res.json(JSend.success({ message: "Hello from GAE!" }));
+});
+
 app.use("/public", express.static("public"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-// app.use(upload.none());
-
-// //gui mail qua
-// app.post("/send-email", async (req, res) => {
-//   const { to, subject, text, html } = req.body; // Get email data from frontend request
-
-//   const transporter = nodemailer.createTransport({
-//     host: "smtp.sendgrid.net",
-//     port: 587,
-//     secure: false,
-//     auth: {
-//       user: "apikey",
-//       pass: process.env.SENDGRID_API_KEY,
-//     },
-//   });
-
-//   const mailOptions = {
-//     from: process.env.EMAIL_OF_API,
-//     to,
-//     subject,
-//     text,
-//     html,
-//   };
-
-//   try {
-//     const info = await transporter.sendMail(mailOptions);
-//     console.log("Email response:", info);
-//     res.json({ message: "Email sent successfully!", info });
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to send email: " + error.message });
-//   }
-// });
-// Kết nối với Mailjet
 const mjClient = new mailjet.Client({
   apiKey: process.env.MJ_APIKEY_PUBLIC,
   apiSecret: process.env.MJ_APIKEY_PRIVATE,
 });
 
-// Gửi email qua Mailjet
 app.post("/send-email", async (req, res) => {
-  const { to, subject, text, html } = req.body; // Lấy dữ liệu email từ request frontend
-
+  const { to, subject, text, html } = req.body;
   const request = mjClient.post("send", { version: "v3.1" }).request({
     Messages: [
       {
-        From: {
-          Email: process.env.EMAIL_OF_API, // Email người gửi từ .env
-          Name: "ChauDinhThong API KEY mjClient", // Tên người gửi (có thể tùy chỉnh)
-        },
-        To: [
-          {
-            Email: to, // Địa chỉ email người nhận
-            Name: "You", // Tên người nhận (có thể tùy chỉnh)
-          },
-        ],
-        Subject: subject, // Tiêu đề email
-        TextPart: text, // Nội dung dạng text
-        HTMLPart: html, // Nội dung dạng HTML
+        From: { Email: process.env.EMAIL_OF_API, Name: "ChauDinhThong API" },
+        To: [{ Email: to, Name: "You" }],
+        Subject: subject,
+        TextPart: text,
+        HTMLPart: html,
       },
     ],
   });
@@ -111,15 +95,20 @@ app.post("/send-email", async (req, res) => {
     res.status(500).json({ message: "Failed to send email: " + error.message });
   }
 });
+
+// Middleware để log lỗi chi tiết
+app.use((err, req, res, next) => {
+  console.error("Detailed error:", err);
+  next(err);
+});
+
 productRouter.setup(app);
 customerRouter.setup(app);
 orderRouter.setup(app);
 cartRouter.setup(app);
 adminRouter.setup(app);
-//handle 404 response
-app.use(resourceNotFound);
 
-//define error handler middleware last, after other app.use() and routes calls
+app.use(resourceNotFound);
 app.use(handleError);
 
 module.exports = app;

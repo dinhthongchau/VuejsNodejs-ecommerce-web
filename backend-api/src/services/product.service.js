@@ -3,7 +3,7 @@ const Paginator = require("./paginator");
 const { unlink } = require("node:fs");
 
 function productRepository() {
-  return knex("Product");
+  return knex("product");
 }
 
 function readProduct(payload) {

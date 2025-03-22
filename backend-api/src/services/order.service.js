@@ -2,7 +2,7 @@ const knex = require("../database/knex");
 const Paginator = require("./paginator");
 
 function orderRepository() {
-  return knex("Orders");
+  return knex("orders");
 }
 
 function readOrder(payload) {

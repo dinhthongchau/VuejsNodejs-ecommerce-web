@@ -4,7 +4,7 @@ const Paginator = require("./paginator");
 const bcrypt = require("bcrypt");
 
 function adminRepository() {
-  return knex("Admins");
+  return knex("admins");
 }
 
 function readAdmin(payload) {
