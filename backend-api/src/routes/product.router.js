@@ -3,7 +3,7 @@ const express = require("express");
 const productController = require("../controllers/product.controller.js");
 const router = express.Router();
 const { methodNotAllowed } = require("../controllers/errors.controller.js");
-const avatarUpload = require('../middlewares/avatar-upload.middleware.js');
+const avatarUpload = require("../middlewares/avatar-upload.middleware.js");
 module.exports.setup = (app) => {
   app.use("/api/v1/products", router);
   /**
@@ -54,7 +54,7 @@ module.exports.setup = (app) => {
    *                     metadata:
    *                       $ref: '#/components/schemas/PaginationMetadata'
    */
-  router.get('/', productController.getProductsByFilter); // Lọc sản phẩm
+  router.get("/", productController.getProductsByFilter); // Lọc sản phẩm
 
   /**
    * @swagger
@@ -88,7 +88,7 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.post('/', avatarUpload, productController.createProduct); // Tạo sản phẩm mới
+  router.post("/", avatarUpload, productController.createProduct); // Tạo sản phẩm mới
 
   /**
    * @swagger
@@ -103,8 +103,8 @@ module.exports.setup = (app) => {
    *         description: All products deleted
    *         $ref: '#/components/responses/200NoData'
    */
-  router.delete('/', productController.deleteAllProduct); // Xóa tất cả sản phẩm
-  router.all('/', methodNotAllowed); // Xử lý phương thức không được phép
+  router.delete("/", productController.deleteAllProduct); // Xóa tất cả sản phẩm
+  router.all("/", methodNotAllowed); // Xử lý phương thức không được phép
 
   /**
    * @swagger
@@ -134,66 +134,66 @@ module.exports.setup = (app) => {
    *                     product:
    *                       $ref: '#/components/schemas/Product'
    */
-  router.get('/:product_id', productController.getProduct); // Lấy sản phẩm theo ID
+  router.get("/:product_id", productController.getProduct); // Lấy sản phẩm theo ID
 
   /**
- * @swagger
- * /api/v1/products/{product_id}:
- *   put:
- *     summary: Update product by ID
- *     description: Update product by ID
- *     parameters:
- *       - in: path
- *         name: product_id
- *         required: true
- *         schema:
- *           type: string
- *         description: The ID of the product to update
- *     requestBody:
- *       required: true
- *       content:
- *         multipart/form-data:
- *           schema:
- *             $ref: '#/components/schemas/Product'
- *     tags:
- *       - products
- *     responses:
- *       200:
- *         description: An updated product
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   description: The response status
- *                   enum: [success]
- *                 data:
- *                   type: object
- *                   properties:
- *                     product:
- *                       $ref: '#/components/schemas/Product'
- */
-router.put('/:product_id', avatarUpload, productController.updateProduct); // Cập nhật sản phẩm theo ID
+   * @swagger
+   * /api/v1/products/{product_id}:
+   *   put:
+   *     summary: Update product by ID
+   *     description: Update product by ID
+   *     parameters:
+   *       - in: path
+   *         name: product_id
+   *         required: true
+   *         schema:
+   *           type: string
+   *         description: The ID of the product to update
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         multipart/form-data:
+   *           schema:
+   *             $ref: '#/components/schemas/Product'
+   *     tags:
+   *       - products
+   *     responses:
+   *       200:
+   *         description: An updated product
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 status:
+   *                   type: string
+   *                   description: The response status
+   *                   enum: [success]
+   *                 data:
+   *                   type: object
+   *                   properties:
+   *                     product:
+   *                       $ref: '#/components/schemas/Product'
+   */
+  router.put("/:product_id", avatarUpload, productController.updateProduct); // Cập nhật sản phẩm theo ID
 
-/**
- * @swagger
- * /api/v1/products/{product_id}:
- *   delete:
- *     summary: Delete product by ID
- *     description: Delete a product by its ID.
- *     parameters:
- *       - $ref: '#/components/parameters/productIdParam'
- *     tags:
- *       - products
- *     responses:
- *       200:
- *         description: Product deleted
- *         $ref: '#/components/responses/200NoData'
- */
-router.delete('/:product_id', productController.deleteProduct); // Xóa sản phẩm theo ID
-router.all('/:product_id', methodNotAllowed); // Xử lý phương thức không được phép
+  /**
+   * @swagger
+   * /api/v1/products/{product_id}:
+   *   delete:
+   *     summary: Delete product by ID
+   *     description: Delete a product by its ID.
+   *     parameters:
+   *       - $ref: '#/components/parameters/productIdParam'
+   *     tags:
+   *       - products
+   *     responses:
+   *       200:
+   *         description: Product deleted
+   *         $ref: '#/components/responses/200NoData'
+   */
+  router.delete("/:product_id", productController.deleteProduct); // Xóa sản phẩm theo ID
+  router.all("/:product_id", methodNotAllowed); // Xử lý phương thức không được phép
 
-//module.exports = router;
+  //module.exports = router;
 };

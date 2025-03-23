@@ -4,12 +4,10 @@ const JSend = require("../jsend");
 
 async function createProduct(req, res, next) {
   try {
-    // Validate required fields
     if (!req.body?.product_name) {
       return next(new ApiError(400, "Product name is required"));
     }
 
-    // Convert price to number if provided
     if (req.body.product_price) {
       req.body.product_price = Number(req.body.product_price);
       if (isNaN(req.body.product_price)) {
@@ -17,29 +15,27 @@ async function createProduct(req, res, next) {
       }
     }
 
-    // Process uploaded files
     let product_image = [];
-    if (req.files && req.files.length > 0) {
-      product_image = req.files.map(
-        (file) => `/public/uploads/${file.filename}`
-      );
+    if (req.gcsUrls && req.gcsUrls.length > 0) {
+      product_image = req.gcsUrls; // Lấy URL từ middleware
     }
 
-    // Create product object
     const productData = {
       ...req.body,
-      product_image: JSON.stringify(product_image), // Store as JSON string
-      //product_image: product_image, // Store as array directly
+      product_image: JSON.stringify(product_image),
     };
 
     const product = await productsService.createProduct(productData);
+    if (product.product_image && typeof product.product_image === "string") {
+      product.product_image = JSON.parse(product.product_image);
+    } // Truyền productData
 
     return res
       .status(201)
       .set({ Location: `${req.baseUrl}/${product.product_id}` })
       .json(JSend.success({ product }));
   } catch (error) {
-    console.error(error);
+    console.error("Error creating product:", error.stack); // Thêm stack trace
     return next(
       new ApiError(500, "An error occurred while creating the product")
     );

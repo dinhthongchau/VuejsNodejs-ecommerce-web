@@ -1,6 +1,20 @@
 const knex = require("../database/knex");
 const Paginator = require("./paginator");
-const { unlink } = require("node:fs");
+const { Storage } = require("@google-cloud/storage");
+
+const storageOptions = {
+  projectId: "project1-flutter-454507",
+};
+
+// Chỉ thêm keyFilename nếu chạy local (dựa trên biến môi trường)
+if (process.env.NODE_ENV !== "production") {
+  storageOptions.keyFilename =
+    "C:/Users/chaud/cdthong/OLD/ct313h03-project-dinhthongchau/backend-api/src/services/project1-flutter-454507-3a3315a078e1.json";
+}
+
+const storage = new Storage(storageOptions);
+const bucketName = "project1-flutter-454507.appspot.com";
+const bucket = storage.bucket(bucketName);
 
 function productRepository() {
   return knex("product");
@@ -15,21 +29,6 @@ function readProduct(payload) {
     product_description: payload.product_description,
     product_image: payload.product_image,
   };
-}
-async function createProduct(payload) {
-   const parseJSONString = (jsonString) => {
-     if (typeof jsonString === "string") {
-       return JSON.parse(jsonString.replace(/\\/g, ""));
-     }
-     return jsonString;
-   };
-
-   // Chuyển đổi  và product_image nếu cần
-
-   payload.product_image = parseJSONString(payload.product_image);
-  const product = readProduct(payload);
-  const [product_id] = await productRepository().insert(product);
-  return { product_id, ...product };
 }
 
 async function getManyProducts(query) {
@@ -73,21 +72,14 @@ async function getManyProducts(query) {
       delete result.recordCount;
       return result;
     });
-  
-    // 2. Phân tích chuỗi JSON sau khi lấy kết quả
-    results = results.map((result) => {
-      totalRecords = result.recordCount;
-      result.product_image = JSON.parse(result.product_image); // Phân tích chuỗi JSON
-      delete result.recordCount; // Xóa trường recordCount
-      return result;
-    });
+
     return {
       metadata: paginator.getMetadata(totalRecords),
       products: results,
     };
   } catch (error) {
-    console.error("Error in getManyProducts:", error); // Ghi log lỗi
-    throw new ApiError(500, "An error occurred while retrieving products");
+    console.error("Error in getManyProducts:", error);
+    throw new Error("An error occurred while retrieving products");
   }
 }
 
@@ -96,6 +88,13 @@ async function getProductById(product_id) {
     .where("product_id", product_id)
     .select("*")
     .first();
+}
+// product.service.js
+async function createProduct(productData) {
+  const product = readProduct(productData);
+  // product_image đã là chuỗi JSON từ controller, không cần xử lý thêm
+  const [product_id] = await productRepository().insert(product);
+  return { product_id, ...product };
 }
 
 async function updateProduct(product_id, payload) {
@@ -109,28 +108,14 @@ async function updateProduct(product_id, payload) {
   }
 
   const update = readProduct(payload);
-
-  if (!update.product_image) {
-    delete update.product_image;
+  if (payload.gcsUrls && payload.gcsUrls.length > 0) {
+    update.product_image = JSON.stringify(payload.gcsUrls);
   }
 
   await productRepository().where("product_id", product_id).update(update);
-
-  if (
-    update.product_image &&
-    updatedProduct.product_image &&
-    update.product_image !== updatedProduct.product_image &&
-    updatedProduct.product_image.startsWith("/public/uploads")
-  ) {
-    unlink(`.${updatedProduct.product_image}`, (err) => {
-      if (err) {
-        console.error(`Failed to delete old image: ${err}`);
-      }
-    });
-  }
-
   return { ...updatedProduct, ...update };
 }
+
 async function deleteProduct(product_id) {
   const deletedProduct = await productRepository()
     .where("product_id", product_id)
@@ -144,14 +129,16 @@ async function deleteProduct(product_id) {
   await productRepository().where("product_id", product_id).del();
 
   if (
-    deletedProduct.product_image && // Thay đổi 'avatar' thành 'product_image' hoặc tên cột tương ứng với sản phẩm
-    deletedProduct.product_image.startsWith("/public/uploads")
+    deletedProduct.product_image &&
+    deletedProduct.product_image.startsWith("https://storage.googleapis.com")
   ) {
-    unlink(`.${deletedProduct.product_image}`, (err) => {
-      if (err) {
-        console.error(`Error deleting product_image: ${err}`);
-      }
-    });
+    const fileName = deletedProduct.product_image.split(`${bucketName}/`)[1];
+    try {
+      await bucket.file(fileName).delete();
+      console.log(`Deleted file from GCS: ${fileName}`);
+    } catch (err) {
+      console.error(`Error deleting file from GCS: ${err}`);
+    }
   }
 
   return deletedProduct;
@@ -162,19 +149,22 @@ async function deleteAllProduct() {
 
   await productRepository().del();
 
-  products.forEach((product) => {
+  for (const product of products) {
     if (
       product.product_image &&
-      product.product_image.startsWith("/public/uploads")
+      product.product_image.startsWith("https://storage.googleapis.com")
     ) {
-      unlink(`.${product.product_image}`, (err) => {
-        if (err) {
-          console.error(`Error deleting image: ${err}`);
-        }
-      });
+      const fileName = product.product_image.split(`${bucketName}/`)[1];
+      try {
+        await bucket.file(fileName).delete();
+        console.log(`Deleted file from GCS: ${fileName}`);
+      } catch (err) {
+        console.error(`Error deleting file from GCS: ${err}`);
+      }
     }
-  });
+  }
 }
+
 module.exports = {
   createProduct,
   getManyProducts,
