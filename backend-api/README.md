@@ -10,17 +10,8 @@
 
 2. **Configure Environment Variables**
    - Navigate to the `backend` folder.
-   - Copy the file `env.example` and rename it to `.env`:
-     ```bash
-     cp env.example .env
-     ```
-   - Open `.env` and configure your **SendGrid** email settings:
-     - Go to [SendGrid](https://sendgrid.com/) to get your API key.
-     - Add the following to your `.env` file:
-       ```env
-       SENDGRID_API_KEY=your_sendgrid_api_key
-       EMAIL_FROM=your_email@example.com
-       ```
+   - Copy the file `env.example` and rename it to `.env`
+
 
 3. **Install Dependencies**
    - Run the following command to install all required dependencies for both **frontend** and **backend**:
