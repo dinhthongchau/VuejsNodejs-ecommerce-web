@@ -1,6 +1,6 @@
 # **E-Commerce Project: Selling iPhone**
 
-This project includes a **frontend** built with Vue.js and a **backend** built with Node.js, Express, and MySQL. Follow the instructions below to set up the application.
+This project includes a **frontend** built with Vue.js and a **backend** built with Node.js, Express, Mailjet, and MySQL. Follow the instructions below to set up the application.
 
 Video youtube demo: https://youtu.be/BY-JZOygIGg
 ---
@@ -8,7 +8,7 @@ Video youtube demo: https://youtu.be/BY-JZOygIGg
 ## **Prerequisites**
 - Node.js installed (>= v14)
 - MySQL installed
-- [SendGrid](https://sendgrid.com/) account for email configuration
+- [Mailjet] account for email configuration
 
 ---
 
@@ -25,7 +25,7 @@ Video youtube demo: https://youtu.be/BY-JZOygIGg
   
 - Open `.env` and configure the following:
   - Database connection.
-  - SendGrid API details (obtain your API key from [SendGrid](https://sendgrid.com/)).
+  - Mailjet API details (obtain your API key from [Mailjet](https://Mailjet.com/)).
 
 ### 3. **Install Dependencies**
 - Run the following command in the `backend` folder:
